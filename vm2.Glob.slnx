@@ -1,0 +1,33 @@
+<Solution>
+    <Folder Name="/.github/">
+        <File Path=".github/dependabot.yml" />
+    </Folder>
+    <Folder Name="/.github/workflows/">
+        <File Path=".github/workflows/Glob.CI.yaml" />
+    </Folder>
+    <Folder Name="/Solution Items/">
+        <File Path=".editorconfig" />
+        <File Path=".gitignore" />
+        <File Path=".gitattributes" />
+        <File Path="codecov.yaml" />
+        <File Path="COPILOT_INSTRUCTIONS.md" />
+        <File Path="Directory.Build.props" />
+        <File Path="Directory.Packages.props" />
+        <File Path="global.json" />
+        <File Path="LICENSE" />
+        <File Path="README.md" />
+        <File Path="test.runsettings" />
+    </Folder>
+    <Folder Name="/benchmarks/">
+        <Project Path="benchmarks/Glob.Api.Benchmarks/Glob.Api.Benchmarks.csproj" />
+    </Folder>
+    <Folder Name="/src/">
+        <Project Path="src/Glob.Api/Glob.Api.csproj" />
+        <Project Path="src/Glob/Glob.csproj" />
+    </Folder>
+    <Folder Name="/test/">
+        <Project Path="test/Glob.Api.FakeFileSystem.Tests/Glob.Api.FakeFileSystem.Tests.csproj" />
+        <Project Path="test/Glob.Api.FakeFileSystem/Glob.Api.FakeFileSystem.csproj" />
+        <Project Path="test/Glob.Api.Tests/Glob.Api.Tests.csproj" />
+    </Folder>
+</Solution>
