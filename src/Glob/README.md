@@ -194,6 +194,7 @@ A fast, intuitive CLI tool for finding files and directories using glob patterns
 ## Output Format
 
 Each matched path is printed on a separate line with:
+
 - Absolute paths (full path from root)
 - Directory paths end with `/` separator
 - No extra formatting or colors (perfect for piping)
@@ -228,14 +229,14 @@ The tool expands environment variables before pattern matching:
 
 ## Comparison with Alternatives
 
-| Feature          | `glob`        | `find` (Unix) | `Get-ChildItem` (PS) | `fd`      |
-|------------------|---------------|---------------|----------------------|-----------|
-| Cross-platform   | ✅            | ❌           | ❌                   | ✅       |
-| Glob syntax      | ✅ Native     | ❌ Regex     | ❌ Complex           | ✅       |
-| .NET integration | ✅            | ❌           | ⚠️                   | ❌       |
-| Install          | `dotnet tool` | Pre-installed | Pre-installed        | Cargo     |
-| Environment vars | ✅            | ❌           | ✅                   | ❌       |
-| Speed            | Fast          | Very fast     | Slow                 | Very fast |
+| Feature          | `glob`         | `find` (Unix) | `Get-ChildItem` (PS) | `fd`      |
+|:-----------------|:-------------- |:------------- |:-------------------- |:--------- |
+| Cross-platform   | ✅             | ❌            | ❌                   | ✅        |
+| Glob syntax      | ✅ Native      | ❌ Regex      | ❌ Complex           | ✅        |
+| .NET integration | ✅             | ❌            | ⚠️                   | ❌        |
+| Install          | `dotnet tool`  | Pre-installed | Pre-installed        | Cargo     |
+| Environment vars | ✅             | ❌            | ✅                   | ❌        |
+| Speed            | Fast           | Very fast     | Slow                 | Very fast |
 
 ## Troubleshooting
 
@@ -293,7 +294,7 @@ Contributions are welcome! Please see [CONTRIBUTING.md](../../CONTRIBUTING.md) f
 
 ## License
 
-MIT License - Copyright © 2025 Val Melamed
+MIT License - Copyright &copy; 2025 Val Melamed
 
 See [LICENSE](../../LICENSE) for full text.
 
