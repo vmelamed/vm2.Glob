@@ -16,12 +16,13 @@ on:
 jobs:
   release:
     name: Stable Release
-    uses: ./.github/workflows/_release.yaml
+    uses: vmelamed/vm2.DevOps/.github/workflows/_release.yaml@main
     permissions:
       contents: write
-    secrets: inherit
+    secrets:
+      NUGET_API_KEY: ${{ secrets.NUGET_API_GITHUB_KEY }}
     with:
-      os: ubuntu-latest
+      package-projects: '["src/vm2.Glob/vm2.Glob.Api.csproj", "src/vm2.Glob/vm2.Glob.csproj"]'
       dotnet-version: ${{ vars.DOTNET_VERSION || '10.0.x' }}
       force-publish: ${{ inputs.force-publish || false }}
       save_package_artifacts: true
