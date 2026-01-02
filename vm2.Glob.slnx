@@ -8,9 +8,6 @@
         <File Path=".github/workflows/Prerelease.yaml" />
         <File Path=".github/workflows/Release.yaml" />
     </Folder>
-    <Folder Name="/Scripts/">
-        <File Path="scripts/restore-locked.sh" />
-    </Folder>
     <Folder Name="/Solution Items/">
         <File Path=".editorconfig" />
         <File Path=".gitignore" />
