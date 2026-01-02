@@ -354,6 +354,11 @@
           "Microsoft.Extensions.Primitives": "10.0.1"
         }
       },
+      "Microsoft.Extensions.FileSystemGlobbing": {
+        "type": "Transitive",
+        "resolved": "10.0.1",
+        "contentHash": "49dFvGJjLSwGn76eHnP1gBvCJkL8HRYpCrG0DCvsP6wRpEQRLN2Fq8rTxbP+6jS7jmYKCnSVO5C65v4mT3rzeA=="
+      },
       "Microsoft.Extensions.Hosting.Abstractions": {
         "type": "Transitive",
         "resolved": "10.0.1",
@@ -484,27 +489,6 @@
           "Microsoft.Extensions.Logging.Console": "[10.0.1, )",
           "Microsoft.Extensions.Options.ConfigurationExtensions": "[10.0.1, )",
           "System.Configuration.ConfigurationManager": "[10.0.1, )",
-          "Test.Utilities": "[1.0.0, )",
-          "vm2.Glob.Api": "[1.0.0, )",
-          "xunit.v3.extensibility.core": "[3.2.1, )"
-        }
-      },
-      "test.utilities": {
-        "type": "Project",
-        "dependencies": {
-          "FluentAssertions": "[8.8.0, )",
-          "Microsoft.Extensions.Configuration.Binder": "[10.0.1, )",
-          "Microsoft.Extensions.Configuration.CommandLine": "[10.0.1, )",
-          "Microsoft.Extensions.Configuration.EnvironmentVariables": "[10.0.1, )",
-          "Microsoft.Extensions.Configuration.Json": "[10.0.1, )",
-          "Microsoft.Extensions.DependencyInjection": "[10.0.1, )",
-          "Microsoft.Extensions.Hosting": "[10.0.1, )",
-          "Microsoft.Extensions.Logging": "[10.0.1, )",
-          "Microsoft.Extensions.Logging.Abstractions": "[10.0.1, )",
-          "Microsoft.Extensions.Logging.Configuration": "[10.0.1, )",
-          "Microsoft.Extensions.Logging.Console": "[10.0.1, )",
-          "Microsoft.Extensions.Options.ConfigurationExtensions": "[10.0.1, )",
-          "System.Configuration.ConfigurationManager": "[10.0.1, )",
           "vm2.Glob.Api": "[1.0.0, )",
           "xunit.v3.extensibility.core": "[3.2.1, )"
         }
@@ -531,12 +515,6 @@
         "requested": "[8.8.0, )",
         "resolved": "8.8.0",
         "contentHash": "m0kwcqBwvVel03FuMa7Ozo/oTaxYbjeNlcOhQFkyQpwX/8wks6RNl/Jnn58DCZVs6c2oG1RsCZw7HfKSaxLm3w=="
-      },
-      "Microsoft.Extensions.FileSystemGlobbing": {
-        "type": "CentralTransitive",
-        "requested": "[10.0.1, )",
-        "resolved": "10.0.1",
-        "contentHash": "49dFvGJjLSwGn76eHnP1gBvCJkL8HRYpCrG0DCvsP6wRpEQRLN2Fq8rTxbP+6jS7jmYKCnSVO5C65v4mT3rzeA=="
       },
       "xunit.v3.extensibility.core": {
         "type": "CentralTransitive",
