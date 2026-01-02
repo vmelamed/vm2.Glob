@@ -1,7 +1,7 @@
 ﻿// SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Val Melamed
 
-namespace vm2.DevOps.Glob.Api.Tests;
+namespace vm2.Glob.Api.Tests;
 
 [ExcludeFromCodeCoverage]
 public class IntegrationTestData(
@@ -74,17 +74,17 @@ public class IntegrationTestData(
 
     public void Deserialize(IXunitSerializationInfo info)
     {
-        D      = info.GetValue<string>(nameof(D)) ?? "";
-        G      = info.GetValue<string>(nameof(G)) ?? "";
-        Sd     = info.GetValue<string>(nameof(Sd)) ?? "";
-        O      = info.GetValue<Objects>(nameof(O));
-        M      = info.GetValue<MatchCasing>(nameof(M));
-        Tdf    = info.GetValue<bool>(nameof(Tdf));
-        X      = info.GetValue<bool>(nameof(X));
-        Win    = info.GetValue<bool>(nameof(Win));
-        Unix   = info.GetValue<bool>(nameof(Unix));
-        Tx     = info.GetValue<bool>(nameof(Tx));
-        R      = info.GetValue<string[]>(nameof(R)) ?? [];
+        D = info.GetValue<string>(nameof(D)) ?? "";
+        G = info.GetValue<string>(nameof(G)) ?? "";
+        Sd = info.GetValue<string>(nameof(Sd)) ?? "";
+        O = info.GetValue<Objects>(nameof(O));
+        M = info.GetValue<MatchCasing>(nameof(M));
+        Tdf = info.GetValue<bool>(nameof(Tdf));
+        X = info.GetValue<bool>(nameof(X));
+        Win = info.GetValue<bool>(nameof(Win));
+        Unix = info.GetValue<bool>(nameof(Unix));
+        Tx = info.GetValue<bool>(nameof(Tx));
+        R = info.GetValue<string[]>(nameof(R)) ?? [];
     }
 
     public void Serialize(IXunitSerializationInfo info)

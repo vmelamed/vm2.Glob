@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Val Melamed
 
-namespace vm2.DevOps.Glob.Api.Benchmarks;
+namespace vm2.Glob.Api.Benchmarks;
 
 /// <summary>
 /// Compares case-sensitive vs case-insensitive matching performance.

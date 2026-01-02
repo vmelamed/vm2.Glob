@@ -1,7 +1,7 @@
 ﻿// SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Val Melamed
 
-namespace vm2.DevOps.Glob.Api.FakeFileSystem;
+namespace vm2.Glob.Api.FakeFileSystem;
 
 /// <summary>
 /// IFileSystem implementation for FakeFS - provides in-memory file system for benchmarking baseline.
@@ -35,13 +35,13 @@ public sealed partial class FakeFS : IFileSystem
             return regex.IsMatch;
         }
 
-        var comparer =  options.MatchCasing switch
-                        {
-                            MatchCasing.CaseSensitive => StringComparer.Ordinal,
-                            MatchCasing.CaseInsensitive => StringComparer.OrdinalIgnoreCase,
-                            MatchCasing.PlatformDefault => this.Comparer,
-                            _ => throw new ArgumentOutOfRangeException(nameof(options), "Invalid MatchCasing value."),
-                        };
+        var comparer = options.MatchCasing switch
+        {
+            MatchCasing.CaseSensitive => StringComparer.Ordinal,
+            MatchCasing.CaseInsensitive => StringComparer.OrdinalIgnoreCase,
+            MatchCasing.PlatformDefault => this.Comparer,
+            _ => throw new ArgumentOutOfRangeException(nameof(options), "Invalid MatchCasing value."),
+        };
 
         return a => comparer.Compare(a, segment) == 0;
     }
@@ -105,7 +105,7 @@ public sealed partial class FakeFS : IFileSystem
             CurrentFolder.Path.AsSpan().CopyTo(buffer);
 
             // initialize the separator indices stack from the current path, without the terminating path separator
-            for (bufPos = 0; bufPos < CurrentFolder.Path.Length-1; bufPos++)
+            for (bufPos = 0; bufPos < CurrentFolder.Path.Length - 1; bufPos++)
                 if (buffer[bufPos] is SepChar)
                     separatorIndices.Push(bufPos);
 
@@ -224,7 +224,7 @@ public sealed partial class FakeFS : IFileSystem
         do
         {
             foreach (var file in folder.Files.Where(matchesPattern))
-                yield return folder.Path+file;
+                yield return folder.Path + file;
 
             if (options.RecurseSubdirectories)
                 foreach (var sub in folder.Folders)

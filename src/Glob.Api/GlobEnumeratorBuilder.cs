@@ -1,7 +1,7 @@
 ﻿// SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Val Melamed
 
-namespace vm2.DevOps.Glob.Api;
+namespace vm2.Glob.Api;
 
 /// <summary>
 /// Provides a builder for configuring and creating glob enumerators to search for files and directories using glob
@@ -11,14 +11,14 @@ namespace vm2.DevOps.Glob.Api;
 public class GlobEnumeratorBuilder
 {
     #region fields
-    string _glob                              = "*";
-    string _fromDirectory                     = ".";
-    MatchCasing _matchCasing                  = MatchCasing.PlatformDefault;
-    Objects _enumerated                       = Objects.Files;
-    bool _distinct                            = false;
-    bool _depthFirst                          = false;
-    bool _returnSpecialDirectories            = false;
-    bool _ignoreInaccessible                  = true;
+    string _glob = "*";
+    string _fromDirectory = ".";
+    MatchCasing _matchCasing = MatchCasing.PlatformDefault;
+    Objects _enumerated = Objects.Files;
+    bool _distinct = false;
+    bool _depthFirst = false;
+    bool _returnSpecialDirectories = false;
+    bool _ignoreInaccessible = true;
     FileAttributes _skipObjectsWithAttributes = FileAttributes.Hidden | FileAttributes.System;
     #endregion
 
@@ -340,15 +340,15 @@ public class GlobEnumeratorBuilder
     /// <returns>A <see cref="GlobEnumerator"/> that can be used to iterate over matching file system entries.</returns>
     public GlobEnumerator Configure(GlobEnumerator ge)
     {
-        ge.FromDirectory            = _fromDirectory;
-        ge.Enumerated               = _enumerated;
-        ge.MatchCasing              = _matchCasing;
-        ge.Distinct                 = _distinct;
-        ge.DepthFirst               = _depthFirst;
-        ge.Glob                     = _glob;
+        ge.FromDirectory = _fromDirectory;
+        ge.Enumerated = _enumerated;
+        ge.MatchCasing = _matchCasing;
+        ge.Distinct = _distinct;
+        ge.DepthFirst = _depthFirst;
+        ge.Glob = _glob;
         ge.ReturnSpecialDirectories = _returnSpecialDirectories;
-        ge.IgnoreInaccessible       = _ignoreInaccessible;
-        ge.AttributesToSkip         = _skipObjectsWithAttributes;
+        ge.IgnoreInaccessible = _ignoreInaccessible;
+        ge.AttributesToSkip = _skipObjectsWithAttributes;
 
         return ge;
     }

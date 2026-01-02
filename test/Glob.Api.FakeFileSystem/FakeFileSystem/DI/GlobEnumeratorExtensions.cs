@@ -1,7 +1,7 @@
 ﻿// SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Val Melamed
 
-namespace vm2.DevOps.Glob.Api.FakeFileSystem.DI;
+namespace vm2.Glob.Api.FakeFileSystem.DI;
 
 /// <summary>
 /// Provides extension methods for adding the GlobEnumerator to an IServiceCollection.

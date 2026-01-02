@@ -1,7 +1,7 @@
 ﻿// SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Val Melamed
 
-namespace vm2.DevOps.Glob.Api.Tests;
+namespace vm2.Glob.Api.Tests;
 
 [ExcludeFromCodeCoverage]
 public partial class GlobPropertiesTests : GlobEnumeratorUnitTests
@@ -60,7 +60,7 @@ public partial class GlobPropertiesTests : GlobEnumeratorUnitTests
         var ge = GetGlobEnumerator("FSFiles/FS2.Win.json");
 
         ge.Enumerated = Objects.Files;
-        ge.Glob       = "*/";
+        ge.Glob = "*/";
         var enumerate = ge.Enumerate;
 
         enumerate.Should().Throw<ArgumentException>();

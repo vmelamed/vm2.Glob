@@ -1,7 +1,7 @@
 ﻿// SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Val Melamed
 
-namespace vm2.DevOps.Glob.Api.FakeFileSystem;
+namespace vm2.Glob.Api.FakeFileSystem;
 
 [ExcludeFromCodeCoverage]
 public sealed partial class FakeFS
@@ -81,10 +81,11 @@ public sealed partial class FakeFS
             if (si < 0 || si + 1 >= fileName.Length)
                 return DataType.Default;
 
-            suffix = fileName[(si+1)..];
+            suffix = fileName[(si + 1)..];
         }
 
-        return suffix.ToString().ToLower(CultureInfo.InvariantCulture) switch {
+        return suffix.ToString().ToLower(CultureInfo.InvariantCulture) switch
+        {
             "json" => DataType.Json,
             "txt" => DataType.Text,
             _ => DataType.Default,
@@ -102,7 +103,8 @@ public sealed partial class FakeFS
         while (!string.IsNullOrWhiteSpace(firstLine) &&
                (firstLine.StartsWith('#') || firstLine.StartsWith("//")));
 
-        return firstLine switch {
+        return firstLine switch
+        {
             not null when firstLine.StartsWith('{') => DataType.Json,           // a JSON object {...}
             not null when FileSystemRoot().IsMatch(firstLine) => DataType.Text, // a path line: C:\... or /...
             _ => DataType.Default,

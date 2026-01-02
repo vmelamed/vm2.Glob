@@ -1,7 +1,7 @@
 ﻿// SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Val Melamed
 
-namespace vm2.DevOps.Glob.Api;
+namespace vm2.Glob.Api;
 
 /// <summary>
 /// Represents a pattern pattern searcher.
@@ -9,17 +9,18 @@ namespace vm2.DevOps.Glob.Api;
 public sealed partial class GlobEnumerator
 {
     #region Fields and private properties
-    RegexOptions _regexOptions  = RegexOptions.IgnorePatternWhitespace
+    RegexOptions _regexOptions = RegexOptions.IgnorePatternWhitespace
                                 | RegexOptions.ExplicitCapture
                                 | (OperatingSystem.RegexOptions);
 
-    EnumerationOptions _options = new() {
-        MatchCasing              = MatchCasing.PlatformDefault, // see also _matchCasing property
-        RecurseSubdirectories    = false,                       // we control it ourselves
-        MatchType                = MatchType.Simple,            // don't touch it - this is bs
+    EnumerationOptions _options = new()
+    {
+        MatchCasing = MatchCasing.PlatformDefault, // see also _matchCasing property
+        RecurseSubdirectories = false,                       // we control it ourselves
+        MatchType = MatchType.Simple,            // don't touch it - this is bs
         ReturnSpecialDirectories = false,
-        IgnoreInaccessible       = true,
-        AttributesToSkip         = FileAttributes.Hidden | FileAttributes.System,
+        IgnoreInaccessible = true,
+        AttributesToSkip = FileAttributes.Hidden | FileAttributes.System,
     };
 
     ILogger<GlobEnumerator>? _logger;
@@ -104,15 +105,15 @@ public sealed partial class GlobEnumerator
                         goto case MatchCasing.CaseSensitive;
 
                 case MatchCasing.CaseSensitive:
-                    _regexOptions    &= ~RegexOptions.IgnoreCase;
-                    StringComparison  = StringComparison.Ordinal;
-                    StringComparer    = StringComparer.Ordinal;
+                    _regexOptions &= ~RegexOptions.IgnoreCase;
+                    StringComparison = StringComparison.Ordinal;
+                    StringComparer = StringComparer.Ordinal;
                     break;
 
                 case MatchCasing.CaseInsensitive:
-                    _regexOptions    |= RegexOptions.IgnoreCase;
-                    StringComparison  = StringComparison.OrdinalIgnoreCase;
-                    StringComparer    = StringComparer.OrdinalIgnoreCase;
+                    _regexOptions |= RegexOptions.IgnoreCase;
+                    StringComparison = StringComparison.OrdinalIgnoreCase;
+                    StringComparer = StringComparer.OrdinalIgnoreCase;
                     break;
 
                 default:
@@ -170,9 +171,9 @@ public sealed partial class GlobEnumerator
     /// </summary>
     public GlobEnumerator(IFileSystem? fileSystem = null, ILogger<GlobEnumerator>? logger = null)
     {
-        _fileSystem    = fileSystem ?? new FileSystem();
-        _logger        = logger;
-        MatchCasing    = MatchCasing.PlatformDefault;
+        _fileSystem = fileSystem ?? new FileSystem();
+        _logger = logger;
+        MatchCasing = MatchCasing.PlatformDefault;
         FileSystemRoot = _fileSystem.FileSystemRootRegex();
         IgnoreInaccessible = true;
         AttributesToSkip = FileAttributes.Hidden | FileAttributes.System;
@@ -217,10 +218,10 @@ public sealed partial class GlobEnumerator
     // After the normalization, the glob pattern has this shape: <glob.comp.1st>/<glob.comp.2nd>/.../<glob.comp.last>
     // the respective ranges are like this:                      ^--range 1-----^^--range 2-----^^...^--range last---^
 
-    int EndOfFirstComponent() => _glob.IndexOf(SepChar) is int nextEnd && nextEnd is >=0
+    int EndOfFirstComponent() => _glob.IndexOf(SepChar) is int nextEnd && nextEnd is >= 0
                                                 ? nextEnd : _glob.Length;
 
-    int EndOfNextComponent(Range range) => _glob.IndexOf(SepChar, range.End.Value+1) is int nextEnd && nextEnd is >=0
+    int EndOfNextComponent(Range range) => _glob.IndexOf(SepChar, range.End.Value + 1) is int nextEnd && nextEnd is >= 0
                                                 ? nextEnd : _glob.Length;
 
     // first pattern globComponent always starts at 0 and ends at the first SepChar, or at the end of the pattern
@@ -230,7 +231,7 @@ public sealed partial class GlobEnumerator
     // the nextEnd is at the next SepChar after the current range, or at the end of the pattern:
     Range NextComponent(Range range) => IsLastComponent(range)
                                             ? _glob.Length.._glob.Length // no next globComponent
-                                            : (range.End.Value+1)..EndOfNextComponent(range);
+                                            : (range.End.Value + 1)..EndOfNextComponent(range);
 
     IEnumerable<string> Traverse()
     {
@@ -251,8 +252,8 @@ public sealed partial class GlobEnumerator
         {
             var (dir, componentRange, recursively) = p;
 
-            var isLast           = IsLastComponent(componentRange);
-            var component        = _glob[componentRange];
+            var isLast = IsLastComponent(componentRange);
+            var component = _glob[componentRange];
             var (pattern, regex) = ComponentToPatternRegex(component);  // globComponent -> pattern (for .NET) and
                                                                         // regex to filter the names of the objects in dir
             if (_logger?.IsEnabled(LogLevel.Trace) is true)
@@ -395,7 +396,7 @@ public sealed partial class GlobEnumerator
 
         var lastSep = span.LastIndexOf(SepChar);
 
-        return lastSep is >= 0 ? span[(lastSep+1)..] : span;
+        return lastSep is >= 0 ? span[(lastSep + 1)..] : span;
     }
     #endregion
 }

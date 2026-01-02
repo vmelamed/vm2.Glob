@@ -1,4 +1,4 @@
-name: ClearCache.yaml - manual clear of all NuGet caches (Emergency Use!)
+name: ClearCache.yaml - manually trigger clearing of all NuGet caches (For Emergency Use Only!)
 
 on:
   workflow_dispatch:
@@ -23,7 +23,7 @@ permissions:
 jobs:
   call_ci:
     name: Call the CI Workflow
-    uses: ./.github/workflows/_clear_cache.yaml
+    uses: vmelamed/vm2.DevOps/.github/workflows/_clear_cache.yaml@main
     with:
       reason: ${{ inputs.reason }}
       cache-pattern: ${{ inputs.cache-pattern }}

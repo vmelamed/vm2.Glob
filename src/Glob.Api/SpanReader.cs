@@ -1,7 +1,7 @@
 ﻿// SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Val Melamed
 
-namespace vm2.DevOps.Glob.Api;
+namespace vm2.Glob.Api;
 
 /// <summary>
 /// Provides a utility for sequentially reading characters or slices of characters from a <see cref="ReadOnlySpan{T}"/>
@@ -53,7 +53,7 @@ public ref struct SpanReader
         if (size > Remaining)
             throw new ArgumentOutOfRangeException(nameof(size), "Not enough characters in span");
 
-        var s = _chars[Position..(Position+size)];
+        var s = _chars[Position..(Position + size)];
 
         Position += size;
         return s;
@@ -103,7 +103,7 @@ public ref struct SpanReader
         if (size > Remaining)
             throw new ArgumentOutOfRangeException(nameof(size), "Not enough characters in span");
 
-        return _chars[Position..(Position+size)];
+        return _chars[Position..(Position + size)];
     }
 
     /// <summary>

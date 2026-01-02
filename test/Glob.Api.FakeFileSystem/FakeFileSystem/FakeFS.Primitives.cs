@@ -1,7 +1,7 @@
 ﻿// SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Val Melamed
 
-namespace vm2.DevOps.Glob.Api.FakeFileSystem;
+namespace vm2.Glob.Api.FakeFileSystem;
 
 /// <summary>
 /// Fake file system loaded from a JSON representation.
@@ -112,7 +112,7 @@ public sealed partial class FakeFS
             if (path[j] is SepChar)
             {
                 yield return new Range(i, j);           // "abc", "def", etc.
-                i = j+1 < path.Length ? j+1 : j;
+                i = j + 1 < path.Length ? j + 1 : j;
             }
 
         if (i < j)

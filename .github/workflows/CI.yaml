@@ -1,31 +1,31 @@
-name: "CI: Build, Test, Benchmarks"
+name: "CI: Build, Run Tests, Run Benchmarks"
 
 on:
   push:
     branches:
-      - "**" # trigger on push for all branches
+      - "**" # trigger on push for all branches or...
 
   pull_request:
     branches:
-      - "**" # trigger on PR for all branches
+      - "**" # ...on PR for all branches.
 
   workflow_dispatch:
     inputs:
       os:
-        description: "Runner OS (for multiple OS-es separate by comma, e.g. ubuntu-latest,windows-latest)"
+        description: Runner OS (or multiple OS-es separate by comma, e.g. 'ubuntu-latest,windows-latest')
         type: string
-        default: "ubuntu-latest"
+        default: ubuntu-latest
         # There is a known GitHub actions issue: the workflow dispatch UI doesn't properly handle JSON strings with quotes.
         # E.g. for the input '["ubuntu-latest"]', the UI removes the inner quotes and it becomes the invalid JSON: '[ubuntu-latest]'.
 
       preprocessor-symbols:
-        description: Define constants to pass to the compiler
+        description: Define semicolon-separated preprocessor symbols to pass to the compiler
         type: string
         default: SHORT_RUN
+        # Enables benchmarks short run mode for faster execution, but less precise results, acceptable for CI runs.
 
 env:
-  BUILD_PROJECTS: >-
-    [""]
+  BUILD_PROJECTS: ""
   TEST_PROJECTS: >-
     [
     "./test/Glob.Api.FakeFileSystem.Tests/Glob.Api.FakeFileSystem.Tests.csproj",
@@ -35,20 +35,17 @@ env:
     [
     "./benchmarks/Glob.Api.Benchmarks/Glob.Api.Benchmarks.csproj"
     ]
+  PREPROCESSOR_SYMBOLS: "SHORT_RUN"
   OS: >-
-    ["ubuntu-latest"]
-  PREPROCESSOR_SYMBOLS: ""
+    [
+    "ubuntu-latest"
+    ]
 
 jobs:
   get-params:
     name: Prepare the default and passed in parameters
-    runs-on: ubuntu-latest # here it doesn't matter - we're preparing the inputs for the next workload'
-    if: >
-      ${{
-      github.event_name == 'pull_request' ||
-      github.event_name == 'workflow_dispatch' ||
-      github.event_name == 'push' && !contains(github.event.head_commit.message, '[skip ci]')
-      }}
+    runs-on: ubuntu-latest # in this workflow the runner doesn't matter - we're just preparing the inputs for the next workload(s).
+    if: ${{ github.event_name != 'push' || !contains(github.event.head_commit.message, '[skip ci]') }}
     env:
       dotnet_version: ${{ vars.DOTNET_VERSION }}
       configuration: ${{ vars.CONFIGURATION }}
@@ -70,23 +67,28 @@ jobs:
         shell: bash
         run: |
           # the following outputs are invariant - no matter how we trigger the workflow, they stay the same as specified in env:
-          build_projects=${{ env.BUILD_PROJECTS }}
-          test_projects=${{ env.TEST_PROJECTS }}
-          benchmark_projects=${{ env.BENCHMARK_PROJECTS }}
+          build_projects='${{ env.BUILD_PROJECTS }}'
+          test_projects='${{ env.TEST_PROJECTS }}'
+          benchmark_projects='${{ env.BENCHMARK_PROJECTS }}'
+          dotnet_version='${{ env.dotnet_version }}'
+          configuration='${{ env.configuration }}'
+          min_coverage_pct='${{ env.min_coverage_pct }}'
+          max_regression_pct='${{ env.max_regression_pct }}'
 
-          if [ "${{ github.event_name }}" == "push" ]; then
-              # Set the default values for push events - add SHORT_RUN to preprocessor symbols for faster benchmark tests (less precise)
-              os=${{ env.OS }}
-              preprocessor_symbols="${{ env.PREPROCESSOR_SYMBOLS }};SHORT_RUN"
-          elif [ "${{ github.event_name }}" == "pull_request" ]; then
-              # Set the default values for push and pull_request events
-              os=${{ env.OS }}
-              preprocessor_symbols=${{ env.PREPROCESSOR_SYMBOLS }}
-          elif [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-              # Get the values from the inputs of workflow_dispatch event (the UI)
-              # Convert comma-separated runner's OS values to JSON array
+          if [ '${{ github.event_name }}' == "push" ]; then
+              # Set the values for push events, and add SHORT_RUN to preprocessor_symbols for faster benchmark tests (less precise, yet acceptable for CI runs).
+              os='${{ env.OS }}'
+              preprocessor_symbols='SHORT_RUN;${{ env.PREPROCESSOR_SYMBOLS }}' # *CP* Adjust as needed.
+          elif [ '${{ github.event_name }}' == "pull_request" ]; then
+              # Set the values for pull_request events
+              os='${{ env.OS }}'
+              preprocessor_symbols='${{ env.PREPROCESSOR_SYMBOLS }}'
+          elif [ '${{ github.event_name }}' == "workflow_dispatch" ]; then
+              # Get the values from the UI inputs of workflow_dispatch event. Convert comma-separated runner's OS values to JSON array
+              # There is a known GitHub actions issue: the workflow dispatch UI doesn't properly handle JSON strings with quotes.
+              # E.g. for the input '["ubuntu-latest"]', the UI removes the inner quotes and it becomes the invalid JSON: '[ubuntu-latest]'.
               os=$(echo "${{ inputs.os }}" | jq -Rc 'split(",") | map(select(length > 0) | gsub("^\\s+|\\s+$";""))')
-              preprocessor_symbols="${{ inputs.preprocessor-symbols }}"
+              preprocessor_symbols='${{ inputs.preprocessor-symbols }}'
           else
               echo "Unsupported event: ${{ github.event_name }}"
               exit 5
@@ -98,9 +100,9 @@ jobs:
             echo "test-projects=${test_projects}"
             echo "benchmark-projects=${benchmark_projects}"
             echo "os=${os}"
+            echo "preprocessor-symbols=${preprocessor_symbols}"
             echo "dotnet-version=${dotnet_version}"
             echo "configuration=${configuration}"
-            echo "preprocessor-symbols=${preprocessor_symbols}"
             echo "min-coverage-pct=${min_coverage_pct}"
             echo "max-regression-pct=${max_regression_pct}"
           }  >> $GITHUB_OUTPUT
@@ -114,8 +116,8 @@ jobs:
       BENCHER_API_TOKEN: ${{ secrets.BENCHER_API_TOKEN }}
     permissions:
       contents: read
-      pull-requests: write # Required to comment on PRs
-      checks: write # Required to create GitHub Checks
+      pull-requests: write
+      checks: write
     with:
       os: ${{ needs.get-params.outputs.os }}
       dotnet-version: ${{ needs.get-params.outputs.dotnet-version }}

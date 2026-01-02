@@ -1,7 +1,7 @@
 ﻿// SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Val Melamed
 
-namespace vm2.DevOps.Glob.Api;
+namespace vm2.Glob.Api;
 
 /// <summary>
 /// Provides extension methods for the <see cref="IFileSystem"/> interface.
@@ -26,7 +26,7 @@ public static class IFileSystemExtensions
         /// <summary>
         /// A regular expression pattern that matches a sequence of valid file system name characters.
         /// </summary>
-        public string NameSequence => fs.NameCharacter+"*";
+        public string NameSequence => fs.NameCharacter + "*";
 
         /// <summary>
         /// Gets the default string comparer to use for platform-dependent string operations.

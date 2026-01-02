@@ -1,7 +1,7 @@
 ﻿// SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Val Melamed
 
-namespace vm2.DevOps.Glob.Api;
+namespace vm2.Glob.Api;
 
 /// <summary>
 /// Represents a glob _glob searcher.
@@ -18,7 +18,7 @@ public sealed partial class GlobEnumerator
     /// <param name="span">The span of characters to escape.</param>
     static ReadOnlySpan<char> RegexEscape(ReadOnlySpan<char> span)
     {
-        var writer = new SpanWriter(stackalloc char[2*span.Length]);
+        var writer = new SpanWriter(stackalloc char[2 * span.Length]);
 
         foreach (var ch in span)
         {
@@ -47,13 +47,13 @@ public sealed partial class GlobEnumerator
         {
             // then ignore _fromDirectory and the current directory and start from the root of the file system
             fromDir = m.Value;
-            start   = m.Length; // skip the root part in the GlobRegex - it is reflected in fromDir
+            start = m.Length; // skip the root part in the GlobRegex - it is reflected in fromDir
         }
         else
         {
             // get the full path of FromDirectory relative to the current dir
             fromDir = _fileSystem.GetFullPath(FromDirectory is "" ? CurrentDir : FromDirectory);
-            start   = 0;        // start from the beginning
+            start = 0;        // start from the beginning
         }
         var end = Glob.EndsWith(SepChar) ? Glob.Length - 1 : Glob.Length;  // ignore a trailing separator
 
@@ -93,7 +93,8 @@ public sealed partial class GlobEnumerator
     (string pattern, string regex) ComponentToPatternRegex(string glob)
     {
         // shortcut the easy cases
-        var pr = glob switch {
+        var pr = glob switch
+        {
             "" => (SequenceWildcard, _fileSystem.NameSequence),     // "*", ".*"
             SequenceWildcard => (glob, _fileSystem.NameSequence),   // "*", ".*"
             CharacterWildcard => (glob, _fileSystem.NameCharacter), // "?", "."
@@ -124,9 +125,9 @@ public sealed partial class GlobEnumerator
         // span to go through the glob
         var globReader = new SpanReader(glob.AsSpan());
         // escape the non-matches and translate the matches to regex equivalents
-        var rexWriter = new SpanWriter(stackalloc char[32*glob.Length]);
+        var rexWriter = new SpanWriter(stackalloc char[32 * glob.Length]);
         // copy the non-matches and translate the matches to file system _glob equivalents - * and ?
-        var patWriter = new SpanWriter(stackalloc char[32*glob.Length]);
+        var patWriter = new SpanWriter(stackalloc char[32 * glob.Length]);
 
         // replace all wildcards with '*'
         foreach (Match match in matches)
@@ -134,7 +135,7 @@ public sealed partial class GlobEnumerator
             // the non-match is from the current position to the start of the match - escape and copy the next non-match
             if (match.Index > globReader.Position)
             {
-                var nonMatch = globReader.Read(match.Index-globReader.Position);
+                var nonMatch = globReader.Read(match.Index - globReader.Position);
 
                 rexWriter.Write(RegexEscape(nonMatch));
                 patWriter.Write(nonMatch);
@@ -176,17 +177,18 @@ public sealed partial class GlobEnumerator
             .Groups
             .Values
             .FirstOrDefault(
-                g => !string.IsNullOrWhiteSpace(g.Name) && !char.IsDigit(g.Name[0]) && !string.IsNullOrWhiteSpace(g.Value)) switch {
-                      { Name: CharWildcardGr } question => (CharacterWildcard, _fileSystem.NameCharacter),
-                      { Name: SeqWildcardGr } asterisk => (SequenceWildcard, _fileSystem.NameSequence),     // no need to filter the results
-                      { Name: ClassGr } chrClass => (CharacterWildcard, $"[{TransformClass(chrClass.Value)}]"),
-                    _ => throw new ArgumentException("Invalid glob _glob match.", nameof(match)),
-                };
+                g => !string.IsNullOrWhiteSpace(g.Name) && !char.IsDigit(g.Name[0]) && !string.IsNullOrWhiteSpace(g.Value)) switch
+        {
+            { Name: CharWildcardGr } question => (CharacterWildcard, _fileSystem.NameCharacter),
+            { Name: SeqWildcardGr } asterisk => (SequenceWildcard, _fileSystem.NameSequence),     // no need to filter the results
+            { Name: ClassGr } chrClass => (CharacterWildcard, $"[{TransformClass(chrClass.Value)}]"),
+            _ => throw new ArgumentException("Invalid glob _glob match.", nameof(match)),
+        };
 
     static ReadOnlySpan<char> TransformClass(string globClass)
     {
         var globReader = new SpanReader(globClass);
-        var globWriter = new SpanWriter(new Memory<char>(new char[32*globClass.Length]).Span);
+        var globWriter = new SpanWriter(new Memory<char>(new char[32 * globClass.Length]).Span);
 
         // the first char(s) can be '!' or ']' or '!]' that need special handling
         if (globReader.Peek() is '!')
@@ -214,7 +216,7 @@ public sealed partial class GlobEnumerator
         {
             // the non-match is from the current position to the start of the match - escape and copy the next non-match
             if (match.Index > globReader.Position)
-                globWriter.Write(RegexEscape(globReader.Read(match.Index-globReader.Position)));
+                globWriter.Write(RegexEscape(globReader.Read(match.Index - globReader.Position)));
 
             _ = globReader.Read(match.Length);  // consume the match
 
@@ -235,17 +237,17 @@ public sealed partial class GlobEnumerator
         FrozenDictionary.ToFrozenDictionary(
             new Dictionary<string, string>()
             {
-                ["alnum"]  = @"\p{L}\p{Nd}\p{Nl}",
-                ["alpha"]  = @"\p{L}\p{Nl}",
-                ["blank"]  = @"\p{Zs}\t",
-                ["cntrl"]  = @"\p{Cc}",
-                ["digit"]  = @"\d",
-                ["graph"]  = @"\p{L}\p{M}\p{N}\p{P}\p{S}",
-                ["lower"]  = @"\p{Ll}\p{Lt}\p{Nl}",
-                ["print"]  = @"\p{S}\p{N}\p{Zs}\p{M}\p{L}\p{P}",
-                ["punct"]  = @"\p{P}$+<=>^`|~",
-                ["space"]  = @"\s",
-                ["upper"]  = @"\p{Lu}\p{Lt}\p{Nl}",
+                ["alnum"] = @"\p{L}\p{Nd}\p{Nl}",
+                ["alpha"] = @"\p{L}\p{Nl}",
+                ["blank"] = @"\p{Zs}\t",
+                ["cntrl"] = @"\p{Cc}",
+                ["digit"] = @"\d",
+                ["graph"] = @"\p{L}\p{M}\p{N}\p{P}\p{S}",
+                ["lower"] = @"\p{Ll}\p{Lt}\p{Nl}",
+                ["print"] = @"\p{S}\p{N}\p{Zs}\p{M}\p{L}\p{P}",
+                ["punct"] = @"\p{P}$+<=>^`|~",
+                ["space"] = @"\s",
+                ["upper"] = @"\p{Lu}\p{Lt}\p{Nl}",
                 ["xdigit"] = @"0-9A-Fa-f",
             });
 }

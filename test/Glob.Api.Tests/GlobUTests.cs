@@ -1,7 +1,7 @@
 ﻿// SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Val Melamed
 
-namespace vm2.DevOps.Glob.Api.Tests;
+namespace vm2.Glob.Api.Tests;
 
 [ExcludeFromCodeCoverage]
 public abstract partial class GlobEnumeratorUnitTests : IClassFixture<GlobUnitTestsFixture>
@@ -12,7 +12,7 @@ public abstract partial class GlobEnumeratorUnitTests : IClassFixture<GlobUnitTe
         GlobUnitTestsFixture fixture,
         ITestOutputHelper output)
     {
-        Output  = output;
+        Output = output;
         Fixture = fixture;
 
         _host = Fixture.BuildHost(output);

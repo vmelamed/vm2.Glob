@@ -1,7 +1,7 @@
 ﻿// SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Val Melamed
 
-namespace vm2.DevOps.Glob.Api.FakeFileSystem;
+namespace vm2.Glob.Api.FakeFileSystem;
 
 /// <summary>
 /// This class implements the interface <see cref="IFileSystem"/> used by <see cref="GlobEnumerator"/> but instead of real
@@ -20,11 +20,11 @@ namespace vm2.DevOps.Glob.Api.FakeFileSystem;
 public sealed partial class FakeFS
 {
     #region constants
-    const string Wildcards     = "*?";  // TODO: add [], {}, etc. advanced features
-    const string Globstar      = "**";
+    const string Wildcards = "*?";  // TODO: add [], {}, etc. advanced features
+    const string Globstar = "**";
 
-    const int WinDriveLength   = 2;     // e.g. "C:"
-    const int WinRootLength    = 3;     // e.g. "C:/"
+    const int WinDriveLength = 2;     // e.g. "C:"
+    const int WinRootLength = 3;     // e.g. "C:/"
     #endregion
 
     #region Properties
@@ -60,7 +60,8 @@ public sealed partial class FakeFS
         string text;
 
         (dataType, text) = GetFileSystemData(fileName, dataType);
-        _ = dataType switch {
+        _ = dataType switch
+        {
             DataType.Json => FromJson(text),
             DataType.Text => FromText(text),
             _ => throw new NotSupportedException("The data type must be either Json or Text."),
@@ -110,9 +111,9 @@ public sealed partial class FakeFS
     {
         ValidatePath(path);
 
-        var nPath      = NormalizePath(path).ToString();
+        var nPath = NormalizePath(path).ToString();
         var enumerator = EnumeratePathRanges(nPath).GetEnumerator();
-        var folder     = CurrentFolder;
+        var folder = CurrentFolder;
 
         if (!enumerator.MoveNext())
             return new PathAndFile(folder);

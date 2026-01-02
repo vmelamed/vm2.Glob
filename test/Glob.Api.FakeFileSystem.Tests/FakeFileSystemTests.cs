@@ -1,7 +1,7 @@
 ﻿// SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Val Melamed
 
-namespace vm2.DevOps.Glob.Api.FakeFileSystem.Tests;
+namespace vm2.Glob.Api.FakeFileSystem.Tests;
 
 public partial class FakeFileSystemTests
 {
