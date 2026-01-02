@@ -91,8 +91,9 @@ jobs:
       contents: write
       packages: write
     secrets:
-      NUGET_API_KEY: ${{ secrets.NUGET_API_GITHUB_KEY }}  # CP. The API key to use for publishing to the NuGet server (GitHub Package, NuGet.org, etc.).
-                                                          # Make sure it corresponds to the 'env.NUGET_SERVER' above
+      NUGET_API_KEY:
+        ${{ secrets.NUGET_API_GITHUB_KEY }} # CP. The API key to use for publishing to the NuGet server (GitHub Package, NuGet.org, etc.).
+        # Make sure it corresponds to the 'env.NUGET_SERVER' above
     with:
       package-projects: ${{ needs.get-params.outputs.package-projects }}
       dotnet-version: ${{ vars.DOTNET_VERSION }}
@@ -100,4 +101,4 @@ jobs:
       force-publish: ${{ fromJSON(needs.get-params.outputs.force-publish) }}
       reason: ${{ inputs.reason || '' }}
       nuget-server: ${{ needs.get-params.outputs.nuget-server }}
-      save_package_artifacts: true
+      save-package-artifacts: true
