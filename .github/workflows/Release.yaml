@@ -86,4 +86,4 @@ jobs:
       dotnet-version: ${{ vars.DOTNET_VERSION }}
       force-publish: ${{ fromJSON(needs.get-params.outputs.force-publish) }}
       nuget-server: ${{ needs.get-params.outputs.nuget-server }}
-      save_package_artifacts: true
+      save-package-artifacts: true
