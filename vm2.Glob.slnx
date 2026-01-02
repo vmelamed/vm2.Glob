@@ -3,7 +3,13 @@
         <File Path=".github/dependabot.yml" />
     </Folder>
     <Folder Name="/.github/workflows/">
-        <File Path=".github/workflows/Glob.CI.yaml" />
+        <File Path=".github/workflows/CI.yaml" />
+        <File Path=".github/workflows/ClearCache.yaml" />
+        <File Path=".github/workflows/Prerelease.yaml" />
+        <File Path=".github/workflows/Release.yaml" />
+    </Folder>
+    <Folder Name="/Scripts/">
+        <File Path="scripts/restore-locked.sh" />
     </Folder>
     <Folder Name="/Solution Items/">
         <File Path=".editorconfig" />
