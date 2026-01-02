@@ -1,10 +1,10 @@
-﻿# vm2.DevOps.Glob - Cross-Platform Glob Pattern Matching Tool
+﻿# vm2.Glob - Cross-Platform Glob Pattern Matching Tool
 
 A fast, intuitive CLI tool for finding files and directories using glob patterns.
 
 ## Installation
 
-    dotnet tool install -g vm2.DevOps.Glob
+    dotnet tool install -g vm2.Glob
 
 ## Quick Start
 
@@ -265,13 +265,13 @@ The tool expands environment variables before pattern matching:
 
 ## Library Integration
 
-This tool is built on the `vm2.DevOps.Glob.Api` library. For programmatic access in .NET applications:
+This tool is built on the `vm2.Glob.Api` library. For programmatic access in .NET applications:
 
-    dotnet add package vm2.DevOps.Glob.Api
+    dotnet add package vm2.Glob.Api
 
 Example usage:
 
-    using vm2.DevOps.Glob.Api;
+    using vm2.Glob.Api;
 
     var enumerator = new GlobEnumerator();
     enumerator.Glob = "**/*.cs";

@@ -7,7 +7,7 @@ global using BenchmarkDotNet.Reports;
 global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.DependencyInjection;
 
-global using vm2.DevOps.Glob.Api;
-global using vm2.DevOps.Glob.Api.Benchmarks.Options;
-global using vm2.DevOps.Glob.Api.DI;
-global using vm2.DevOps.Glob.Api.FakeFileSystem;
+global using vm2.Glob.Api;
+global using vm2.Glob.Api.Benchmarks.Options;
+global using vm2.Glob.Api.DI;
+global using vm2.Glob.Api.FakeFileSystem;

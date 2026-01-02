@@ -1,7 +1,7 @@
 ﻿// SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Val Melamed
 
-namespace vm2.DevOps.Glob.Api;
+namespace vm2.Glob.Api;
 
 /// <summary>
 /// A double-ended queue (deque) that can operate as a stack (LIFO) or a queue (FIFO).
@@ -18,7 +18,7 @@ public class Deque<T> : IEnumerable<T>
     /// <param name="capacity"></param>
     public Deque(bool isStack = false, int capacity = 0)
     {
-        _sequence = capacity is >0 ? new(capacity) : new();
+        _sequence = capacity is > 0 ? new(capacity) : new();
         IsStack = isStack;
     }
 
@@ -68,7 +68,7 @@ public class Deque<T> : IEnumerable<T>
             return false;
         }
 
-        var index = IsStack ? _sequence.Count-1 : 0;
+        var index = IsStack ? _sequence.Count - 1 : 0;
 
         element = _sequence[index];
         _sequence.RemoveAt(index);

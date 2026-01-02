@@ -44,6 +44,7 @@
         <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
         <RestoreLockedMode Condition="'$(CI)' == 'true'">true</RestoreLockedMode>
         <ContinuousIntegrationBuild Condition="'$(CI)' == 'true'">true</ContinuousIntegrationBuild>
+        <MinVerTagPrefix>v</MinVerTagPrefix>
     </PropertyGroup>
 
     <!-- ================ Package properties for all vm2 packages ================ -->
@@ -62,11 +63,14 @@
         <EnablePackageValidation>true</EnablePackageValidation>
         <EmbedAllSources>true</EmbedAllSources>
         <EmbedUntrackedSources>true</EmbedUntrackedSources>
-        <MinVerTagPrefix>v</MinVerTagPrefix>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
     </PropertyGroup>
 
     <!-- ================ Common Package References for All projects ================ -->
+    <PropertyGroup>
+        <RestoreSources>https://api.nuget.org/v3/index.json;https://nuget.pkg.github.com/vmelamed/index.json</RestoreSources>
+    </PropertyGroup>
+
     <ItemGroup>
         <PackageReference Include="System.Configuration.ConfigurationManager" />
         <PackageReference Include="Microsoft.Extensions.Configuration.Binder" />
@@ -102,7 +106,7 @@
         <IncludeSymbols>False</IncludeSymbols>
         <GenerateDocumentationFile>false</GenerateDocumentationFile>
         <NoWarn>$(NoWarn);CA1701;CA1702;CA1707;CA1806;CA2211;CS0618;CS1572;CS1573;CS1574;CS1591;CS1711;IDE0021;IDE0022;IDE0039;IDE0065;IDE1006;IDE2000;IDE2002;IDE0058;IDE0290</NoWarn>
-        <!-- test.runsettings is assumed to be in the directory with the solution and the test project is at <solution dir>/test/<Xyz.Tests>/Xyz.Tests.csproj -->
+        <!-- test.runsettings is assumed to be in the directory with the test project and it is supposed to be at <solution dir>/test/<Xyz.Tests>/Xyz.Tests.csproj -->
         <RunSettingsFilePath>$(MSBuildProjectDirectory)\..\..\test.runsettings</RunSettingsFilePath>
         <!-- Enable code coverage collection with Microsoft.Testing.Extensions.CodeCoverage ADD MTP Code Coverage settings: -->
         <EnableCodeCoverage>true</EnableCodeCoverage>
@@ -180,6 +184,7 @@
         <IncludeSymbols>False</IncludeSymbols>
         <GenerateDocumentationFile>false</GenerateDocumentationFile>
         <NoWarn>$(NoWarn);CA1701;CA1702;CA1707;CA1806;CA2211;CS0618;CS1572;CS1573;CS1574;CS1591;CS1711;IDE0021;IDE0022;IDE0039;IDE0065;IDE1006;IDE2000;IDE2002;IDE0058;IDE0290</NoWarn>
+        <TieredPGO>false</TieredPGO>
         <!-- To show up in the VS test explorer, see also below in the package references:
         <RestorePackagesWithLockFile Condition="$(BuildingInsideVisualStudio) == 'true')">false</RestorePackagesWithLockFile>
         -->

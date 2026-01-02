@@ -1,7 +1,7 @@
 ﻿// SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Val Melamed
 
-namespace vm2.DevOps.Glob.Api;
+namespace vm2.Glob.Api;
 
 /// <summary>
 /// Validation regular expressions for pathnames.
@@ -38,7 +38,7 @@ public static partial class GlobConstants
     /// <summary>
     /// Represents a string used to denote an arbitrary sequence in a glob.
     /// </summary>
-    public const string SequenceWildcard  = "*";
+    public const string SequenceWildcard = "*";
 
     /// <summary>
     /// Represents a wildcard for any single character in a dirPath.
@@ -237,7 +237,7 @@ public static partial class GlobConstants
         $
         """;
 
-    const RegexOptions winOptions  = unixOptions | RegexOptions.IgnoreCase;
+    const RegexOptions winOptions = unixOptions | RegexOptions.IgnoreCase;
 
     /// <summary>
     /// Gets a <see cref="Regex"/> object for validating Windows pathnames.
@@ -365,6 +365,6 @@ public static partial class GlobConstants
     /// <summary>
     /// An array of characters that have special meaning in regular expressions and may need to be escaped.
     /// </summary>
-    public static readonly char[] RegexChars = [ '.', '^', '$', '+', '(', ')', '[', ']', '{', '}', '|', '\\' ];
+    public static readonly char[] RegexChars = ['.', '^', '$', '+', '(', ')', '[', ']', '{', '}', '|', '\\'];
     #endregion
 }

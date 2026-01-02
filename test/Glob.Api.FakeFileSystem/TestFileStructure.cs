@@ -1,7 +1,7 @@
 ﻿// SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Val Melamed
 
-namespace vm2.DevOps.Glob.Api.FakeFileSystem;
+namespace vm2.Glob.Api.FakeFileSystem;
 
 /// <summary>
 /// Provides methods to create and verify test file structures based on JSON specifications. Also includes utility method for

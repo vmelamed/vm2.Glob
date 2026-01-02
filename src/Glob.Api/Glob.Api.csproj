@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <RootNamespace>vm2.DevOps.Glob.Api</RootNamespace>
+        <RootNamespace>vm2.Glob.Api</RootNamespace>
 
         <!-- NuGet Package Metadata -->
         <PackageId>vm2.Glob.Api</PackageId>
@@ -10,8 +10,7 @@
         A fast, cross-platform glob pattern matching API for finding files and directories. Implements POSIX.2 glob specification.
         </Description>
         <PackageTags>glob;pattern;matching;api;cross-platform;file-search;directory-search</PackageTags>
-        <PackageProjectUrl>https://github.com/vmelamed/vm2.DevOps</PackageProjectUrl>
-        <RepositoryUrl>https://github.com/vmelamed/vm2.DevOps</RepositoryUrl>
+        <PackageProjectUrl>https://github.com/vmelamed/vm2.Glob/blob/main/src/Glob.Api</PackageProjectUrl>
         <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 

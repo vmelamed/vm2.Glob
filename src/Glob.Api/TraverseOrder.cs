@@ -1,4 +1,4 @@
-﻿namespace vm2.DevOps.Glob.Api;
+﻿namespace vm2.Glob.Api;
 
 /// <summary>
 /// Specifies the order in which directories are traversed during glob enumeration.

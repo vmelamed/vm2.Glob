@@ -1,9 +1,9 @@
 ﻿// SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Val Melamed
 
-namespace vm2.DevOps.Glob.Api.Tests;
+namespace vm2.Glob.Api.Tests;
 
-using vm2.DevOps.Glob.Api.DI;
+using vm2.Glob.Api.DI;
 
 [ExcludeFromCodeCoverage]
 public sealed class GlobIntegrationTestsFixture : GlobUnitTestsFixture

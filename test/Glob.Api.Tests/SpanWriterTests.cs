@@ -1,7 +1,7 @@
 ﻿// SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Val Melamed
 
-namespace vm2.DevOps.Glob.Api.Tests;
+namespace vm2.Glob.Api.Tests;
 
 /// <summary>
 /// Unit tests for the SpanWriter ref struct.

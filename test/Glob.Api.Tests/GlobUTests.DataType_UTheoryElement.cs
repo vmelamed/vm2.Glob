@@ -1,7 +1,7 @@
 ﻿// SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Val Melamed
 
-namespace vm2.DevOps.Glob.Api.Tests;
+namespace vm2.Glob.Api.Tests;
 
 [ExcludeFromCodeCoverage]
 public class UnitTestElement(
@@ -64,15 +64,15 @@ public class UnitTestElement(
 
     public void Deserialize(IXunitSerializationInfo info)
     {
-        D      = info.GetValue<string>(nameof(D)) ?? "";
-        Fs     = info.GetValue<string>(nameof(Fs)) ?? "";
-        G      = info.GetValue<string>(nameof(G)) ?? "";
-        Cwd    = info.GetValue<string>(nameof(Cwd)) ?? "";
-        Sd     = info.GetValue<string>(nameof(Sd)) ?? "";
-        O      = info.GetValue<Objects>(nameof(O));
-        M      = info.GetValue<MatchCasing>(nameof(M));
+        D = info.GetValue<string>(nameof(D)) ?? "";
+        Fs = info.GetValue<string>(nameof(Fs)) ?? "";
+        G = info.GetValue<string>(nameof(G)) ?? "";
+        Cwd = info.GetValue<string>(nameof(Cwd)) ?? "";
+        Sd = info.GetValue<string>(nameof(Sd)) ?? "";
+        O = info.GetValue<Objects>(nameof(O));
+        M = info.GetValue<MatchCasing>(nameof(M));
         Throws = info.GetValue<bool>(nameof(Throws));
-        R      = info.GetValue<string[]>(nameof(R)) ?? [];
+        R = info.GetValue<string[]>(nameof(R)) ?? [];
     }
 
     public void Serialize(IXunitSerializationInfo info)

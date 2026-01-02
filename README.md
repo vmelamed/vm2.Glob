@@ -94,6 +94,10 @@ All scripts live under `scripts/bash/` and follow a three-file convention:
 
 They all source `_common.sh` for shared behavior and respect common flags (`--verbose`, `--quiet`, `--trace`, `--dry-run`, `--debugger`, see above).
 
+## Local lockfile maintenance
+
+- Run `./scripts/restore-locked.sh [solution-or-project]` to refresh lockfiles with `--force-evaluate`, then verify them with `--locked-mode` (mirrors CI enforcement). Defaults to `vm2.Glob.slnx` when no target is provided.
+
 ### `validate-vars.*.sh`
 
 - Validates and normalizes workflow inputs, emitting derived values for downstream jobs in `$GITHUB_OUTPUT`
@@ -233,3 +237,4 @@ They all source `_common.sh` for shared behavior and respect common flags (`--ve
 - All workflows assume .NET 10.0.x SDKs; update the workflow inputs if you need to target a different version.
 - Scripts rely on `bash` and standard GNU utilities available on Ubuntu GitHub-hosted runners. Any additional tooling they need (e.g., `jq`, `reportgenerator`) is installed on demand.
 - When adding new scripts, follow the existing three-file pattern and keep code ShellCheck-clean so the shared lint step continues to pass.
+- For lockfile hygiene before committing, run `./scripts/restore-locked.sh [solution-or-project]`; it refreshes locks with `--force-evaluate` and then verifies them with `--locked-mode` (mirrors CI). Defaults to `vm2.Glob.slnx` if no target is provided.

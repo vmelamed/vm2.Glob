@@ -1,7 +1,7 @@
 ﻿// SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Val Melamed
 
-namespace vm2.DevOps.Glob.Api;
+namespace vm2.Glob.Api;
 
 /// <summary>
 /// Provides methods for interacting with the actual file system as implemented in .NET.
@@ -50,7 +50,7 @@ public class FileSystem : IFileSystem
 
     string PathWithSlashes(string path) => IsWindows ? path.Replace(WinSepChar, SepChar) : path;
 
-    static string TerminateWithSlash(string path) => path.EndsWith(SepChar) ? path : path+SepChar;
+    static string TerminateWithSlash(string path) => path.EndsWith(SepChar) ? path : path + SepChar;
 
     /// <summary>
     /// Retrieves the names of sub-directories within the specified directory.

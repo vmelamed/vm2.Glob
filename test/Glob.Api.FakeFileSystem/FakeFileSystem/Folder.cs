@@ -1,7 +1,7 @@
 ﻿// SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Val Melamed
 
-namespace vm2.DevOps.Glob.Api.FakeFileSystem;
+namespace vm2.Glob.Api.FakeFileSystem;
 
 using System.Linq;
 
@@ -79,9 +79,9 @@ public partial class Folder
             foreach (var folder in Folders)
                 folder.Comparer = value;    // propagate to children
 
-            field   = value;
+            field = value;
             Folders = Folders;      // rebuild to ensure correct new ordering of children
-            Files   = Files;        // Recreate the sets with the new comparer
+            Files = Files;        // Recreate the sets with the new comparer
         }
     } = StringComparer.OrdinalIgnoreCase;
 
@@ -110,8 +110,8 @@ public partial class Folder
     /// </remarks>
     public Folder(string name = "", StringComparer? comparer = null)
     {
-        Name     = name;
-        Path     = name.EndsWith(SepChar) ? name : name + SepChar;
+        Name = name;
+        Path = name.EndsWith(SepChar) ? name : name + SepChar;
         Comparer = comparer ?? StringComparer.Ordinal;
     }
 
@@ -184,7 +184,7 @@ public partial class Folder
     {
         foreach (var child in folder.Folders)
         {
-            child.Parent   = folder;
+            child.Parent = folder;
             child.Comparer = folder.Comparer;
             SetAsParent(child);
         }

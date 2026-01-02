@@ -1,4 +1,4 @@
-﻿# vm2.DevOps.Glob.Api - Cross-Platform Glob Pattern Matching Library
+﻿# vm2.Glob.Api - Cross-Platform Glob Pattern Matching Library
 
 A high-performance, cross-platform glob pattern matching library for .NET applications. Implements the
 [POSIX.2 glob specification](https://www.man7.org/linux/man-pages/man7/glob.7.html) with extensions for Windows and Unix-like
@@ -6,11 +6,11 @@ systems.
 
 ## Installation
 
-    dotnet add package vm2.DevOps.Glob.Api
+    dotnet add package vm2.Glob.Api
 
 ## Quick Start
 
-    using vm2.DevOps.Glob.Api;
+    using vm2.Glob.Api;
 
     // Basic usage
     var enumerator = new GlobEnumerator();
@@ -394,19 +394,23 @@ Typical performance on standard hardware:
 
 #### Properties
 
-##### Pattern and Directory:
+##### Pattern and Directory
+
 - `string Glob` - The glob pattern to match (default: `""` which is treated as `"*"`)
 - `string FromDirectory` - Starting directory for enumeration (default: `"."` - current directory)
 
-##### Object Selection:
+##### Object Selection
+
 - `Objects Enumerated` - Type of objects to find: `Files`, `Directories`, or `FilesAndDirectories` (default: `Files`)
 
-##### Matching Behavior:
+##### Matching Behavior
+
 - `MatchCasing MatchCasing` - Case sensitivity mode: `PlatformDefault`, `CaseSensitive`, or `CaseInsensitive` (default: `PlatformDefault`)
 - `bool DepthFirst` - Traversal order: `true` = depth-first, `false` = breadth-first (default: `false`)
 - `bool Distinct` - Enable deduplication of results (default: `false`)
 
-##### File System Behavior:
+##### File System Behavior
+
 - `bool ReturnSpecialDirectories` - Include special directory entries `"."` and `".."` in results (default: `false`)
 - `bool IgnoreInaccessible` - Skip files/directories when access is denied (e.g., `UnauthorizedAccessException`, `SecurityException`) (default: `true`)
 - `FileAttributes AttributesToSkip` - Skip files/directories with specified attributes (default: `FileAttributes.Hidden | FileAttributes.System`)
@@ -423,45 +427,53 @@ Typical performance on standard hardware:
 
 #### Methods
 
-##### Pattern Configuration:
+##### Pattern Configuration
+
 - `WithGlob(string pattern)` - Set the glob pattern
 
-##### Directory Configuration:
+##### Directory Configuration
+
 - `FromDirectory(string path)` - Set starting directory
 
-##### Object Type Selection:
+##### Object Type Selection
+
 - `SelectFiles()` - Find only files
 - `SelectDirectories()` - Find only directories
 - `SelectDirectoriesAndFiles()` - Find both files and directories
 - `Select(Objects type)` - Set object type explicitly
 
-##### Case Sensitivity:
+##### Case Sensitivity
+
 - `CaseSensitive()` - Enable case-sensitive matching
 - `CaseInsensitive()` - Enable case-insensitive matching
 - `PlatformSensitive()` - Use platform default case sensitivity
 - `WithCaseSensitivity(MatchCasing casing)` - Set case sensitivity explicitly
 
-##### Traversal Order:
+##### Traversal Order
+
 - `DepthFirst()` - Enable depth-first traversal
 - `BreadthFirst()` - Enable breadth-first traversal (default)
 - `TraverseDepthFirst(bool depthFirst)` - Set traversal order explicitly
 
-##### Result Filtering:
+##### Result Filtering
+
 - `Distinct()` - Enable deduplication
 - `WithDistinct(bool distinct)` - Set deduplication explicitly
 
-##### File System Behavior:
+##### File System Behavior
+
 - `IncludeSpecialDirectories(bool include = true)` - Include `"."` and `".."` entries
 - `SkipInaccessible(bool skip = true)` - Skip files/directories with access errors
 - `SkipObjectsWithAttributes(FileAttributes attributes)` - Skip objects with specified attributes (e.g., `FileAttributes.Hidden`)
 
-##### Builder Methods:
+##### Builder Methods
+
 - `Build()` - Build and return the builder (for method chaining)
 - `Configure(GlobEnumerator enumerator)` - Apply configuration to an enumerator instance
 
 ### Extension Methods
 
-#### Dependency Injection:
+#### Dependency Injection
 
     // Register with default FileSystem
     IServiceCollection.AddGlobEnumerator()
@@ -472,7 +484,7 @@ Typical performance on standard hardware:
     // Register with specific FileSystem instance
     IServiceCollection.AddGlobEnumerator(IFileSystem fileSystem)
 
-#### Service Provider:
+#### Service Provider
 
     // Get configured enumerator from DI container
     IServiceProvider.GetGlobEnumerator(
@@ -482,7 +494,7 @@ Typical performance on standard hardware:
 
 For quick file searches from the terminal, try our CLI tool:
 
-    dotnet tool install -g vm2.DevOps.Glob
+    dotnet tool install -g vm2.Glob
 
 Then use anywhere:
 
@@ -490,7 +502,7 @@ Then use anywhere:
 
 Perfect for shell scripts, CI/CD pipelines, and developer workflows.
 
-See [vm2.DevOps.Glob](https://www.nuget.org/packages/vm2.DevOps.Glob) for more details.
+See [vm2.Glob](https://www.nuget.org/packages/vm2.Glob) for more details.
 
 ## Documentation
 

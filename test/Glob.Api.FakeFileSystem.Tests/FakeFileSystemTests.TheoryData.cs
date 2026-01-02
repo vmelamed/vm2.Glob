@@ -1,7 +1,7 @@
 ﻿// SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Val Melamed
 
-namespace vm2.DevOps.Glob.Api.FakeFileSystem.Tests;
+namespace vm2.Glob.Api.FakeFileSystem.Tests;
 
 public partial class FakeFileSystemTests
 {
@@ -28,10 +28,10 @@ public partial class FakeFileSystemTests
         public void Deserialize(IXunitSerializationInfo info)
         {
             ATestFileLine = info.GetValue<string>(nameof(ATestFileLine)) ?? "";
-            TextOrFile    = info.GetValue<string>(nameof(TextOrFile)) ?? "";
-            Throws        = info.GetValue<bool>(nameof(Throws));
-            Json          = info.GetValue<string>(nameof(Json)) ?? "";
-            PrintJson     = info.GetValue<bool>(nameof(PrintJson));
+            TextOrFile = info.GetValue<string>(nameof(TextOrFile)) ?? "";
+            Throws = info.GetValue<bool>(nameof(Throws));
+            Json = info.GetValue<string>(nameof(Json)) ?? "";
+            PrintJson = info.GetValue<bool>(nameof(PrintJson));
         }
 
         public void Serialize(IXunitSerializationInfo info)
@@ -107,11 +107,11 @@ public partial class FakeFileSystemTests
 
         public void Deserialize(IXunitSerializationInfo info)
         {
-            A         = info.GetValue<string>(nameof(A)) ?? "";
-            Json      = info.GetValue<string>(nameof(Json)) ?? "";
-            Throws    = info.GetValue<bool>(nameof(Throws));
+            A = info.GetValue<string>(nameof(A)) ?? "";
+            Json = info.GetValue<string>(nameof(Json)) ?? "";
+            Throws = info.GetValue<bool>(nameof(Throws));
             PrintJson = info.GetValue<bool>(nameof(PrintJson));
-            Text      = info.GetValue<string>(nameof(Text)) ?? "";
+            Text = info.GetValue<string>(nameof(Text)) ?? "";
         }
 
         public void Serialize(IXunitSerializationInfo info)
@@ -174,12 +174,12 @@ public partial class FakeFileSystemTests
 
         public void Deserialize(IXunitSerializationInfo info)
         {
-            A          = info.GetValue<string>(nameof(A)) ?? "";
+            A = info.GetValue<string>(nameof(A)) ?? "";
             FsJsonFile = info.GetValue<string>(nameof(FsJsonFile)) ?? "";
-            Cwf        = info.GetValue<string>(nameof(Cwf)) ?? "";
-            Chf        = info.GetValue<string>(nameof(Chf)) ?? "";
-            Rwf        = info.GetValue<string>(nameof(Rwf)) ?? "";
-            Throws     = info.GetValue<bool>(nameof(Throws));
+            Cwf = info.GetValue<string>(nameof(Cwf)) ?? "";
+            Chf = info.GetValue<string>(nameof(Chf)) ?? "";
+            Rwf = info.GetValue<string>(nameof(Rwf)) ?? "";
+            Throws = info.GetValue<bool>(nameof(Throws));
         }
         public void Serialize(IXunitSerializationInfo info)
         {
@@ -264,12 +264,12 @@ public partial class FakeFileSystemTests
         public void Deserialize(IXunitSerializationInfo info)
         {
             AFileLine = info.GetValue<string>(nameof(AFileLine)) ?? "";
-            JsonFile     = info.GetValue<string>(nameof(JsonFile)) ?? "";
-            Path         = info.GetValue<string>(nameof(Path)) ?? "";
-            CurrentFolder   = info.GetValue<string>(nameof(CurrentFolder)) ?? "";
-            ResultPath   = info.GetValue<string>(nameof(ResultPath)) ?? "";
-            ResultFile   = info.GetValue<string>(nameof(ResultFile)) ?? "";
-            Throws       = info.GetValue<bool>(nameof(Throws));
+            JsonFile = info.GetValue<string>(nameof(JsonFile)) ?? "";
+            Path = info.GetValue<string>(nameof(Path)) ?? "";
+            CurrentFolder = info.GetValue<string>(nameof(CurrentFolder)) ?? "";
+            ResultPath = info.GetValue<string>(nameof(ResultPath)) ?? "";
+            ResultFile = info.GetValue<string>(nameof(ResultFile)) ?? "";
+            Throws = info.GetValue<bool>(nameof(Throws));
         }
 
         public void Serialize(IXunitSerializationInfo info)
@@ -341,12 +341,12 @@ public partial class FakeFileSystemTests
 
         public void Deserialize(IXunitSerializationInfo info)
         {
-            AFileLine       = info.GetValue<string>(nameof(AFileLine)) ?? "";
-            JsonFile        = info.GetValue<string>(nameof(JsonFile)) ?? "";
-            Path            = info.GetValue<string>(nameof(Path)) ?? "";
-            CurrentFolder   = info.GetValue<string>(nameof(CurrentFolder)) ?? "";
-            Result          = info.GetValue<bool>(nameof(Result));
-            Throws          = info.GetValue<bool>(nameof(Throws));
+            AFileLine = info.GetValue<string>(nameof(AFileLine)) ?? "";
+            JsonFile = info.GetValue<string>(nameof(JsonFile)) ?? "";
+            Path = info.GetValue<string>(nameof(Path)) ?? "";
+            CurrentFolder = info.GetValue<string>(nameof(CurrentFolder)) ?? "";
+            Result = info.GetValue<bool>(nameof(Result));
+            Throws = info.GetValue<bool>(nameof(Throws));
         }
 
         public void Serialize(IXunitSerializationInfo info)
@@ -450,12 +450,12 @@ public partial class FakeFileSystemTests
 
         public void Deserialize(IXunitSerializationInfo info)
         {
-            AFileLine       = info.GetValue<string>(nameof(AFileLine)) ?? "";
-            JsonFile        = info.GetValue<string>(nameof(JsonFile)) ?? "";
-            Path            = info.GetValue<string>(nameof(Path)) ?? "";
-            CurrentFolder   = info.GetValue<string>(nameof(CurrentFolder)) ?? "";
-            Result          = info.GetValue<string>(nameof(Result)) ?? "";
-            Throws          = info.GetValue<bool>(nameof(Throws));
+            AFileLine = info.GetValue<string>(nameof(AFileLine)) ?? "";
+            JsonFile = info.GetValue<string>(nameof(JsonFile)) ?? "";
+            Path = info.GetValue<string>(nameof(Path)) ?? "";
+            CurrentFolder = info.GetValue<string>(nameof(CurrentFolder)) ?? "";
+            Result = info.GetValue<string>(nameof(Result)) ?? "";
+            Throws = info.GetValue<bool>(nameof(Throws));
         }
 
         public void Serialize(IXunitSerializationInfo info)
@@ -532,14 +532,14 @@ public partial class FakeFileSystemTests
 
         public void Deserialize(IXunitSerializationInfo info)
         {
-            AFileLine      = info.GetValue<string>(nameof(AFileLine)) ?? "";
-            JsonFile       = info.GetValue<string>(nameof(JsonFile)) ?? "";
-            CurrentFolder  = info.GetValue<string>(nameof(CurrentFolder)) ?? "";
-            Path           = info.GetValue<string>(nameof(Path)) ?? "";
-            Pattern        = info.GetValue<string>(nameof(Pattern)) ?? "";
-            Recursive      = info.GetValue<bool>(nameof(Recursive));
-            Results        = info.GetValue<string[]>(nameof(Results)) ?? [];
-            Throws         = info.GetValue<bool>(nameof(Throws));
+            AFileLine = info.GetValue<string>(nameof(AFileLine)) ?? "";
+            JsonFile = info.GetValue<string>(nameof(JsonFile)) ?? "";
+            CurrentFolder = info.GetValue<string>(nameof(CurrentFolder)) ?? "";
+            Path = info.GetValue<string>(nameof(Path)) ?? "";
+            Pattern = info.GetValue<string>(nameof(Pattern)) ?? "";
+            Recursive = info.GetValue<bool>(nameof(Recursive));
+            Results = info.GetValue<string[]>(nameof(Results)) ?? [];
+            Throws = info.GetValue<bool>(nameof(Throws));
         }
 
         public void Serialize(IXunitSerializationInfo info)

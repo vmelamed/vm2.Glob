@@ -1,28 +1,89 @@
-name: Release to NuGet
+name: Publish NuGet Release
+# After creating pay attention to the comments starting with CP - these are "Customize Points" to adjust the workflow to your repo needs.
 
 on:
   push:
     tags:
-      - "v[0-9]+.[0-9]+.[0-9]+" # Match v1.2.3
-      - "v[0-9]+.[0-9]+.[0-9]+.[0-9]+" # Match v1.2.3.4
+      - "v[0-9]*.[0-9]*.[0-9]*"
 
   workflow_dispatch:
     inputs:
+      reason:
+        description: "Reason for manual release"
+        required: true
+        type: string
+
       force-publish:
         description: "Force publish"
         type: boolean
         default: false
 
+env:
+  PACKAGE_PROJECTS: >-
+    [
+    "src/vm2.Glob.Api/vm2.Glob.Api.csproj",
+    "src/vm2.Glob/vm2.Glob.csproj"
+    ]
+  NUGET_SERVER: github
+
 jobs:
+  get-params:
+    name: Prepare the parameters
+    runs-on: ubuntu-latest
+    if: >+
+      ${{
+      github.event_name == 'workflow_dispatch' ||
+      !contains(github.ref_name,'-') &&
+      startsWith(github.ref, format('refs/tags/%s', vars.MinVerTagPrefix || 'v'))
+      }}
+    outputs:
+      package-projects: ${{ steps.init-params.outputs.package-projects }}
+      nuget-server: ${{ steps.init-params.outputs.nuget-server }}
+      force-publish: ${{ steps.init-params.outputs.force-publish }}
+    steps:
+      - name: Gather parameters
+        id: init-params
+        shell: bash
+        run: |
+          package_projects='${{ env.PACKAGE_PROJECTS }}'
+          nuget_server='${{ env.NUGET_SERVER }}'
+          force_publish=false
+
+          if [ '${{ github.event_name }}' == "workflow_dispatch" ]; then
+            force_publish='${{ inputs.force-publish }}'
+          fi
+
+          # Set the outputs:
+          {
+            echo "package-projects=${package_projects}"
+            echo "nuget-server=${nuget_server}"
+            echo "force-publish=${force_publish}"
+          }  >> $GITHUB_OUTPUT
+
+  log-trigger:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Log manual trigger reason
+        run: |
+          echo "::notice::Manual release triggered by ${{ github.actor }}"
+          echo "::notice::Reason: ${{ inputs.reason }}"
+
   release:
-    name: Stable Release
-    uses: ./.github/workflows/_release.yaml
+    name: Release
+    uses: vmelamed/vm2.DevOps/.github/workflows/_release.yaml@main
+    needs:
+      - get-params
     permissions:
       contents: write
-    secrets: inherit
+      packages: write
+    secrets:
+      NUGET_API_KEY:
+        ${{ secrets.NUGET_API_GITHUB_KEY }} # CP. the API key to use for publishing to GitHub NuGet packages or NuGet.org
+        # Make sure it corresponds to the 'nuget-server' below
     with:
-      os: ubuntu-latest
-      dotnet-version: ${{ vars.DOTNET_VERSION || '10.0.x' }}
-      force-publish: ${{ inputs.force-publish || false }}
-      save_package_artifacts: true
-      nuget-server: github # Temporarily publish to 'github' - https://nuget.pkg.github.com/. Eventually should go to 'nuget' - https://api.nuget.org/v3/index.json
+      package-projects: ${{ needs.get-params.outputs.package-projects }}
+      dotnet-version: ${{ vars.DOTNET_VERSION }}
+      force-publish: ${{ fromJSON(needs.get-params.outputs.force-publish) }}
+      nuget-server: ${{ needs.get-params.outputs.nuget-server }}
+      save-package-artifacts: true

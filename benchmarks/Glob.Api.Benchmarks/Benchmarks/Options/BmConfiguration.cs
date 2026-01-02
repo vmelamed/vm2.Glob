@@ -1,4 +1,4 @@
-﻿namespace vm2.DevOps.Glob.Api.Benchmarks.Options;
+﻿namespace vm2.Glob.Api.Benchmarks.Options;
 
 public static class BmConfiguration
 {

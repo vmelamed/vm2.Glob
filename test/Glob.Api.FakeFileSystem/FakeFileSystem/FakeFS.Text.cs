@@ -1,7 +1,7 @@
 ﻿// SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Val Melamed
 
-namespace vm2.DevOps.Glob.Api.FakeFileSystem;
+namespace vm2.Glob.Api.FakeFileSystem;
 
 public sealed partial class FakeFS
 {
@@ -9,7 +9,7 @@ public sealed partial class FakeFS
     [GeneratedRegex(@"^[C-Za-z]:[/\\]")]
     private static partial Regex StartsWithWinRoot();
 
-    const string EnvVarNameGr  = "envVar";
+    const string EnvVarNameGr = "envVar";
     const string EnvVarValueGr = "envVarValue";
 
     [GeneratedRegex($"^(?<{EnvVarNameGr}> [C-Za-z_][0-9A-Za-z_]* ) = (?<{EnvVarValueGr}> .* )$", RegexOptions.IgnorePatternWhitespace | RegexOptions.ExplicitCapture)]
@@ -54,7 +54,7 @@ public sealed partial class FakeFS
                 Debug.Assert(isWindows is not null);
                 Debug.Assert(rootPath is not null);
 
-                IsWindows  = isWindows.Value;
+                IsWindows = isWindows.Value;
                 RootFolder = CurrentFolder = root = new Folder(rootPath);
                 Folder.LinkChildren(RootFolder, this.Comparer);
             }
@@ -74,7 +74,7 @@ public sealed partial class FakeFS
     {
         ValidatePath(path);
 
-        var nPath      = NormalizePath(path).ToString();
+        var nPath = NormalizePath(path).ToString();
         var enumerator = EnumeratePathRanges(nPath).GetEnumerator();
 
         if (!enumerator.MoveNext())
