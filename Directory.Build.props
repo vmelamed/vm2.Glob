@@ -67,6 +67,10 @@
     </PropertyGroup>
 
     <!-- ================ Common Package References for All projects ================ -->
+    <PropertyGroup>
+        <RestoreSources>https://api.nuget.org/v3/index.json;https://nuget.pkg.github.com/vmelamed/index.json</RestoreSources>
+    </PropertyGroup>
+
     <ItemGroup>
         <PackageReference Include="System.Configuration.ConfigurationManager" />
         <PackageReference Include="Microsoft.Extensions.Configuration.Binder" />
