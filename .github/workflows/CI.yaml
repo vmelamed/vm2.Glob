@@ -1,4 +1,4 @@
-name: "CI: Build, Run Tests, Run Benchmarks"
+name: "CI: Build, Test, Benchmark"
 
 on:
   push:
