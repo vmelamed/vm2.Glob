@@ -122,6 +122,8 @@
     </PropertyGroup>
     <ItemGroup Condition="$(IsTestProject) == 'true'">
         <!-- Use MTP v2 for all environments - VS 2022 should support it -->
+        <PackageReference Include="Microsoft.Testing.Extensions.TrxReport" />
+        <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" />
         <PackageReference Include="FluentAssertions" />
         <PackageReference Include="vm2.TestUtilities" />
     </ItemGroup>
@@ -144,6 +146,14 @@
         <Using Include="Xunit" />
         <Using Include="FluentAssertions" />
     </ItemGroup>
+
+    <!-- Delete test lock files when restoring inside VS to avoid NU1005 while keeping lock files for CLI/CI. -->
+    <Target Name="RemoveTestLockFileInVS" Condition="'$(IsTestProject)' == 'true' and '$(BuildingInsideVisualStudio)' == 'true'" BeforeTargets="Restore">
+        <PropertyGroup>
+            <_PackagesLockFile>$(MSBuildProjectDirectory)\packages.lock.json</_PackagesLockFile>
+        </PropertyGroup>
+        <Delete Files="$(_PackagesLockFile)" Condition="Exists('$(_PackagesLockFile)')" />
+    </Target>
 
     <!-- ================ Test Library Projects' Settings ================ -->
     <!-- Test stack:
