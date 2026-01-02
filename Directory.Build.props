@@ -147,6 +147,14 @@
         <Using Include="FluentAssertions" />
     </ItemGroup>
 
+    <!-- Delete test lock files when restoring inside VS to avoid NU1005 while keeping lock files for CLI/CI. -->
+    <Target Name="RemoveTestLockFileInVS" Condition="'$(IsTestProject)' == 'true' and '$(BuildingInsideVisualStudio)' == 'true'" BeforeTargets="Restore">
+        <PropertyGroup>
+            <_PackagesLockFile>$(MSBuildProjectDirectory)\packages.lock.json</_PackagesLockFile>
+        </PropertyGroup>
+        <Delete Files="$(_PackagesLockFile)" Condition="Exists('$(_PackagesLockFile)')" />
+    </Target>
+
     <!-- ================ Test Library Projects' Settings ================ -->
     <!-- Test stack:
           Microsoft Testing Platform (MTP) with
