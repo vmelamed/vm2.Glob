@@ -10,9 +10,10 @@
         A fast, cross-platform glob pattern matching API for finding files and directories. Implements POSIX.2 glob specification.
         </Description>
         <PackageTags>glob pattern matching api cross-platform file-search directory-search</PackageTags>
-        <PackageProjectUrl>https://github.com/vmelamed/vm2.Glob/blob/main/src/Glob.Api</PackageProjectUrl>
+        <PackageProjectUrl>https://github.com/vmelamed/vm2.Glob/blob/main/src/Glob.Api/Glob.Api.csproj</PackageProjectUrl>
         <RepositoryUrl>https://github.com/vmelamed/vm2.Glob</RepositoryUrl>
         <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageReleaseNotes>Initial release.</PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup>
