@@ -1,4 +1,4 @@
-name: "CI: Build, Test, Benchmark"
+name: "CI: Build, Run Tests, Run Benchmarks"
 
 on:
   push:
@@ -22,7 +22,7 @@ on:
         description: Define semicolon-separated preprocessor symbols to pass to the compiler
         type: string
         required: false
-        default: ''
+        default: ""
         # E.g. `SHORT_RUN` enables benchmarks short run mode for faster execution.
 
 env:
@@ -76,7 +76,7 @@ jobs:
           if [ '${{ github.event_name }}' == "push" ]; then
               # Set the values for push events, and add SHORT_RUN to preprocessor_symbols for faster benchmark tests (less precise, yet acceptable for CI runs).
               os='${{ env.OS }}'
-              preprocessor_symbols='SHORT_RUN;${{ env.PREPROCESSOR_SYMBOLS }}' # *CP* Adjust as needed.
+              preprocessor_symbols='SHORT_RUN;${{ env.PREPROCESSOR_SYMBOLS }}' # *TODO* Adjust as needed.
           elif [ '${{ github.event_name }}' == "pull_request" ]; then
               # Set the values for pull_request events
               os='${{ env.OS }}'

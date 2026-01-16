@@ -1,5 +1,5 @@
 name: Publish NuGet Release
-# After creating pay attention to the comments starting with CP - these are "Customize Points" to adjust the workflow to your repo needs.
+# After creating pay attention to the comments starting with TODO - these are "Customize Points" to adjust the workflow to your repo needs.
 
 on:
   push:
@@ -52,6 +52,7 @@ jobs:
           }  >> $GITHUB_OUTPUT
 
   log-trigger:
+    name: Log manual trigger reason
     if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:

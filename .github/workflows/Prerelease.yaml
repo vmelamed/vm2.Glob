@@ -1,5 +1,4 @@
 name: Publish NuGet Prerelease
-# After creating pay attention to the comments starting with CP - these are "Customize Points" to adjust the workflow to your repo needs.
 
 on:
   pull_request:
