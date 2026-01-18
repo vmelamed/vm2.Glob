@@ -1,4 +1,4 @@
-name: "CI: Build, Run Tests, Run Benchmarks"
+name: "CI: Build, Test, Benchmark"
 
 on:
   push:
@@ -23,7 +23,6 @@ on:
         type: string
         required: false
         default: ""
-        # E.g. `SHORT_RUN` enables benchmarks short run mode for faster execution.
 
 env:
   BUILD_PROJECTS: >-
@@ -45,10 +44,13 @@ jobs:
     runs-on: ubuntu-latest # in this workflow the runner doesn't matter - we're just preparing the inputs for the next workload(s).
     if: ${{ github.event_name != 'push' || !contains(github.event.head_commit.message, '[skip ci]') }}
     env:
-      dotnet_version: ${{ vars.DOTNET_VERSION }}
+      # *TODO* The following are invariant - no matter how we trigger the workflow, they should stay the same.
+      dotnet-version: ${{ vars.DOTNET_VERSION }}
       configuration: ${{ vars.CONFIGURATION }}
-      min_coverage_pct: ${{ vars.MIN_COVERAGE_PCT }}
-      max_regression_pct: ${{ vars.MAX_REGRESSION_PCT }}
+      min-coverage-pct: ${{ vars.MIN_COVERAGE_PCT }}
+      max-regression-pct: ${{ vars.MAX_REGRESSION_PCT }}
+      MinVerTagPrefix: ${{ vars.MINVERTAGPREFIX || 'v' }}
+      MinVerDefaultPreReleaseIdentifiers: ${{ vars.MINVERDEFAULTPRERELEASEIDENTIFIERS || 'preview' }}
     outputs:
       build-projects: ${{ steps.init-params.outputs.build-projects }}
       test-projects: ${{ steps.init-params.outputs.test-projects }}
@@ -68,15 +70,15 @@ jobs:
           build_projects='${{ env.BUILD_PROJECTS }}'
           test_projects='${{ env.TEST_PROJECTS }}'
           benchmark_projects='${{ env.BENCHMARK_PROJECTS }}'
-          dotnet_version='${{ env.dotnet_version }}'
+          dotnet_version='${{ env.dotnet-version }}'
           configuration='${{ env.configuration }}'
-          min_coverage_pct='${{ env.min_coverage_pct }}'
-          max_regression_pct='${{ env.max_regression_pct }}'
+          min_coverage_pct='${{ env.min-coverage-pct }}'
+          max_regression_pct='${{ env.max-regression-pct }}'
 
           if [ '${{ github.event_name }}' == "push" ]; then
               # Set the values for push events, and add SHORT_RUN to preprocessor_symbols for faster benchmark tests (less precise, yet acceptable for CI runs).
               os='${{ env.OS }}'
-              preprocessor_symbols='SHORT_RUN;${{ env.PREPROCESSOR_SYMBOLS }}' # *TODO* Adjust as needed.
+              preprocessor_symbols='SHORT_RUN;${{ env.PREPROCESSOR_SYMBOLS }}'
           elif [ '${{ github.event_name }}' == "pull_request" ]; then
               # Set the values for pull_request events
               os='${{ env.OS }}'
@@ -94,15 +96,15 @@ jobs:
 
           # Set the outputs:
           {
-            echo "build-projects=${build_projects}"
-            echo "test-projects=${test_projects}"
-            echo "benchmark-projects=${benchmark_projects}"
-            echo "os=${os}"
-            echo "preprocessor-symbols=${preprocessor_symbols}"
-            echo "dotnet-version=${dotnet_version}"
-            echo "configuration=${configuration}"
-            echo "min-coverage-pct=${min_coverage_pct}"
-            echo "max-regression-pct=${max_regression_pct}"
+              echo "build-projects=${build_projects}"
+              echo "test-projects=${test_projects}"
+              echo "benchmark-projects=${benchmark_projects}"
+              echo "os=${os}"
+              echo "preprocessor-symbols=${preprocessor_symbols}"
+              echo "dotnet-version=${dotnet_version}"
+              echo "configuration=${configuration}"
+              echo "min-coverage-pct=${min_coverage_pct}"
+              echo "max-regression-pct=${max_regression_pct}"
           }  >> $GITHUB_OUTPUT
 
   call-ci:
@@ -114,10 +116,10 @@ jobs:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       BENCHER_API_TOKEN: ${{ secrets.BENCHER_API_TOKEN }}
     permissions:
-      contents: read
-      packages: read
-      pull-requests: write
-      checks: write
+      contents: read # Required to checkout the code
+      packages: read # Required to restore GitHub Packages NuGet packages
+      pull-requests: write # Required to comment on PRs
+      checks: write # Required to create GitHub Checks
     with:
       os: ${{ needs.get-params.outputs.os }}
       dotnet-version: ${{ needs.get-params.outputs.dotnet-version }}

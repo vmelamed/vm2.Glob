@@ -4,7 +4,7 @@ name: Publish NuGet Release
 on:
   push:
     tags:
-      - "v[0-9]*.[0-9]*.[0-9]*"
+      - "v[0-9]*.[0-9]*.[0-9]*" # trigger on version tags like v1.2.3
 
   workflow_dispatch:
     inputs:
@@ -62,7 +62,7 @@ jobs:
           echo "::notice::Reason: ${{ inputs.reason }}"
 
   release:
-    name: Release - package and release NuGet release
+    name: Release - package and publish NuGet stable release
     needs:
       - get-params
     uses: vmelamed/vm2.DevOps/.github/workflows/_release.yaml@main
@@ -79,5 +79,5 @@ jobs:
       dotnet-version: ${{ vars.DOTNET_VERSION }}
       package-projects: ${{ needs.get-params.outputs.package-projects }}
       nuget-server: ${{ needs.get-params.outputs.nuget-server }}
-      reason: ${{ inputs.reason || '' }}
+      reason: ${{ inputs.reason }}
       save-package-artifacts: ${{ fromJson(needs.get-params.outputs.save-package-artifacts) }}
