@@ -1,5 +1,4 @@
 name: Publish NuGet Release
-# After creating pay attention to the comments starting with TODO - these are "Customize Points" to adjust the workflow to your repo needs.
 
 on:
   push:
@@ -19,6 +18,7 @@ env:
     "src/vm2.Glob.Api/vm2.Glob.Api.csproj",
     "src/vm2.Glob/vm2.Glob.csproj"
     ]
+
   NUGET_SERVER: ${{ vars.NUGET_SERVER || 'github' }}
 
 jobs:
@@ -47,7 +47,7 @@ jobs:
           nuget_server='${{ env.NUGET_SERVER }}'
           dotnet_version='${{ vars.DOTNET_VERSION }}'
           minver_tag_prefix='${{ vars.MINVERTAGPREFIX || 'v' }}'
-          reason="Stable Release (main tagged release)"
+          reason="Stable Release (main was manually tagged with a release tag)"
           save_package_artifacts='${{ vars.SAVE_PACKAGE_ARTIFACTS || 'false' }}'
 
           if [ '${{ github.event_name }}' == "workflow_dispatch" ]; then
@@ -80,7 +80,7 @@ jobs:
       - get-params
     uses: vmelamed/vm2.DevOps/.github/workflows/_release.yaml@main
     secrets:
-      # You don't need all three secrets, only the one corresponding to the chosen NuGet server in inputs.nuget-server or the default 'github'
+      # You don't need all three secrets, only the one corresponding to the chosen NuGet server above or the default 'github'
       NUGET_API_GITHUB_KEY: ${{ secrets.NUGET_API_GITHUB_KEY }}
       NUGET_API_NUGET_KEY: ${{ secrets.NUGET_API_NUGET_KEY }}
       NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}

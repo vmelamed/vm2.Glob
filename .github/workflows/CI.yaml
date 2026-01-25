@@ -27,13 +27,16 @@ on:
 env:
   BUILD_PROJECTS: >-
     ["./vm2.Glob.slnx"]
+
   TEST_PROJECTS: >-
     [
     "./test/Glob.Api.FakeFileSystem.Tests/Glob.Api.FakeFileSystem.Tests.csproj",
     "./test/Glob.Api.Tests/Glob.Api.Tests.csproj"
     ]
+
   BENCHMARK_PROJECTS: >-
     ["./benchmarks/Glob.Api.Benchmarks/Glob.Api.Benchmarks.csproj"]
+
   PREPROCESSOR_SYMBOLS: ""
   OS: >-
     ["ubuntu-latest"]
@@ -43,14 +46,6 @@ jobs:
     name: Finalize parameters from variables, inputs, secrets and defaults
     runs-on: ubuntu-latest # in this workflow the runner doesn't matter - we're just preparing the inputs for the next workload(s).
     if: ${{ github.event_name != 'push' || !contains(github.event.head_commit.message, '[skip ci]') }}
-    env:
-      # *TODO* The following are invariant - no matter how we trigger the workflow, they should stay the same.
-      dotnet-version: ${{ vars.DOTNET_VERSION }}
-      configuration: ${{ vars.CONFIGURATION }}
-      min-coverage-pct: ${{ vars.MIN_COVERAGE_PCT }}
-      max-regression-pct: ${{ vars.MAX_REGRESSION_PCT }}
-      minver-tag-prefix: ${{ vars.MINVERTAGPREFIX || 'v' }}
-      minver-prerelease-id: ${{ vars.MINVERDEFAULTPRERELEASEIDENTIFIERS || 'preview.0' }}
     outputs:
       build-projects: ${{ steps.init-params.outputs.build-projects }}
       test-projects: ${{ steps.init-params.outputs.test-projects }}
@@ -72,12 +67,12 @@ jobs:
           build_projects='${{ env.BUILD_PROJECTS }}'
           test_projects='${{ env.TEST_PROJECTS }}'
           benchmark_projects='${{ env.BENCHMARK_PROJECTS }}'
-          dotnet_version='${{ env.dotnet-version }}'
-          configuration='${{ env.configuration }}'
-          min_coverage_pct='${{ env.min-coverage-pct }}'
-          max_regression_pct='${{ env.max-regression-pct }}'
-          minver_tag_prefix='${{ env.minver-tag-prefix }}'
-          minver_prerelease_id='${{ env.minver-prerelease-id }}'
+          dotnet_version='${{ vars.DOTNET_VERSION }}'
+          configuration='${{ vars.CONFIGURATION }}'
+          min_coverage_pct='${{ vars.MIN_COVERAGE_PCT }}'
+          max_regression_pct='${{ vars.MAX_REGRESSION_PCT }}'
+          minver_tag_prefix='${{ vars.MINVERTAGPREFIX }}'
+          minver_prerelease_id='${{ vars.MINVERDEFAULTPRERELEASEIDENTIFIERS }}'
 
           if [ '${{ github.event_name }}' == "push" ]; then
               # Set the values for push events, and add SHORT_RUN to preprocessor_symbols for faster benchmark tests (less precise, yet acceptable for CI runs).
