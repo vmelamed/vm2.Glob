@@ -38,6 +38,7 @@ env:
     ["./benchmarks/Glob.Api.Benchmarks/Glob.Api.Benchmarks.csproj"]
 
   PREPROCESSOR_SYMBOLS: ""
+
   OS: >-
     ["ubuntu-latest"]
 
