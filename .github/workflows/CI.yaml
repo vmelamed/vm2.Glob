@@ -123,13 +123,13 @@ jobs:
       pull-requests: write # Required to comment on PRs
       checks: write # Required to create GitHub Checks
     with:
+      build-projects: ${{ needs.get-params.outputs.build-projects }}
+      test-projects: ${{ needs.get-params.outputs.test-projects }}
+      benchmark-projects: ${{ needs.get-params.outputs.benchmark-projects }}
       os: ${{ needs.get-params.outputs.os }}
       dotnet-version: ${{ needs.get-params.outputs.dotnet-version }}
       configuration: ${{ needs.get-params.outputs.configuration }}
       preprocessor-symbols: ${{ needs.get-params.outputs.preprocessor-symbols }}
-      build-projects: ${{ needs.get-params.outputs.build-projects }}
-      test-projects: ${{ needs.get-params.outputs.test-projects }}
-      benchmark-projects: ${{ needs.get-params.outputs.benchmark-projects }}
       min-coverage-pct: ${{ fromJSON(needs.get-params.outputs.min-coverage-pct) }}
       max-regression-pct: ${{ fromJSON(needs.get-params.outputs.max-regression-pct) }}
       minver-tag-prefix: ${{ needs.get-params.outputs.minver-tag-prefix }}
