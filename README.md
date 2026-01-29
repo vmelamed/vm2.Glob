@@ -30,7 +30,7 @@ These top-level workflows are intended to be called directly via `workflow_call`
   1. Build
   1. Test
   1. Run benchmark tests
-- Normalizes all incoming inputs (target OS, .NET SDK, configuration, defined symbols, etc.) through `validate-vars.sh` (see the list of parameters above).
+- Normalizes all incoming inputs (target OS, .NET SDK, configuration, defined symbols, etc.) through `validate-input.sh` (see the list of parameters above).
 - Fans out to the lower-level reusable workflows (`build.yaml`, `test.yaml`, `benchmarks.yaml`).
 - Uploads/Downloads artifacts from/to artifact directories (`TestArtifacts`, `BmArtifacts`) so downstream jobs and scripts stay in sync, compare with previous versions (esp. for benchmarks), track progress of non-functional changes (e.g. test coverage and performance benchmarks), etc. history.
 
@@ -98,7 +98,7 @@ They all source `github.sh` for shared behavior and respect common flags (`--ver
 
 - Run `./scripts/restore-locked.sh [solution-or-project]` to refresh lockfiles with `--force-evaluate`, then verify them with `--locked-mode` (mirrors CI enforcement). Defaults to `vm2.Glob.slnx` when no target is provided.
 
-### `validate-vars.*.sh`
+### `validate-input.*.sh`
 
 - Validates and normalizes workflow inputs, emitting derived values for downstream jobs in `$GITHUB_OUTPUT`
 - Ensures consistent environment variable defaults for the pipeline
