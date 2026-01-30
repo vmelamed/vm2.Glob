@@ -1,4 +1,8 @@
-﻿namespace vm2.Glob.Api.Benchmarks.Options;
+﻿// SPDX-License-Identifier: MIT
+// Copyright (c) 2025 Val Melamed
+
+
+namespace vm2.Glob.Api.Benchmarks.Options;
 
 /// <summary>
 /// Represents configuration options for a benchmark run, including paths for results, test file system structure, and
