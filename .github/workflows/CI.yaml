@@ -26,7 +26,9 @@ on:
 
 env:
   BUILD_PROJECTS: >-
-    ["./vm2.Glob.slnx"]
+    [
+    "./vm2.Glob.slnx"
+    ]
 
   TEST_PROJECTS: >-
     [
@@ -35,12 +37,16 @@ env:
     ]
 
   BENCHMARK_PROJECTS: >-
-    ["./benchmarks/Glob.Api.Benchmarks/Glob.Api.Benchmarks.csproj"]
-
-  PREPROCESSOR_SYMBOLS: ""
+    [
+    "./benchmarks/Glob.Api.Benchmarks/Glob.Api.Benchmarks.csproj"
+    ]
 
   RUNNERS_OS: >-
-    ["ubuntu-latest"]
+    [
+    "ubuntu-latest"
+    ]
+
+  PREPROCESSOR_SYMBOLS: ""
 
 jobs:
   get-params:
@@ -68,8 +74,10 @@ jobs:
           build_projects='${{ env.BUILD_PROJECTS }}'
           test_projects='${{ env.TEST_PROJECTS }}'
           benchmark_projects='${{ env.BENCHMARK_PROJECTS }}'
+          runners_os='${{ env.RUNNERS_OS }}'
           dotnet_version='${{ vars.DOTNET_VERSION }}'
           configuration='${{ vars.CONFIGURATION }}'
+          preprocessor_symbols='${{ env.PREPROCESSOR_SYMBOLS }}'
           min_coverage_pct='${{ vars.MIN_COVERAGE_PCT }}'
           max_regression_pct='${{ vars.MAX_REGRESSION_PCT }}'
           minver_tag_prefix='${{ vars.MINVERTAGPREFIX }}'
@@ -77,14 +85,9 @@ jobs:
 
           if [ '${{ github.event_name }}' == "push" ]; then
               # Set the values for push events, and add SHORT_RUN to preprocessor_symbols for faster benchmark tests (less precise, yet acceptable for CI runs).
-              runners_os='${{ env.RUNNERS_OS }}'
               preprocessor_symbols='SHORT_RUN;${{ env.PREPROCESSOR_SYMBOLS }}'
-          elif [ '${{ github.event_name }}' == "pull_request" ]; then
-              # Set the values for pull_request events
-              runners_os='${{ env.RUNNERS_OS }}'
-              preprocessor_symbols='${{ env.PREPROCESSOR_SYMBOLS }}'
           elif [ '${{ github.event_name }}' == "workflow_dispatch" ]; then
-              # Get the values from the UI inputs of workflow_dispatch event. Convert comma-separated runner's OS values to JSON array
+              # Get the values from the UI inputs of workflow_dispatch event. Convert comma-separated runners' OS values to JSON array
               # There is a known GitHub actions issue: the workflow dispatch UI doesn't properly handle JSON strings with quotes.
               # E.g. for the input '["ubuntu-latest"]', the UI removes the inner quotes and it becomes the invalid JSON: '[ubuntu-latest]'.
               runners_os=$(echo "${{ inputs.runners-os }}" | jq -Rc 'split(",") | map(select(length > 0) | gsub("^\\s+|\\s+$";""))')
@@ -100,9 +103,9 @@ jobs:
               echo "test-projects=${test_projects}"
               echo "benchmark-projects=${benchmark_projects}"
               echo "runners-os=${runners_os}"
-              echo "preprocessor-symbols=${preprocessor_symbols}"
               echo "dotnet-version=${dotnet_version}"
               echo "configuration=${configuration}"
+              echo "preprocessor-symbols=${preprocessor_symbols}"
               echo "min-coverage-pct=${min_coverage_pct}"
               echo "max-regression-pct=${max_regression_pct}"
               echo "minver-tag-prefix=${minver_tag_prefix}"
