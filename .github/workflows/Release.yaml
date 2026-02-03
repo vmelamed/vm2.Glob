@@ -9,13 +9,13 @@ on:
         type: string
 
 env:
-  PACKAGE_PROJECTS: >-
+  PACKAGE_PROJECTS: >
     [
     "src/vm2.Glob.Api/vm2.Glob.Api.csproj",
     "src/vm2.Glob/vm2.Glob.csproj"
     ]
 
-  PREPROCESSOR_SYMBOLS: '' # Semicolon-separated preprocessor symbols to pass to the compiler.
+  PREPROCESSOR_SYMBOLS: "" # Semicolon-separated preprocessor symbols to pass to the compiler.
   NUGET_SERVER: ${{ vars.NUGET_SERVER || 'github' }} # Ensure the NUGET_API_*KEY secrets corresponds to the server selected here.
   CONFIGURATION: ${{ vars.CONFIGURATION || 'Release' }} # The build configuration: Debug, Release, etc.
   DOTNET_VERSION: ${{ vars.DOTNET_VERSION || '10.0.x' }} # The .NET SDK version to use.

@@ -3,9 +3,8 @@
     assemblyfilter = +Glob.Api.FakeFileSystem*
 
     # Exclude generated assemblies
-    classFilter = -*ExcludeFromCodeCoverage*
-    classFilter = -*GeneratedCode*
-    classFilter = -*GeneratedRegex*
+    classFilter = -*GeneratedCodeAttribute*
+    classFilter = -*GeneratedRegexAttribute*
     classFilter = -*SourceGenerationContext*
 
     # Exclude generated and irrelevant files
