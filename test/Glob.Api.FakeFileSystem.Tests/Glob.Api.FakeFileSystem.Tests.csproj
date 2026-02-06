@@ -9,12 +9,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Content Include="testconfig.json">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </Content>
-    </ItemGroup>
-
-    <ItemGroup>
         <Content Include="FSFiles\FS*.*.graph.txt">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </Content>

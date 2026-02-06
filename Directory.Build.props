@@ -126,13 +126,6 @@
 
         <!-- Enable code coverage by default -->
         <EnableCodeCoverage>true</EnableCodeCoverage>
-        <!-- Default output format: cobertura | xml | coverage -->
-        <CodeCoverageOutputFormat>cobertura</CodeCoverageOutputFormat>
-        <!-- Optional: custom settings file -->
-        <RunSettingsFilePath>$(RepoRoot)CodeCoverage.runsettings</RunSettingsFilePath>
-        <TestConfiguration>$(RepoRoot)testconfig.json</TestConfiguration>
-        <ResultsDirectory>$(RepoRoot)TestResults/$(MSBuildProjectName)</ResultsDirectory>
-        <CodeCoverageOutput>$(ResultsDirectory)/coverage.xml</CodeCoverageOutput>
     </PropertyGroup>
 
     <ItemGroup Condition="$(IsTestProject) == 'true'">
@@ -150,10 +143,9 @@
         <Using Include="FluentAssertions" />
     </ItemGroup>
 
-    <!-- Copy repo-level test configuration files to test output directory -->
+    <!-- Copy repo-level test configuration to test output directory -->
     <ItemGroup Condition="$(IsTestProject) == 'true'">
         <Content Include="$(RepoRoot)testconfig.json">
-            <Link>testconfig.json</Link>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
     </ItemGroup>
