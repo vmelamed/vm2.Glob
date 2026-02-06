@@ -11,7 +11,7 @@
              without overriding the rest of the symbols like DEBUG, TRACE, etc. -->
         <DefineConstants Condition="'preprocessor_symbols' != ''">$(DefineConstants);$(preprocessor_symbols)</DefineConstants>
 
-        <RepoRoot>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), '.git'))\</RepoRoot>
+        <RepoRoot>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), 'Directory.Build.props'))</RepoRoot>
     </PropertyGroup>
 
     <!-- ================ Common Settings for All projects ================ -->
@@ -60,6 +60,15 @@
         <EmbedUntrackedSources>true</EmbedUntrackedSources>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
     </PropertyGroup>
+
+    <!-- Print version info after build for all projects -->
+    <Target Name="PrintVersion" AfterTargets="Build">
+        <Message Importance="high" Text="AssemblyVersion: $(AssemblyVersion)" />
+        <Message Importance="high" Text="FileVersion: $(FileVersion)" />
+        <Message Importance="high" Text="InformationalVersion: $(InformationalVersion)" />
+        <Message Importance="high" Text="PackageVersion: $(PackageVersion)" />
+        <Message Importance="high" Text="Version: $(Version)" />
+    </Target>
 
     <!-- ================ Common Package References for All projects ================ -->
     <ItemGroup>
@@ -113,6 +122,7 @@
         </NoWarn>
         <!-- Enable MTP v.2 For more information on Microsoft Testing Platform support in xUnit.net, visit: https://xunit.net/docs/getting-started/v3/microsoft-testing-platform -->
         <UseMicrosoftTestingPlatform>true</UseMicrosoftTestingPlatform>
+        <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
 
         <!-- Enable code coverage by default -->
         <EnableCodeCoverage>true</EnableCodeCoverage>
@@ -138,6 +148,14 @@
     <ItemGroup Condition="$(IsTestProject) == 'true'">
         <Using Include="Xunit" />
         <Using Include="FluentAssertions" />
+    </ItemGroup>
+
+    <!-- Copy repo-level test configuration files to test output directory -->
+    <ItemGroup Condition="$(IsTestProject) == 'true'">
+        <Content Include="$(RepoRoot)testconfig.json">
+            <Link>testconfig.json</Link>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
 
     <!-- ================ Test Library Projects' Settings ================ -->
@@ -253,15 +271,6 @@
         <IsPackable>false</IsPackable>
         <GenerateDocumentationFile>false</GenerateDocumentationFile>
     </PropertyGroup>
-
-    <!-- Print version info after build for all projects -->
-    <Target Name="PrintVersion" AfterTargets="Build">
-        <Message Importance="high" Text="AssemblyVersion: $(AssemblyVersion)" />
-        <Message Importance="high" Text="FileVersion: $(FileVersion)" />
-        <Message Importance="high" Text="InformationalVersion: $(InformationalVersion)" />
-        <Message Importance="high" Text="PackageVersion: $(PackageVersion)" />
-        <Message Importance="high" Text="Version: $(Version)" />
-    </Target>
 
     <!-- Add project-specific properties and packages here -->
 
