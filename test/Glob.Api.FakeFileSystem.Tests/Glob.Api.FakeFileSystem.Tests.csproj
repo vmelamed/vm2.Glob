@@ -2,6 +2,9 @@
 
     <PropertyGroup>
         <RootNamespace>vm2.Glob.Api.FakeFileSystem.Tests</RootNamespace>
+
+        <!-- MTP v2: Extend base exclusions to also exclude Glob.Api (dependency, not test target) -->
+        <CoverageExcludeByFile>$(CoverageExcludeByFile);**/Glob.Api.dll</CoverageExcludeByFile>
     </PropertyGroup>
 
     <ItemGroup>
