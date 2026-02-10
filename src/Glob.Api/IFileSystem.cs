@@ -14,7 +14,7 @@ public interface IFileSystem
     /// <returns>
     /// <see langword="true"/> if the current operating system is Windows.
     /// </returns>
-    bool IsWindows => OperatingSystem.IsWindows();
+    bool IsWindows { get; }
 
     /// <summary>
     /// Converts a relative or absolute path into a fully qualified path. The returned path is normalized but is not guaranteed

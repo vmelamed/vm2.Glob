@@ -3,6 +3,7 @@
         <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
         <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
     </PropertyGroup>
+
     <ItemGroup>
         <PackageVersion Include="System.CommandLine" Version="2.0.2" />
         <PackageVersion Include="System.Configuration.ConfigurationManager" Version="10.0.2" />
@@ -19,6 +20,7 @@
         <PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="10.0.2" />
         <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.102" />
         <PackageVersion Include="MinVer" Version="7.0.0" />
+
         <!-- The test stack: -->
         <PackageVersion Include="Microsoft.Testing.Extensions.CodeCoverage" Version="18.1.0" />
         <PackageVersion Include="Microsoft.Testing.Platform" Version="2.0.2" />
@@ -31,10 +33,13 @@
         <PackageVersion Include="xunit.v3.extensibility.core" Version="3.2.2" />
         <PackageVersion Include="xunit.v3.runner.inproc" Version="3.2.2" />
         <PackageVersion Include="vm2.TestUtilities" Version="1.2.1" />
+
         <!-- Benchmarking packages: -->
         <!-- for running with Visual Studio profiler:<PackageVersion Include="Microsoft.VisualStudio.DiagnosticsHub.BenchmarkDotNetDiagnosers" Version="18.0.36421.1" />-->
         <PackageVersion Include="BenchmarkDotNet" Version="0.15.8" />
         <PackageVersion Include="BenchmarkDotNet.Annotations" Version="0.15.8" />
-        <!-- Add project-specific packages here: -->
+
+        <!-- Add project-specific packages below this line: -->
+
     </ItemGroup>
 </Project>
