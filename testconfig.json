@@ -22,7 +22,7 @@
         "methodDisplayOptions": "none",
         "parallelAlgorithm": "conservative",
         "parallelizeTestCollections": true,
-        "parallelizeAssembly": true,
+        "parallelizeTestMethods": true,
         "preEnumerateTheories": true,
         "printMaxEnumerableLength": 5,
         "printMaxObjectDepth": 3,
