@@ -2,9 +2,6 @@
 
     <PropertyGroup>
         <RootNamespace>vm2.Glob.Api.FakeFileSystem.Tests</RootNamespace>
-
-        <!-- Exclude dependencies from coverage (not the test target) -->
-        <CoverageExcludeByFile>$(CoverageExcludeByFile);**/Glob.Api.dll;**/Glob.Api.FakeFileSystem.dll</CoverageExcludeByFile>
     </PropertyGroup>
 
     <ItemGroup>

@@ -7,7 +7,7 @@ on:
 
   pull_request:
     branches:
-      - "**" # trigger on PR for all branches
+      - "**" # trigger on PR for all branches.
 
   pull_request_review:
     types:
@@ -136,6 +136,7 @@ jobs:
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       BENCHER_API_TOKEN: ${{ secrets.BENCHER_API_TOKEN }}
+      REPORTGENERATOR_LICENSE: ${{ secrets.REPORTGENERATOR_LICENSE }}
     permissions:
       contents: read # Required to checkout the code
       packages: read # Required to restore GitHub Packages NuGet packages

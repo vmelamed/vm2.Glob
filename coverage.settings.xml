@@ -3,9 +3,6 @@
     <CodeCoverage>
         <!-- Match assemblies to include in coverage -->
         <ModulePaths>
-            <Include>
-                <ModulePath>.*Glob\.Api\.dll$</ModulePath>
-            </Include>
             <Exclude>
                 <ModulePath>.*Tests\.dll$</ModulePath>
                 <ModulePath>.*TestUtilities\.dll$</ModulePath>
@@ -35,7 +32,7 @@
                 <Source>.*\\d__.*\.cs$</Source>
 
                 <!-- Test files -->
-                <Source>.*\\Test\.Utilities\\.*</Source>
+                <Source>.*\\TestUtilities\\.*</Source>
                 <Source>.*\.Tests\\.*</Source>
             </Exclude>
         </Sources>
