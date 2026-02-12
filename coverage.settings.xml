@@ -6,7 +6,6 @@
             <Exclude>
                 <ModulePath>.*Tests\.dll$</ModulePath>
                 <ModulePath>.*TestUtilities\.dll$</ModulePath>
-                <ModulePath>.*\.FakeFileSystem\.dll$</ModulePath>
             </Exclude>
         </ModulePaths>
 
