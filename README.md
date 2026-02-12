@@ -1,241 +1,862 @@
-# DevOps Automation Toolkit
+﻿# vm2.Glob - Cross-Platform Glob Pattern Matching
 
-This repository packages reusable GitHub Actions workflows and Bash automation that can be plugged into any .NET solution. All shell entry points sit under `scripts/bash/` and are linted during CI with [ShellCheck](https://www.shellcheck.net/) to keep the scripts portable and robust.
+[![CI](https://github.com/vmelamed/vm2.Glob/actions/workflows/CI.yaml/badge.svg)](https://github.com/vmelamed/vm2.Glob/actions/workflows/CI.yaml)
+[![Release](https://github.com/vmelamed/vm2.Glob/actions/workflows/Release.yaml/badge.svg)](https://github.com/vmelamed/vm2.Glob/actions/workflows/Release.yaml)
+[![codecov](https://codecov.io/gh/vmelamed/vm2.Glob/branch/main/graph/badge.svg)](https://codecov.io/gh/vmelamed/vm2.Glob)
+[![NuGet](https://img.shields.io/nuget/v/vm2.Glob.Api.svg)](https://www.nuget.org/packages/vm2.Glob.Api)
 
-## High-level reusable workflows
+<!-- TOC tocDepth:2..3 chapterDepth:2..6 -->
 
-These top-level workflows are intended to be called directly via `workflow_call` from dependent repositories. They orchestrate the full CI/CD pipeline, and fan out to lower-level building blocks - reusable workflows and bash scripts as needed. The workflows and scripts share a common input surface to make it easy to toggle behavior across the pipeline:
+- [vm2.Glob.Api - Cross-Platform Glob Pattern Matching API Library](#vm2globapi---cross-platform-glob-pattern-matching-api-library)
+  - [Installation](#installation)
+  - [Quick Start](#quick-start)
+  - [Features](#features)
+  - [Glob Pattern Syntax](#glob-pattern-syntax)
+  - [Usage](#usage)
+  - [Configuration Options](#configuration-options)
+  - [Real-World Examples](#real-world-examples)
+  - [Testing with IFileSystem](#testing-with-ifilesystem)
+  - [Performance Considerations](#performance-considerations)
+  - [API Reference](#api-reference)
+  - [References](#references)
+- [vm2.Glob - Cross-Platform Glob Pattern Matching Tool](#vm2glob---cross-platform-glob-pattern-matching-tool)
+  - [Tool Installation](#tool-installation)
+  - [Tool Quick Start](#tool-quick-start)
+  - [Tool Features](#tool-features)
+  - [Glob Pattern Syntax (the same as Glob.Api - see above)](#glob-pattern-syntax-the-same-as-globapi---see-above)
+  - [Command Line Options](#command-line-options)
+  - [Examples](#examples)
+  - [Real-World Use Cases](#real-world-use-cases)
+  - [Output Format](#output-format)
+  - [Environment Variable Support](#environment-variable-support)
+  - [Performance Tips](#performance-tips)
+  - [Comparison with Alternatives](#comparison-with-alternatives)
+  - [Troubleshooting](#troubleshooting)
+  - [Library Integration](#library-integration)
+- [License](#license)
+- [Version History](#version-history)
 
-- Common switches for all bash scripts:
-  - `help`: If `true`, scripts will display usage information and exit (default: `false`)
-  - `debugger`:  Set when the a script is running under a debugger, e.g. 'gdb'. If specified, the script will not set traps for DEBUG and EXIT, and will set the '--quiet' switch. (default: `false`)
-  - `dry-run`: If `true`, scripts will simulate actions without making changes (default: `false`)
-  - `quiet`: If `true`, scripts will suppress all functions that request input from the user - confirmations - Y/N, choices - 1) 2)..., etc. and will assume some sensible default input. (default: `false`, in CI - `true`)
-  - `verbose`: If `true`, scripts will emit tracing and messages from all `trace()` calls, all executed commands, and all variable dumps (default: `false`)
-- Switches and options for the CI workflows and bash scripts:
-  - `target-os`: Operating systems to run the jobs on (default: `ubuntu-latest`)
-  - `dotnet-version`: .NET SDK version to install (default: `10.0.x`)
-  - `configuration`: Build configuration (default: `Release`)
-  - `preprocessor-symbols`: Optional preprocessor symbols to pass to `dotnet build` (e.g. SHORT_RUN for benchmarks) (default: empty)
-  - `test-project`: Relative path to the test project to execute (default: `tests/UnitTests/UnitTests.csproj`)
-  - `min-coverage-pct`: Minimum acceptable line coverage percentage (default: `80`)
-  - `run-benchmarks`: Whether to run benchmarks as part of the CI (default: `true`)
-  - `benchmark-project`: Relative path to the benchmark project to execute (default: `benchmarks/Benchmarks/Benchmarks.csproj`)
-  - `force-new-baseline`: Ignore the current baseline and make the current benchmark results the new baseline (default: `false`)
-  - `max-regression-pct`: Maximum acceptable regression percentage (default: `10`)
+<!-- /TOC -->
 
-### `.github/workflows/ci.yaml`
+## vm2.Glob.Api - Cross-Platform Glob Pattern Matching API Library
 
-- Orchestrates the full pipeline:
-  1. Build
-  1. Test
-  1. Run benchmark tests
-- Normalizes all incoming inputs (target OS, .NET SDK, configuration, defined symbols, etc.) through `validate-input.sh` (see the list of parameters above).
-- Fans out to the lower-level reusable workflows (`build.yaml`, `test.yaml`, `benchmarks.yaml`).
-- Uploads/Downloads artifacts from/to artifact directories (`TestArtifacts`, `BmArtifacts`) so downstream jobs and scripts stay in sync, compare with previous versions (esp. for benchmarks), track progress of non-functional changes (e.g. test coverage and performance benchmarks), etc. history.
+A high-performance, cross-platform glob pattern matching library for .NET applications. Implements the
+[POSIX.2 glob specification](https://www.man7.org/linux/man-pages/man7/glob.7.html) with extensions for Windows and Unix-like
+systems.
 
-### `.github/workflows/Prerelease.yaml`
+### Installation
 
-- Triggers on pushes to `main` or manual dispatches to `main`.
-- Computes semantic prerelease tags (`vX.Y.(Z+1)-<prefix>.<YYYYMMDD>.<run>`) using MinVer conventions,
-- Pushes the tag
-- Packs with `dotnet pack`, and publishes to NuGet as a prerelease
-- Runs the CI workflow again with all default parameters (see above) to ensure the code is in a good state before packing
-- Accepts switches for
-  - prerelease tag prefix (e.g. `preview`, `beta`, `alpha`)
-  - customizing the prerelease label
-  - optionally uploading the produced `.nupkg` files as workflow artifacts for later inspection.
-  - forcing publication
+    dotnet add package vm2.Glob.Api
 
-### `.github/workflows/Release.yaml`
+### Quick Start
 
-- Ships stable releases off of `v*` tags - `^v[0-9]+(\.[0-9]+)(\.[0-9]+)(\.[0-9]+)$` (e.g. `v2.1.3`) or manual dispatches.
-- Runs a `Release` pack
-- Pushes packages to NuGet
-- Shares the same input surface as the prerelease workflow, making it easy to toggle behavior between prerelease and stable channels.
+    using vm2.Glob.Api;
 
-## Composable workflow building blocks
+    // Basic usage
+    var enumerator = new GlobEnumerator();
+    enumerator.Glob = "**/*.cs";
+    enumerator.FromDirectory = "./src";
 
-These workflows are included by the high-level orchestrators, but can also be consumed individually if you only need part of the pipeline. E.g. all scripts are designed to be reusable and callable either from a workflow or directly from the command line. E.g. you can call `run-tests.sh` from your own workflow if you want to run tests with coverage but don't need the full CI.
+    foreach (var file in enumerator.Enumerate())
+    {
+        Console.WriteLine(file);
+    }
 
-### `.github/workflows/build.yaml`
+### Features
 
-- Checks out the repository
-- Installs the requested .NET SDK
-- Runs `dotnet build` with optional preprocessor symbols
-- Makes all scripts under `scripts/bash/` executable (`chmod +x`)
-- Runs ShellCheck (`ludeeus/action-shellcheck`) across `scripts/bash/`
-- Populates `$GITHUB_STEP_SUMMARY` with build results
+- ✅ **[POSIX.2 glob specification](https://www.man7.org/linux/man-pages/man7/glob.7.html)** compliant with Windows extensions
+- ✅ **Cross-platform** - Identical behavior on Windows, Linux, macOS, and BSD
+- ✅ **High performance** - Optimized enumeration with minimal allocations
+- ✅ **Flexible API** - Fluent builder pattern for easy configuration
+- ✅ **Lazy evaluation** - IEnumerable-based streaming of results
+- ✅ **Testable** - `IFileSystem` abstraction for unit testing
+- ✅ **Environment variables** - Automatic expansion of path variables
+- ✅ **Multiple traversal modes** - Depth-first or breadth-first
+- ✅ **Deduplication** - Optional removal of duplicate results
 
-### `.github/workflows/test.yaml`
+### Glob Pattern Syntax
 
-- Provisions the .NET SDK
-- Calls `scripts/bash/run-tests.sh` to execute a specified test project with coverage collection
-- Publishes the resulting `TestArtifacts` directory (coverage reports, logs) as an artifact for future inspections
-- Populates `$GITHUB_STEP_SUMMARY` with coverage results, and fails the job if coverage is below the configured threshold
+| Pattern     | Meaning                                                  | Example                           |
+|-------------|----------------------------------------------------------|-----------------------------------|
+| `*`         | Any sequence of characters (except path separator)       | `*.txt` matches `file.txt`        |
+| `?`         | Any single character                                     | `file?.txt` matches `file1.txt`   |
+| `[abc]`     | Any character in set                                     | `[abc].txt` matches `a.txt`       |
+| `[a-z]`     | Any character in range                                   | `[0-9].txt` matches `5.txt`       |
+| `[!abc]`    | Any character NOT in set                                 | `[!.]*.txt` excludes hidden files |
+| `**`        | Zero or more directory levels (globstar)                 | `**/test/**/*.cs` recursive       |
+| `[:class:]` | Named character class (alpha, digit, lower, upper, etc.) | `[[:digit:]]*.log`                |
 
-### `.github/workflows/benchmarks.yaml`
+### Usage
 
-- Restores baseline benchmark summaries (if available) via `download-artifact.sh`
-- Executes `scripts/bash/run-benchmarks.sh`
-- Analyses the results and compares to the baseline (results from previous runs)
-- Enforces regression thresholds
-- Always publishes the latest benchmark summaries
-- Optionally pushes a refreshed baseline when large improvements are observed
-- When large regressions are detected, the job fails and the summary contains guidance on how to proceed, possibly by forcing a new baseline
+#### Basic Enumeration
 
-## Script library (lowest layer)
+    var enumerator = new GlobEnumerator
+    {
+        Glob = "**/*.cs",
+        FromDirectory = "./src"
+    };
 
-All scripts live under `scripts/bash/` and follow a three-file convention:
+    foreach (var file in enumerator.Enumerate())
+    {
+        Console.WriteLine(file);
+    }
 
-- the main script
-- `*.usage.sh` file that defines help text
-- `*.utils.sh` helper that encapsulates argument parsing
+#### Using Fluent Builder
 
-They all source `github.sh` for shared behavior and respect common flags (`--verbose`, `--quiet`, `--trace`, `--dry-run`, `--debugger`, see above).
+    var results = new GlobEnumeratorBuilder()
+        .WithGlob("**/*Tests.cs")
+        .FromDirectory("./test")
+        .SelectFiles()
+        .CaseSensitive()
+        .Build()
+        .Configure(new GlobEnumerator())
+        .Enumerate()
+        .ToList();
 
-## Local lockfile maintenance
+#### Dependency Injection
 
-- Run `./scripts/restore-locked.sh [solution-or-project]` to refresh lockfiles with `--force-evaluate`, then verify them with `--locked-mode` (mirrors CI enforcement). Defaults to `vm2.Glob.slnx` when no target is provided.
+    // In Startup.cs or Program.cs
+    services.AddGlobEnumerator();
 
-### `validate-input.*.sh`
+    // In your service
+    public class FileService
+    {
+        private readonly GlobEnumerator _globEnumerator;
 
-- Validates and normalizes workflow inputs, emitting derived values for downstream jobs in `$GITHUB_OUTPUT`
-- Ensures consistent environment variable defaults for the pipeline
+        public FileService(GlobEnumerator globEnumerator)
+        {
+            _globEnumerator = globEnumerator;
+        }
 
-### `run-tests.*.sh`
+        public IEnumerable<string> FindFiles(string pattern)
+        {
+            _globEnumerator.Glob = pattern;
+            return _globEnumerator.Enumerate();
+        }
+    }
 
-- Runs `dotnet test` with configurable build configuration, preprocessor symbols, and coverage thresholds
-- Manages artifacts (`TestArtifacts/Results`, coverage summaries)
-- Installs/uninstalls the `dotnet-reportgenerator-globaltool` on demand
-- Populates `$GITHUB_STEP_SUMMARY` with coverage outcomes and e
-- Exits with a non-zero status when coverage falls below the configured threshold
+#### Advanced Configuration Using GlobEnumeratorBuilder
 
-### `run-benchmarks.*.sh`
+    var enumerator = new GlobEnumeratorBuilder()
+        .WithGlob("**/docs/**/*.md")
+        .FromDirectory("/usr/share")
+        .Select(Objects.Files)                    // Files only
+        .WithCaseSensitivity(MatchCasing.CaseInsensitive)
+        .TraverseDepthFirst(true)                 // Depth-first traversal
+        .Distinct()                               // Remove duplicates
+        .Build()
+        .Configure(new GlobEnumerator());
 
-- Executes BenchmarkDotNet projects via `dotnet run`
-- Exports JSON results and compact summaries (rendered using `jq` and the query `summary.jq`)
-- Compares current performance against stored baselines
-- Sets `FORCE_NEW_BASELINE` when improvements/regressions exceed significantly the configured tolerances. This causes the `benchmarks.yaml` to upload the results as new baselines.
+    foreach (var file in enumerator.Enumerate())
+    {
+        ProcessFile(file);
+    }
 
-### `download-artifact.*.sh`
+#### File System Access Control
 
-- Downloads artifacts from prior workflow runs using the GitHub REST APIs and `gh` CLI semantics.
-- Used by `benchmarks.yaml` to hydrate baseline data before running new benchmarks, but is general-purpose for any artifact retrieval task.
+##### Include Hidden and System Files
 
-### `_common.sh` and `github.sh`
+Also, useful on UNIX-like systems to include dotfiles (e.g., `.gitignore`).
 
-- Shared utility library that wires in tracing, verbosity, CI-safe defaults, and interactive prompts.
-- Implements helpers for argument parsing (`get_common_arg()`), logging (`trace()`, `dump_vars()`), command execution with dry-run support (`execute()`), user prompts (`choose()`, `confirm()`, `press_any_key()`), and numeric/string validation helpers (`is_integer`, `is_in`, etc.).
-- Should be sourced by all new scripts to ensure consistent behavior across the automation surface.
+    var enumerator = new GlobEnumerator
+    {
+        Glob = "**/*",
+        FromDirectory = "./src",
+        AttributesToSkip = FileAttributes.None  // Include all files
+    };
 
-#### `_common.sh` and `github.sh` functions and variables
+    foreach (var file in enumerator.Enumerate())
+    {
+        Console.WriteLine(file);
+    }
 
-##### Variables (**WIP**)
+##### Skip Only Specific Attributes
 
-- `debugger`: If `true`, indicates the script is running under a debugger, e.g. 'gdb'. If specified, the script will not set traps for DEBUG and EXIT (see below), and will set the '--quiet' as user input from stdin interferes with the debugger. (default: `false`)
-- `verbose`: If `true`, enables the output from the functions `execute()`, `trace()`, and `dump_vars()` (default: `false`)
-- `dry_run`: If `true`, simulates actions without making changes (default: `false`)
-- `quiet`: If `true`, suppresses all functions that request input from the user - confirmations - Y/N, choices - 1) 2)..., etc. and will assume some sensible default input. (default: `false`, in CI - `true`)
-- `ci`: If `true`, indicates the script is running in a CI environment, as always set by GitHub Actions (default: `false`, or `true` in GitHub Actions)
-- `_ignore`: The file to redirect unwanted output to (default: `/dev/null`). When the calling script sets the common flag `--trace`, this is set to `/dev/`stdout`` so that the output from all executed commands are visible.
-- `common_switches`: A string that contains documentation of all common switches passed to the calling script's function `get_common_arg()`. For reuse by the calling scripts in their help strings.
+    // Skip only temporary files
+    enumerator.AttributesToSkip = FileAttributes.Temporary;
 
-##### Functions (**WIP**)
+    // Skip multiple attributes
+    enumerator.AttributesToSkip = FileAttributes.Hidden
+                                | FileAttributes.System
+                                | FileAttributes.Temporary;
 
-- `on_debug()` and `on_exit()`: bash DEBUG and EXIT trap handlers that remember the last invoked bash command in `$last_command`. Used by `on_exit()` to report the last command when the script exits with an error.
-- `set-*` functions are invoked when the script is initializing from external environment variables or common arguments are being applied to the calling script (see `get_common_arg()`).
-  - `set_ci()`: when the variable `CI` is `true`, sets the following variables as follows:
-    - `ci` to `true`
-    - `quiet` to `true`
-    - `debugger` to `false`
-    - `verbose` to `false`
-    - `dry_run` to `false`
-    - `_ignore` to `/dev/null`
-    - `set +x` - disables bash tracing
-  - `set_debugger()`: sets (except when `ci` is `true`):
-    - `debugger` to `true`
-    - `quiet` to `true`
-  - `set_trace_enabled()`: when `true`, sets (except when `ci` is `true`):
-    - `verbose` to `true`
-    - `_ignore` to `/dev/`stdout``
-    - `set -x` enables bash tracing
-  - `set_dry_run()`: when `true`, sets (except when `ci` is `true`) `dry_run` to `true`
-  - `set_quiet()`: when `true`, sets (except when `ci` is `true`) `quiet` to `true`
-  - `set_verbose()`: when `true`, sets `verbose` to `true`. Note that verbose is not disabled in CI, as it is useful when debugging workflows or to see trace output from `execute()`, `trace()`, and `dump_vars()` calls.
-- `dump_vars()`: dumps the values of all passed variables to `stdout`. Useful for debugging. Pass the name of the variables you want dumped (without the `$`), e.g. `dump_vars var1 var2`. Also you can pass "flags" between the variable names:
-  - `-f` or `--force`: dump the variables even if `verbose` is not `true`. Useful when you want to see variable dumps in quiet mode or in CI.
-  - `-h` or `--header` followed by a header string: include a header line before or between the variable dumps
-  - `-b` or `--blank`: include a blank line between variable dumps
-  - `-l` or `--line`: include a line between variable dumps
-- `is_defined_variable()`: returns `0` if the passed variable is defined (not null), `1` otherwise. Usage: `is_defined_variable var_name` (without the `$`).
-- `write_line()`: for internal use by `dump_vars()`
-- `get_common_arg()`: parses common arguments passed to the calling script and invokes the corresponding `set-*` functions. Usage: `get_common_arg "$@"` (pass all script arguments). Recognizes the following arguments:
-  - `--debugger`: calls `set_debugger()` (see above)
-  - `--quiet`, `-q`: calls `set_quiet()` (see above)
-  - `--verbose`, `-v`: calls `set_verbose()` (see above)
-  - `--trace`, `-x`: calls `set_trace_enabled()` (see above)
-  - `--dry-run`, `-n`: calls `set_dry_run()` (see above)
+##### Handle Access Denied Scenarios
 
-  Returns `0` if a common argument was found and processed, `1` otherwise.
+    // Throw exceptions for inaccessible files (strict mode)
+    enumerator.IgnoreInaccessible = false;
 
-- `display_usage_msg()`: suppresses temporarily the bash tracing (if enabled) and displays the passed usage message. Usage: `display_usage_msg "$usage_msg"` (pass the usage message as a single string).
-- `trace()`: if `verbose` is `true`, prints the passed message to `stdout`. Usage: `trace "message"`.
-- `execute()`: depending on the value of `dry_run`, either executes or just displays what would have been executed. Usage: `execute "command"`. E.g.:
-  - `execute sudo apt-get update && sudo apt-get install -y gh jq`
-  - `execute mkdir -p "$artifacts_dir"`
+    try
+    {
+        foreach (var file in enumerator.Enumerate())
+        {
+            ProcessFile(file);
+        }
+    }
+    catch (UnauthorizedAccessException ex)
+    {
+        Console.WriteLine($"Access denied: {ex.Message}");
+    }
 
-  Suggestion: use the execute function to run commands that have no side effects, i.e. do not change the system state, e.g. install/uninstall software, create/delete files or directories, etc.
+    // Skip inaccessible files silently (default, permissive mode)
+    enumerator.IgnoreInaccessible = true;
 
-- `to_lower()` and `to_upper()`: converts the passed string to lower or upper case and outputs the result to `stdout`. Usage: `to_lower "STRING"`. E.g. `lower_str=$(to_lower "$str")`
-- `is_*` predicates are useful for arguments validation:
-  - `is_integer()`: returns `0` if its parameter represents a valid integer number, `1` otherwise
-  - `is_non_positive()`: returns `0` if its parameter represents a valid non-positive, integer number: {..., -3, -2, -1, 0}, `1` otherwise
-  - `is_positive()`: returns `0` if its parameter represents a valid positive, integer number (aka natural number): {1, 2, 3, ...}, `1` otherwise
-  - `is_non_negative()`: returns `0` if its parameter represents a valid non-negative, integer number: {0, 1, 2, 3, ...}, `1` otherwise
-  - `is_negative()`: returns `0` if its parameter represents a valid negative: {..., -3, -2, -1}, `1` otherwise
-  - `is_integer()`: returns `0` if its parameter represents a valid integer number (..., -2, -1, 0, 1, 2, ...), `1` otherwise
-  - `is_decimal()`: returns `0` if its parameter represents a valid decimal number, `1` otherwise
-  - `is_in()`: returns `0` if the first parameter is found in the list of subsequent parameters, `1` otherwise. Usage: `is_in "value" "list_item1" "list_item2" ...`
-- `compare_semver()`: compares two semver compliant version strings and returns `0` if the first is equal to the second, `1` if the first is greater, and `255` if the first is smaller. Usage: `compare_semver "1.2.3" "1.2.4"`
-- `list_of_files()`: given a file pattern, lists all files as a bash list that match the pattern to `stdout`. Usage: `list_of_files "pattern"`. E.g. `files=$(list_of_files "*.json")`
-- User interaction functions:
-  - `press_any_key()`: prompts the user to press any key to continue. Usage: `press_any_key "Prompt message"`. If `quiet` is `true`, does nothing and returns   immediately.
-  - `confirm()`: prompts the user with a Y/N question and returns `0` if the answer is yes, `1` otherwise. Usage: `if confirm "Are you sure?"; then ...;  fi`.   If `quiet` is `true`, assumes the default answer is yes.
-  - `choose()`: prompts the user to choose one of the passed options and returns the selected option to `stdout`. Usage: `choose "Prompt message" "Option 1" "Option 2" ...`. The function automatically displays the options in a numbered list and outputs the user's choice to `stdout`. E.g.:
+    foreach (var file in enumerator.Enumerate())
+    {
+        // Will skip files/directories that can't be accessed
+        ProcessFile(file);
+    }
 
-    ```bash
-    choice=$(choose \
-                "The benchmark results directory '$artifacts_dir' already exists. What do you want to do?" \
-                    "Clobber the directory '$artifacts_dir' with the new contents" \
-                    "Move the contents of the directory to '$renamed_artifacts_dir', and continue" \
-                    "Delete the contents of the directory, and continue" \
-                    "Exit the script") || exit $?
-    ```
+##### Include Special Directory Entries
 
-    If `quiet` is `true`, assumes the first option is selected.
+    // Include "." and ".." in directory enumeration
+    var enumerator = new GlobEnumerator
+    {
+        Glob = "*",
+        FromDirectory = "./src",
+        Enumerated = Objects.Directories,
+        ReturnSpecialDirectories = true
+    };
 
-  - `get_credentials()`: prompts the user to enter a username and password, and returns them via predefined variables `username` and `password`. Usage: `get_credentials "Prompt message"`.
+    foreach (var dir in enumerator.Enumerate())
+    {
+        // Will include ".", "..", and other directories
+        Console.WriteLine(dir);
+    }
 
-    ```bash
-    credentials=$(get_credentials "Enter your user ID: " "Enter your password: " "Are these correct?") || exit $?
-    username=${credentials%%:*}
-    password=${credentials#*:}
-    ```
+**Note:** `ReturnSpecialDirectories` is rarely needed and defaults to `false` for cleaner results.
 
-    If `quiet` is `true`, returns ":".
+### Configuration Options
 
-- `scp_retry()`: attempts to SSH copy a file via `scp` up to a specified number of times with a delay between attempts. Usage: `scp_retry "source" "destination" max_attempts delay_seconds`. E.g. `scp_retry "file.txt" "user@host:/path/" 5 10` tries to copy `file.txt` to `user@host:/path/` up to 5 times, waiting 10 seconds between attempts.
+#### Object Type Selection
 
-- Test functions for building test harnesses:
-  - `fail()`: prints the passed message to `stderr` and exits with status `1`. Usage: `fail "Error message"`. E.g. `if ! is_integer "$var"; then fail "The variable 'var' must be an integer"; fi`
-  - `assert_eq()`: compares two values and exits with status `1` if they are not equal. Usage: `assert_eq "value1" "value2" "Error message"`. E.g. `assert_eq "$expected" "$actual" "The actual value does not match the expected value"`
-  - `assert_true()`: checks if the passed expression is true and exits with status `1` if it is not. Usage: `assert_true "expression" "Error message"`. E.g. `assert_true "$var" "The variable 'var' must be true"; fi`
-  - `assert_false()`: checks if the passed expression is false and exits with status `1` if it is not. Usage: `assert_false "expression" "Error message"`. E.g. `assert_false "$var" "The variable 'var' must be false"; fi`
+    // Find only files (default)
+    enumerator.Enumerated = Objects.Files;
 
-## Additional notes
+    // Find only directories
+    enumerator.Enumerated = Objects.Directories;
 
-- All workflows assume .NET 10.0.x SDKs; update the workflow inputs if you need to target a different version.
-- Scripts rely on `bash` and standard GNU utilities available on Ubuntu GitHub-hosted runners. Any additional tooling they need (e.g., `jq`, `reportgenerator`) is installed on demand.
-- When adding new scripts, follow the existing three-file pattern and keep code ShellCheck-clean so the shared lint step continues to pass.
-- For lockfile hygiene before committing, run `./scripts/restore-locked.sh [solution-or-project]`; it refreshes locks with `--force-evaluate` and then verifies them with `--locked-mode` (mirrors CI). Defaults to `vm2.Glob.slnx` if no target is provided.
+    // Find both files and directories
+    enumerator.Enumerated = Objects.FilesAndDirectories;
+
+#### Case Sensitivity
+
+    // Platform default (case-insensitive on Windows, sensitive on Unix)
+    enumerator.MatchCasing = MatchCasing.PlatformDefault;
+
+    // Always case-sensitive
+    enumerator.MatchCasing = MatchCasing.CaseSensitive;
+
+    // Always case-insensitive
+    enumerator.MatchCasing = MatchCasing.CaseInsensitive;
+
+#### Traversal Order
+
+    // Breadth-first (default) - process all items at current level before descending
+    enumerator.DepthFirst = false;
+
+    // Depth-first - fully explore each subdirectory before siblings
+    enumerator.DepthFirst = true;
+
+#### Deduplication
+
+    // Allow duplicate results (default, faster)
+    enumerator.Distinct = false;
+
+    // Remove duplicate results (uses more memory)
+    enumerator.Distinct = true;
+
+**Note:** Deduplication is only necessary for patterns with multiple globstars (e.g., `**/docs/**/*.md`) which may produce
+duplicate results.
+
+### Real-World Examples
+
+#### Build Tool - Find Source Files
+
+    public IEnumerable<string> GetSourceFiles(string projectPath)
+    {
+        var enumerator = new GlobEnumeratorBuilder()
+            .WithGlob("**/*.cs")
+            .FromDirectory(projectPath)
+            .SelectFiles()
+            .Build()
+            .Configure(new GlobEnumerator());
+
+        return enumerator.Enumerate()
+            .Where(f => !f.Contains("/obj/") && !f.Contains("/bin/"));
+    }
+
+#### Test Runner - Find Test Assemblies
+
+    public IEnumerable<string> FindTestAssemblies(string artifactsPath)
+    {
+        var enumerator = new GlobEnumerator
+        {
+            Glob = "**/*Tests.dll",
+            FromDirectory = artifactsPath,
+            Enumerated = Objects.Files
+        };
+
+        return enumerator.Enumerate();
+    }
+
+#### File Cleanup - Find Old Log Files
+
+    public void CleanupLogs(string logDirectory, int daysOld)
+    {
+        var enumerator = new GlobEnumerator
+        {
+            Glob = "**/*.log",
+            FromDirectory = logDirectory
+        };
+
+        var cutoffDate = DateTime.Now.AddDays(-daysOld);
+
+        foreach (var logFile in enumerator.Enumerate())
+        {
+            if (File.GetLastWriteTime(logFile) < cutoffDate)
+            {
+                File.Delete(logFile);
+            }
+        }
+    }
+
+#### Configuration Loader - Find Config Files
+
+    public Dictionary<string, string> LoadConfigurations(string configPath)
+    {
+        var enumerator = new GlobEnumeratorBuilder()
+            .WithGlob("**/{appsettings,config}.json")
+            .FromDirectory(configPath)
+            .SelectFiles()
+            .CaseInsensitive()
+            .Build()
+            .Configure(new GlobEnumerator());
+
+        return enumerator.Enumerate()
+            .ToDictionary(
+                f => Path.GetFileName(f),
+                f => File.ReadAllText(f)
+            );
+    }
+
+#### ASP.NET Core - Static File Discovery
+
+    public void ConfigureStaticFiles(IApplicationBuilder app)
+    {
+        var wwwroot = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+        var enumerator = new GlobEnumerator
+        {
+            Glob = "**/*.{js,css,html}",
+            FromDirectory = wwwroot,
+            Enumerated = Objects.Files
+        };
+
+        foreach (var staticFile in enumerator.Enumerate())
+        {
+            // Process static files
+            Console.WriteLine($"Found: {staticFile}");
+        }
+    }
+
+### Testing with IFileSystem
+
+The library provides `IFileSystem` abstraction for unit testing without file system access:
+
+#### Custom Test Implementation
+
+    public class InMemoryFileSystem : IFileSystem
+    {
+        private readonly Dictionary<string, List<string>> _structure;
+
+        public bool IsWindows => false;
+
+        public IEnumerable<string> EnumerateFiles(string path, string pattern, EnumerationOptions options)
+        {
+            return _structure.TryGetValue(path, out var files)
+                ? files.Where(f => MatchesPattern(f, pattern))
+                : Enumerable.Empty<string>();
+        }
+
+        // Implement other methods...
+    }
+
+    // In tests
+    [Fact]
+    public void GlobEnumerator_FindsExpectedFiles()
+    {
+        var fakeFs = new InMemoryFileSystem();
+        fakeFs.AddFile("/src/Program.cs");
+        fakeFs.AddFile("/src/Models/User.cs");
+
+        var enumerator = new GlobEnumerator(fakeFs)
+        {
+            Glob = "**/*.cs",
+            FromDirectory = "/src"
+        };
+
+        var results = enumerator.Enumerate().ToList();
+
+        results.Should().HaveCount(2);
+    }
+
+### Performance Considerations
+
+#### Best Practices
+
+1. **Be specific with patterns** - `src/**/*.cs` is faster than `**/*.cs`
+2. **Use appropriate object type** - `Objects.Files` skips directory enumeration overhead
+3. **Avoid excessive globstars** - Each `**` increases traversal depth
+4. **Use deduplication sparingly** - Only enable for multi-globstar patterns
+5. **Prefer breadth-first for wide trees** - Better memory locality
+6. **Prefer depth-first for deep trees** - Faster for deep hierarchies
+7. **Prefer breadth-first for wide trees** - Faster for wide hierarchies or when the sought match is likely near the top and you
+   intend to stop as early as possible.
+
+#### Memory Usage
+
+- **Lazy enumeration** - Results streamed, not materialized
+- **Minimal allocations** - Uses `Span<T>` and `stackalloc` internally
+- **Deduplication cost** - `HashSet<string>` for tracking seen paths
+
+#### Benchmarks
+
+Typical performance on standard hardware:
+
+| Operation                   | Files | Time   | Allocations |
+|-----------------------------|-------|-------:|-------------|
+| Simple pattern (`*.cs`)     |   100 | ~1ms   | <1KB        |
+| Recursive (`**/*.cs`)       | 1,000 | ~50ms  | ~50KB       |
+| Complex (`**/test/**/*.cs`) | 1,000 | ~80ms  | ~80KB       |
+| With distinct               | 1,000 | ~100ms | ~150KB      |
+
+### API Reference
+
+#### GlobEnumerator Class
+
+##### Properties
+
+###### Pattern and Directory
+
+- `string Glob` - The glob pattern to match (default: `""` which is treated as `"*"`)
+- `string FromDirectory` - Starting directory for enumeration (default: `"."` - current directory)
+
+###### Object Selection
+
+- `Objects Enumerated` - Type of objects to find: `Files`, `Directories`, or `FilesAndDirectories` (default: `Files`)
+
+###### Matching Behavior
+
+- `MatchCasing MatchCasing` - Case sensitivity mode: `PlatformDefault`, `CaseSensitive`, or `CaseInsensitive` (default: `PlatformDefault`)
+- `bool DepthFirst` - Traversal order: `true` = depth-first, `false` = breadth-first (default: `false`)
+- `bool Distinct` - Enable deduplication of results (default: `false`)
+
+###### File System Behavior
+
+- `bool ReturnSpecialDirectories` - Include special directory entries `"."` and `".."` in results (default: `false`)
+- `bool IgnoreInaccessible` - Skip files/directories when access is denied (e.g., `UnauthorizedAccessException`, `SecurityException`) (default: `true`)
+- `FileAttributes AttributesToSkip` - Skip files/directories with specified attributes (default: `FileAttributes.Hidden | FileAttributes.System`)
+
+##### Methods
+
+- `IEnumerable<string> Enumerate()` - Execute the glob pattern and return matching paths
+
+##### Constructor
+
+- `GlobEnumerator(IFileSystem? fileSystem = null, ILogger<GlobEnumerator>? logger = null)` - Create a new instance with optional custom file system and logger
+
+#### `GlobEnumeratorBuilder` Class
+
+##### Methods of the `GlobEnumeratorBuilder`
+
+###### Pattern Configuration
+
+- `WithGlob(string pattern)` - Set the glob pattern
+
+###### Directory Configuration
+
+- `FromDirectory(string path)` - Set starting directory
+
+###### `GlobEnumeratorBuilder` Object Type Selection
+
+- `SelectFiles()` - Find only files
+- `SelectDirectories()` - Find only directories
+- `SelectDirectoriesAndFiles()` - Find both files and directories
+- `Select(Objects type)` - Set object type explicitly
+
+###### `GlobEnumeratorBuilder` Case Sensitivity
+
+- `CaseSensitive()` - Enable case-sensitive matching
+- `CaseInsensitive()` - Enable case-insensitive matching
+- `PlatformSensitive()` - Use platform default case sensitivity
+- `WithCaseSensitivity(MatchCasing casing)` - Set case sensitivity explicitly
+
+###### `GlobEnumeratorBuilder` Traversal Order
+
+- `DepthFirst()` - Enable depth-first traversal
+- `BreadthFirst()` - Enable breadth-first traversal (default)
+- `TraverseDepthFirst(bool depthFirst)` - Set traversal order explicitly
+
+###### `GlobEnumeratorBuilder` Result Filtering
+
+- `Distinct()` - Enable deduplication
+- `WithDistinct(bool distinct)` - Set deduplication explicitly
+
+###### `GlobEnumeratorBuilder` File System Behavior
+
+- `IncludeSpecialDirectories(bool include = true)` - Include `"."` and `".."` entries
+- `SkipInaccessible(bool skip = true)` - Skip files/directories with access errors
+- `SkipObjectsWithAttributes(FileAttributes attributes)` - Skip objects with specified attributes (e.g., `FileAttributes.Hidden`)
+
+###### `GlobEnumeratorBuilder` Methods
+
+- `Build()` - Build and return the builder (for method chaining)
+- `Configure(GlobEnumerator enumerator)` - Apply configuration to an enumerator instance
+
+#### Extension Methods
+
+##### Dependency Injection with `GlobEnumeratorBuilder`
+
+You can easily integrate `GlobEnumerator` with your .NET application's dependency injection (DI) system using the following extension methods:
+
+    // Register with default FileSystem
+    IServiceCollection.AddGlobEnumerator()
+
+    // Register with custom FileSystem implementation
+    IServiceCollection.AddGlobEnumerator<TFileSystem>()
+
+    // Register with specific FileSystem instance
+    IServiceCollection.AddGlobEnumerator(IFileSystem fileSystem)
+
+##### Service Provider
+
+    // Get configured enumerator from DI container
+    IServiceProvider.GetGlobEnumerator(
+        Func<GlobEnumeratorBuilder, GlobEnumeratorBuilder> configure)
+
+#### Development Setup and Build of the Library
+
+To set up the development environment and build the library, follow these steps:
+
+- Clone the Repository
+
+  ```sh
+  git clone https://github.com/vmelamed/vm2.Glob
+  cd vm2.Glob
+  ```
+
+- Build the Library
+
+  ```sh
+  dotnet build
+  ```
+
+- Run tests
+
+  ```sh
+  dotnet test
+  ```
+
+- Run benchmarks
+
+  ```sh
+  dotnet run -c Release --project benchmarks/Glob.Api.Benchmarks
+  ```
+
+### References
+
+- [POSIX.2 Glob Specification](https://www.man7.org/linux/man-pages/man7/glob.7.html) - The Linux man-pages project
+- [Glob (programming) - Wikipedia](https://en.wikipedia.org/wiki/Glob_(programming))
+- [CommonMark Specification](https://spec.commonmark.org/) - Used for this documentation
+
+## vm2.Glob - Cross-Platform Glob Pattern Matching Tool
+
+A fast, intuitive CLI tool for finding files and directories using glob patterns.
+
+### Tool Installation
+
+    dotnet tool install -g vm2.Glob
+
+### Tool Quick Start
+
+    # Find all C# files recursively
+    glob "**/*.cs"
+
+    # Find files in a specific directory
+    glob "**/*.txt" -d ~/documents
+
+    # Find only directories
+    glob "**" -o directories
+
+    # Case-sensitive search
+    glob "[A-Z]*.cs" -c sensitive
+
+    # Remove duplicates from multi-globstar patterns
+    glob "**/docs/**/*.md" -x
+
+### Tool Features
+
+- ✅ **[POSIX.2 glob specification](https://www.man7.org/linux/man-pages/man7/glob.7.html)** with Windows extensions
+- ✅ **Cross-platform** - Windows, Linux, macOS
+- ✅ **Fast** - Optimized enumeration algorithms
+- ✅ **Flexible** - Files, directories, or both
+- ✅ **Smart** - Environment variable expansion
+- ✅ **Clean output** - Full absolute paths
+
+### Glob Pattern Syntax (the same as Glob.Api - see above)
+
+| Pattern     | Meaning                                            |
+|-------------|----------------------------------------------------|
+| `*`         | Any sequence of characters (except path separator) |
+| `?`         | Any single character                               |
+| `[abc]`     | Any character in set (a, b, or c)                  |
+| `[a-z]`     | Any character in range                             |
+| `[!abc]`    | Any character NOT in set                           |
+| `**`        | Zero or more directory levels (globstar)           |
+| `[:alpha:]` | Named character class                              |
+
+### Command Line Options
+
+    glob <pattern> [options]
+
+    Arguments:
+      glob                Glob pattern (e.g., '**/*.txt')
+
+    Options:
+      -d, --start-from       Start directory (default: current directory)
+      -o, --search-objects   What to find: files|f, directories|d, both|b (default: both)
+      -c, --case             Case sensitivity: sensitive|s, insensitive|i, platform|p (default: platform)
+      -x, --distinct         Remove duplicate results (default: false)
+      -a, --show-hidden      Include hidden/system files (default: false)
+      --help                 Show help and usage information
+      --version              Show version information
+
+### Examples
+
+#### Basic Usage
+
+    # Find all C# files
+    glob "**/*.cs"
+
+    # Find test files
+    glob "**/*Tests.cs"
+
+    # Find JSON config files
+    glob "*.json"
+
+#### Directory Specific
+
+    # Search in a specific directory
+    glob "**/*.txt" -d ~/documents
+
+    # Search from home directory
+    glob "**/*.log" -d ~
+
+    # Search with absolute path
+    glob "**/*.md" -d /usr/share/doc
+
+#### Object Type Selection (Tool Option -o, --search-objects)
+
+    # Find only files
+    glob "**/*.dll" -o files
+
+    # Find only directories
+    glob "**" -o directories
+
+    # Find both (default)
+    glob "src/**" -o both
+
+#### Case Sensitivity (Tool Option -c, --case)
+
+    # Case-sensitive (exact match required)
+    glob "[A-Z]*.cs" -c sensitive
+
+    # Case-insensitive (README.md matches readme.md)
+    glob "readme.md" -c insensitive
+
+    # Platform default (insensitive on Windows, sensitive on Unix)
+    glob "*.TXT" -c platform
+
+#### Advanced Patterns
+
+    # Character classes
+    glob "**/*[0-9].log"           # File names ending with digit
+    glob "**/[a-z]*.cs"            # File names starting with lowercase
+
+    # Named character classes
+    glob "**/*[[:digit:]].txt"     # File names ending with a digit
+    glob "**/[[:alpha:]]*.cs"      # File names starting with a letter
+
+    # Negation
+    glob "**/[!.]*.json"            # JSON files not starting with dot
+
+    # Environment variables (expanded before matching)
+    glob "$HOME/documents/**/*.pdf"              # Unix
+    glob "%USERPROFILE%\documents\**\*.pdf"      # Windows
+    glob "~/documents/**/*.pdf"                  # Unix (~ expands to $HOME)
+
+#### Deduplication (Tool Option -x, --distinct)
+
+    # Without distinct (may show duplicates)
+    glob "**/docs/**/*.md"
+
+    # With distinct (removes duplicates)
+    glob "**/docs/**/*.md" -x
+
+#### Including Hidden Files
+
+    # Exclude hidden/system files (default)
+    glob "**/*"
+
+    # Include hidden/system files
+    glob "**/*" -a
+
+### Real-World Use Cases
+
+#### Development Workflows
+
+    # Find all unit test files
+    glob "**/test/**/*Tests.cs"
+
+    # Find configuration files
+    glob "**/{appsettings,web.config}.json"
+
+    # Find source files excluding tests
+    glob "src/**/*.cs"
+
+#### CI/CD Integration
+
+##### GitHub Actions
+
+    - name: Find test assemblies
+      run: |
+        TEST_DLLS=$(glob "**/*Tests.dll" -d ./artifacts/bin)
+        dotnet test $TEST_DLLS
+
+##### Azure Pipelines
+
+    - script: |
+        FILES=$(glob "**/*.csproj")
+        echo "##vso[task.setvariable variable=ProjectFiles]$FILES"
+
+#### Code Analysis
+
+    # Find public interfaces
+    glob "src/**/I*.cs" | xargs grep "public interface"
+
+    # Find deprecated code
+    glob "**/*.cs" | xargs grep -l "Obsolete"
+
+    # Count lines of code
+    glob "src/**/*.cs" | xargs wc -l
+
+#### Project Maintenance
+
+    # Find package references
+    glob "**/*.csproj" | xargs grep PackageReference
+
+    # Find large files
+    glob "**/*" | xargs du -h | sort -rh | head -20
+
+    # Find old log files
+    glob "**/*.log" -d /var/log
+
+### Output Format
+
+Each matched path is printed on a separate line with:
+
+- Absolute paths (full path from root)
+- Directory paths end with `/` separator
+- No extra formatting or colors (perfect for piping)
+
+Example output:
+
+    /home/user/projects/MyApp/src/Program.cs
+    /home/user/projects/MyApp/src/Models/User.cs
+    /home/user/projects/MyApp/test/ProgramTests.cs
+
+### Environment Variable Support
+
+The tool expands environment variables before pattern matching:
+
+#### Windows
+
+    glob "%APPDATA%\**\*.json"
+    glob "%USERPROFILE%\Documents\**\*.txt"
+
+#### Unix/Linux/macOS
+
+    glob "$HOME/documents/**/*.pdf"
+    glob "~/projects/**/*.cs"        # ~ expands to $HOME
+    glob "$XDG_CONFIG_HOME/**/*.conf"
+
+### Performance Tips
+
+1. **Be specific** - `src/**/*.cs` is faster than `**/*.cs`
+2. **Use `-o files`** if you only need files (skips directory enumeration)
+3. **Avoid multiple globstars** unless necessary (`**/docs/**` is slower than `docs/**`)
+4. **Use `-x` only when needed** (deduplication has memory cost)
+
+### Comparison with Alternatives
+
+| Feature          | `glob`         | `find` (Unix) | `Get-ChildItem` (PS) | `fd`      |
+|:-----------------|:---------------|:--------------|:---------------------|:----------|
+| Cross-platform   | ✅             | ❌           | ❌                   | ✅       |
+| Glob syntax      | ✅ Native      | ❌ Regex     | ❌ Complex           | ✅       |
+| .NET integration | ✅             | ❌           | ⚠️                   | ❌       |
+| Install          | `dotnet tool`  | Pre-installed | Pre-installed        | Cargo     |
+| Environment vars | ✅             | ❌           | ✅                   | ❌       |
+| Speed            | Fast           | Very fast     | Slow                 | Very fast |
+
+### Troubleshooting
+
+#### Pattern Not Matching
+
+    # Use quotes to prevent shell expansion
+    glob "**/*.cs"     # Correct
+    glob **/*.cs       # Wrong (shell expands before tool runs)
+
+#### Permission Errors
+
+    # Use elevated permissions (Windows)
+    glob "C:\Windows\System32\**\*.dll" -a
+
+    # Use sudo (Unix)
+    sudo glob "/root/**/*"
+
+#### No Results
+
+    # Verify start directory exists
+    glob "**/*.cs" -d ~/nonexistent  # Error
+
+    # Check case sensitivity
+    glob "README.md" -c sensitive    # Won't match readme.md
+    glob "README.md" -c insensitive  # Matches readme.md
+
+### Library Integration
+
+This tool is built on the `vm2.Glob.Api` library. For programmatic access in .NET applications:
+
+    dotnet add package vm2.Glob.Api
+
+Example usage:
+
+    using vm2.Glob.Api;
+
+    var enumerator = new GlobEnumerator();
+    enumerator.Glob = "**/*.cs";
+    enumerator.FromDirectory = "/path/to/search";
+
+    foreach (var file in enumerator.Enumerate())
+    {
+        Console.WriteLine(file);
+    }
+
+## License
+
+MIT License - Copyright &copy; 2025 Val Melamed
+
+See [LICENSE](../../LICENSE) for full text.
+
+## Version History
+
+See [CHANGELOG.md](../../CHANGELOG.md) for version history and release notes.
