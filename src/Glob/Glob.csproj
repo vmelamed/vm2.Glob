@@ -3,7 +3,11 @@
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <RootNamespace>vm2.Glob</RootNamespace>
+        <PackAsTool>true</PackAsTool>
+        <ToolCommandName>glob</ToolCommandName>
+    </PropertyGroup>
 
+    <PropertyGroup Label="NuGet">
         <PackageId>vm2.Glob</PackageId>
         <Title>Cross-platform Glob Pattern Matching CLI Tool</Title>
         <Description>
@@ -14,8 +18,6 @@
         <PackageTags>glob pattern matching cli tool cross-platform file-search directory-search</PackageTags>
         <PackageProjectUrl>https://github.com/vmelamed/vm2.Glob/blob/main/src/Glob</PackageProjectUrl>
         <RepositoryUrl>https://github.com/vmelamed/vm2.Glob</RepositoryUrl>
-        <PackAsTool>true</PackAsTool>
-        <ToolCommandName>glob</ToolCommandName>
         <PackageOutputPath>./nupkg</PackageOutputPath>
         <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
