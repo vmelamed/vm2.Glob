@@ -489,14 +489,61 @@ var results = enumerator.Enumerate().ToList();
 
 ### Benchmarks
 
-Typical performance on standard hardware:
+Typical performance on GitHub Actions Ubuntu Runner, e.g.
 
-| Operation                   | Files | Time   | Allocations |
-|-----------------------------|-------|-------:|-------------|
-| Simple pattern (`*.cs`)     |   100 | ~1ms   | <1KB        |
-| Recursive (`**/*.cs`)       | 1,000 | ~50ms  | ~50KB       |
-| Complex (`**/test/**/*.cs`) | 1,000 | ~80ms  | ~80KB       |
-| With distinct               | 1,000 | ~100ms | ~150KB      |
+```text
+BenchmarkDotNet v0.15.8, Linux Ubuntu 24.04.3 LTS (Noble Numbat)
+Intel Xeon Platinum 8370C CPU 2.80GHz, 1 CPU, 4 logical and 2 physical cores
+.NET SDK 10.0.103
+  [Host]     : .NET 10.0.3 (10.0.3, 10.0.326.7603), X64 RyuJIT x86-64-v4
+  DefaultJob : .NET 10.0.3 (10.0.3, 10.0.326.7603), X64 RyuJIT x86-64-v4
+```
+
+| Method                      | Pattern                |   Mean     |  Error    |  StdDev   | Ratio        | RatioSD | Gen0    | Allocated | Alloc Ratio |
+|---------------------------- |------------------------|-----------:|----------:|----------:|-------------:|--------:|--------:|----------:|------------:|
+| 'Get Files'                 | `**/*`                 |   65.22 us |  0.711 us |  0.665 us |     baseline |         |  4.2725 |  106.3 KB |             |
+| 'Get Directories'           | `**/*`                 |   30.71 us |  0.180 us |  0.168 us | 2.12x faster |   0.02x |  1.9531 |  48.52 KB |  2.19x less |
+| 'Get Files and Directories' | `**/*`                 |   67.88 us |  0.497 us |  0.465 us | 1.04x slower |   0.01x |  4.2725 | 107.52 KB |  1.01x more |
+|                             |                        |            |           |           |              |         |         |           |             |
+| 'Get Files'                 | `**/test/**/*`         |   48.82 us |  0.286 us |  0.268 us |     baseline |         |  3.0518 |  75.18 KB |             |
+| 'Get Directories'           | `**/test/**/*`         |   39.58 us |  0.588 us |  0.550 us | 1.23x faster |   0.02x |  2.5024 |  61.43 KB |  1.22x less |
+| 'Get Files and Directories' | `**/test/**/*`         |   47.59 us |  0.420 us |  0.393 us | 1.03x faster |   0.01x |  3.0518 |  75.38 KB |  1.00x more |
+|                             |                        |            |           |           |              |         |         |           |             |
+| 'Small File System'         | `**/*.cs`              |   142.3 us |   0.60 us |   0.56 us |     baseline |         |  7.8125 | 195.91 KB |             |
+| 'Large File System'         | `**/*.cs`              |   235.9 us |   1.50 us |   1.40 us | 1.66x slower |   0.01x | 12.6953 |  314.2 KB |  1.60x more |
+|                             |                        |            |           |           |              |         |         |           |             |
+| 'Small File System'         | `**/*.md`              |   125.2 us |   0.65 us |   0.61 us |     baseline |         |  6.5918 | 165.97 KB |             |
+| 'Large File System'         | `**/*.md`              |   178.6 us |   0.89 us |   0.83 us | 1.43x slower |   0.01x |  9.2773 | 231.65 KB |  1.40x more |
+|                             |                        |            |           |           |              |         |         |           |             |
+| 'Traverse Depth First'      | `**/*.cs`              |  147.47 us |  0.367 us |  0.344 us |     baseline |         |  7.8125 | 195.91 KB |             |
+| 'Traverse Breadth First'    | `**/*.cs`              |  149.77 us |  0.413 us |  0.386 us | 1.02x slower |   0.00x |  7.8125 | 195.91 KB |  1.00x more |
+|                             |                        |            |           |           |              |         |         |           |             |
+| 'Traverse Depth First'      | `**/docs/**/*.md`      |   79.12 us |  0.215 us |  0.191 us |     baseline |         |  4.5166 | 111.21 KB |             |
+| 'Traverse Breadth First'    | `**/docs/**/*.md`      |   78.58 us |  0.498 us |  0.441 us | 1.01x faster |   0.01x |  4.5166 | 111.21 KB |  1.00x more |
+
+| Method                      | Pattern                | Mean       | Error     | StdDev    |              |         |  Gen0   | Allocated |             |
+|---------------------------- |------------------------|-----------:|----------:|----------:|-------------:|--------:|--------:|----------:|------------:|
+| 'Pattern Complexity'        | `*.md`                 |   7.590 us | 0.0287 us | 0.0254 us |              |         |  0.3586 |   8.91 KB |             |
+| 'Pattern Complexity'        | `**/?????Service.cs`   | 144.493 us | 0.9531 us | 0.8915 us |              |         |  9.0332 | 225.32 KB |             |
+| 'Pattern Complexity'        | `**/*.cs`              | 144.943 us | 0.9319 us | 0.8261 us |              |         |  7.8125 | 195.91 KB |             |
+| 'Pattern Complexity'        | `**/*.md`              | 125.416 us | 0.7815 us | 0.7310 us |              |         |  6.5918 | 165.97 KB |             |
+| 'Pattern Complexity'        | `**/docs/**/*.md`      |  81.249 us | 0.3774 us | 0.3345 us |              |         |  4.5166 | 111.21 KB |             |
+| 'Pattern Complexity'        | `**/te(...)ts.cs [22]` |  81.770 us | 0.2898 us | 0.2711 us |              |         |  4.6387 | 115.69 KB |             |
+| 'Pattern Complexity'        | `**/test/**/*.cs`      |  75.597 us | 0.4659 us | 0.4358 us |              |         |  4.2725 | 107.59 KB |             |
+| 'Pattern Complexity'        | `src/*.cs`             |   8.991 us | 0.0357 us | 0.0334 us |              |         |  0.4120 |  10.16 KB |             |
+
+Legends:
+
+- Pattern     : Value of the 'Pattern' parameter
+- Mean        : Arithmetic mean of all measurements
+- Error       : Half of 99.9% confidence interval
+- StdDev      : Standard deviation of all measurements
+- Ratio       : Mean of the ratio distribution ([Current]/[Baseline])
+- RatioSD     : Standard deviation of the ratio distribution ([Current]/[Baseline])
+- Gen0        : GC Generation 0 collects per 1000 operations
+- Allocated   : Allocated memory per single operation (managed only, inclusive, 1KB = 1024B)
+- Alloc Ratio : Allocated memory ratio distribution ([Current]/[Baseline])
+- 1 us        : 1 Microsecond (0.000001 sec)
 
 ## API Reference
 
