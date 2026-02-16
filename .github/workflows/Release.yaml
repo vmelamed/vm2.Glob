@@ -11,7 +11,7 @@ on:
 env:
   PACKAGE_PROJECTS: >
     [
-    "src/vm2.Glob.Api/vm2.Glob.Api.csproj",
+    "src/Glob.Api/Glob.Api.csproj",
     "src/GlobTool/GlobTool.csproj"
     ]
 
