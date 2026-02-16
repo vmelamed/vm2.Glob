@@ -43,7 +43,7 @@
     - [Extension Methods](#extension-methods)
     - [Development Setup and Build of the Library](#development-setup-and-build-of-the-library)
   - [References](#references)
-- [vm2.Glob - Cross-Platform Glob Pattern Matching Tool](#vm2glob---cross-platform-glob-pattern-matching-tool)
+- [vm2.GlobTool - Cross-Platform Glob Pattern Matching Tool](#vm2globtool---cross-platform-glob-pattern-matching-tool)
   - [Tool Installation](#tool-installation)
   - [Tool Quick Start](#tool-quick-start)
   - [Tool Features](#tool-features)
@@ -608,13 +608,13 @@ To set up the development environment and build the library, follow these steps:
 - [Glob (programming) - Wikipedia](https://en.wikipedia.org/wiki/Glob_(programming))
 - [CommonMark Specification](https://spec.commonmark.org/) - Used for this documentation
 
-## vm2.Glob - Cross-Platform Glob Pattern Matching Tool
+## vm2.GlobTool - Cross-Platform Glob Pattern Matching Tool
 
 A fast, intuitive CLI tool for finding files and directories using glob patterns.
 
 ### Tool Installation
 
-    dotnet tool install -g vm2.Glob
+    dotnet tool install -g vm2.GlobTool
 
 ### Tool Quick Start
 

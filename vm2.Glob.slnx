@@ -27,7 +27,7 @@
     </Folder>
     <Folder Name="/src/">
         <Project Path="src/Glob.Api/Glob.Api.csproj" />
-        <Project Path="src/Glob/Glob.csproj" />
+        <Project Path="src/GlobTool/GlobTool.csproj" />
     </Folder>
     <Folder Name="/test/">
         <Project Path="test/Glob.Api.FakeFileSystem.Tests/Glob.Api.FakeFileSystem.Tests.csproj" />

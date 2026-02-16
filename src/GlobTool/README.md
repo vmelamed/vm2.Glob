@@ -1,10 +1,10 @@
-﻿# vm2.Glob - Cross-Platform Glob Pattern Matching Tool
+﻿# vm2.GlobTool - Cross-Platform Glob Pattern Matching Tool
 
 A fast, intuitive CLI tool for finding files and directories using glob patterns.
 
 ## Installation
 
-    dotnet tool install -g vm2.Glob
+    dotnet tool install -g vm2.GlobTool
 
 ## Quick Start
 

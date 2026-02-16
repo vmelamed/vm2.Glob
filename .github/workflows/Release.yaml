@@ -12,7 +12,7 @@ env:
   PACKAGE_PROJECTS: >
     [
     "src/vm2.Glob.Api/vm2.Glob.Api.csproj",
-    "src/vm2.Glob/vm2.Glob.csproj"
+    "src/GlobTool/GlobTool.csproj"
     ]
 
   PREPROCESSOR_SYMBOLS: "" # Semicolon-separated preprocessor symbols to pass to the compiler.
