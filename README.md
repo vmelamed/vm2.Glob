@@ -79,11 +79,11 @@ Windows and Unix-like systems, including environment variable expansion and plat
 
 - ✅ **[POSIX.2 glob specification](https://www.man7.org/linux/man-pages/man7/glob.7.html)** compliant with Windows extensions
 - ✅ **Cross-platform** — identical behavior on Windows, Linux, and macOS
-- ✅ **High performance** — optimized enumeration with minimal allocations
+- ✅ **Environment variables** — automatic expansion of `$HOME`, `%USERPROFILE%`, and `~`
 - ✅ **Flexible API** — fluent builder pattern for easy configuration
+- ✅ **High performance** — optimized enumeration with minimal allocations
 - ✅ **Lazy evaluation** — `IEnumerable`-based streaming of results
 - ✅ **Testable** — `IFileSystem` abstraction for unit testing without touching the disk
-- ✅ **Environment variables** — automatic expansion of `$HOME`, `%USERPROFILE%`, and `~`
 - ✅ **Multiple traversal modes** — depth-first or breadth-first
 - ✅ **Deduplication** — optional removal of duplicate results from multi-globstar patterns
 
