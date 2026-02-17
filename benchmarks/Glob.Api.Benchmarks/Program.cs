@@ -11,6 +11,9 @@ var config = ManualConfig
                 .WithOptions(ConfigOptions.DisableOptimizationsValidator | ConfigOptions.StopOnFirstError)
                 .WithArtifactsPath(BmConfiguration.Options.ResultsPath)
                 .WithSummaryStyle(SummaryStyle.Default.WithRatioStyle(RatioStyle.Trend))
-;
+                ;
 
-BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(args, config);
+BenchmarkSwitcher
+    .FromAssembly(typeof(Program).Assembly)
+    .Run(args, config)
+    ;

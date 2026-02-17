@@ -16,10 +16,20 @@ public static class BmConfiguration
             .Sources
             .Clear();
 
+        var env = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT") ??= "Production";
+
         builder
             .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile("appsettings.json", optional: true)
-            .AddJsonFile("appsettings.Development.json", optional: true)
+            ;
+
+        if (env == "Development")
+            builder.AddJsonFile("appsettings.Development.json", optional: true);
+
+        if (env == "Staging")
+            builder.AddJsonFile("appsettings.Staging.json", optional: true);
+
+        builder
             .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("USERNAME")}.json", optional: true)
             .AddEnvironmentVariables()
             .AddCommandLine(Environment.GetCommandLineArgs())
