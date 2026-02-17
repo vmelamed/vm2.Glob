@@ -16,7 +16,7 @@ public static class BmConfiguration
             .Sources
             .Clear();
 
-        var env = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT") ??= "Production";
+        var env = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT") ?? "Production";
 
         builder
             .SetBasePath(Directory.GetCurrentDirectory())
