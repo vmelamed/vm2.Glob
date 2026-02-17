@@ -2,7 +2,7 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://github.com/vmelamed/vm2.DevOps/schemas/fakefs.json",
     "title": "FakeFS File Structure",
-    "description": "Schema for defining virtual file system structures used by FakeFS in vm2.Glob.Api tests and benchmarks",
+    "description": "Schema for defining virtual or real file system structures used by FakeFS in vm2.Glob.Api tests and benchmarks",
     "type": "object",
     "required": [
         "name"

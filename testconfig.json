@@ -1,5 +1,12 @@
 {
-    "platformOptions": {
+    "version": "1.0",
+    "testPlatform": {
+        "environmentVariables": {
+            "DOTNET_EnableDiagnostics": "0"
+        },
+        "logging": {
+            "verbosity": "normal"
+        }
     },
     "xUnit": {
         "assertEquivalentMaxDepth": 50,
@@ -15,6 +22,7 @@
         "methodDisplayOptions": "none",
         "parallelAlgorithm": "conservative",
         "parallelizeTestCollections": true,
+        "parallelizeTestMethods": true,
         "preEnumerateTheories": true,
         "printMaxEnumerableLength": 5,
         "printMaxObjectDepth": 3,

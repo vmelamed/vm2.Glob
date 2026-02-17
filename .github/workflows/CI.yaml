@@ -1,94 +1,149 @@
-name: "CI: Build, Test, Benchmark"
+name: "CI: Build, Test, Benchmark, Pack"
 
 on:
   push:
     branches:
-      - "**" # trigger on push for all branches or...
+      - "**" # trigger on push for all branches
 
   pull_request:
     branches:
-      - "**" # ...on PR for all branches.
+      - "**" # trigger on PR for all branches.
+
+  pull_request_review:
+    types:
+      - submitted # trigger after any submitted code review (comments, changes requested, approved, including Copilot);
+                  # jobs further restrict to approved reviews via `if: github.event.review.state == 'approved'`.
 
   workflow_dispatch:
     inputs:
-      os:
-        description: Runner OS (or multiple OS-es separate by comma, e.g. 'ubuntu-latest,windows-latest')
+      runners-os:
+        description: Comma-separated runners OS-es
         type: string
         default: ubuntu-latest
-        # There is a known GitHub actions issue: the workflow dispatch UI doesn't properly handle JSON strings with quotes.
-        # E.g. for the input '["ubuntu-latest"]', the UI removes the inner quotes and it becomes the invalid JSON: '[ubuntu-latest]'.
+        # Note: there is a known GitHub actions issue: the workflow dispatch UI doesn't properly handle JSON strings with quotes -
+        # it removes the quotes. E.g. entering '["ubuntu-latest"]' in the UI prompt removes the inner quotes and it becomes the
+        # invalid JSON: '[ubuntu-latest]'.
 
       preprocessor-symbols:
-        description: Define semicolon-separated preprocessor symbols to pass to the compiler
+        description: Comma-separated preprocessor symbols
         type: string
-        required: false
-        # Enables benchmarks short run mode for faster execution, but less precise results, acceptable for CI runs.
+        default: "SHORT_RUN" # *TODO* Adjust the default preprocessor symbols as needed.
+
+# Concurrency: cancel in-progress runs for the same ref
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
 
 env:
-  BUILD_PROJECTS: ""
-  TEST_PROJECTS: >-
+  BUILD_PROJECTS: >
+    [
+    "./vm2.Glob.slnx"
+    ]
+
+  TEST_PROJECTS: >
     [
     "./test/Glob.Api.FakeFileSystem.Tests/Glob.Api.FakeFileSystem.Tests.csproj",
     "./test/Glob.Api.Tests/Glob.Api.Tests.csproj"
     ]
-  BENCHMARK_PROJECTS: >-
+
+  BENCHMARK_PROJECTS: >
     [
     "./benchmarks/Glob.Api.Benchmarks/Glob.Api.Benchmarks.csproj"
     ]
-  PREPROCESSOR_SYMBOLS: ""
-  OS: >-
+
+  PACKAGE_PROJECTS: >
+    [
+    "src/Glob.Api/Glob.Api.csproj",
+    "src/GlobTool/GlobTool.csproj"
+    ]
+
+  RUNNERS_OS: >
     [
     "ubuntu-latest"
     ]
 
+  PREPROCESSOR_SYMBOLS: ""
+
+  DOTNET_VERSION: ${{ vars.DOTNET_VERSION || '10.0.x' }} # The .NET SDK version to use.
+  CONFIGURATION: ${{ vars.CONFIGURATION || 'Release' }} # The build configuration: Debug, Release, etc.
+  MIN_COVERAGE_PCT: ${{ vars.MIN_COVERAGE_PCT || 80 }} # The minimum code coverage percentage required to pass the tests.
+  MAX_REGRESSION_PCT: ${{ vars.MAX_REGRESSION_PCT || 20 }} # The maximum allowed performance regression percentage for benchmarks to pass.
+  MINVERTAGPREFIX: ${{ vars.MINVERTAGPREFIX || 'v' }} # The MinVer tag prefix.
+  MINVERDEFAULTPRERELEASEIDENTIFIERS: ${{ vars.MINVERDEFAULTPRERELEASEIDENTIFIERS || 'preview.0' }} # The MinVer default pre-release identifiers.
+  VERBOSE: ${{ vars.VERBOSE || 'false' }} # Set to "true" to enable verbose logging in scripts.
+
 jobs:
   get-params:
-    name: Prepare the default and passed in parameters
+    name: Prepare input from env, vars, secrets, inputs, and defaults
     runs-on: ubuntu-latest # in this workflow the runner doesn't matter - we're just preparing the inputs for the next workload(s).
-    if: ${{ github.event_name != 'push' || !contains(github.event.head_commit.message, '[skip ci]') }}
-    env:
-      dotnet_version: ${{ vars.DOTNET_VERSION }}
-      configuration: ${{ vars.CONFIGURATION }}
-      min_coverage_pct: ${{ vars.MIN_COVERAGE_PCT }}
-      max_regression_pct: ${{ vars.MAX_REGRESSION_PCT }}
+    permissions:
+      pull-requests: read
+    if: |
+      ( github.event_name != 'push' || !contains(github.event.head_commit.message, '[skip ci]') ) &&
+      ( github.event_name != 'pull_request_review' || github.event.review.state == 'approved' )
     outputs:
       build-projects: ${{ steps.init-params.outputs.build-projects }}
       test-projects: ${{ steps.init-params.outputs.test-projects }}
       benchmark-projects: ${{ steps.init-params.outputs.benchmark-projects }}
-      os: ${{ steps.init-params.outputs.os }}
+      package-projects: ${{ steps.init-params.outputs.package-projects }}
+      runners-os: ${{ steps.init-params.outputs.runners-os }}
       dotnet-version: ${{ steps.init-params.outputs.dotnet-version }}
       configuration: ${{ steps.init-params.outputs.configuration }}
       preprocessor-symbols: ${{ steps.init-params.outputs.preprocessor-symbols }}
       min-coverage-pct: ${{ steps.init-params.outputs.min-coverage-pct }}
       max-regression-pct: ${{ steps.init-params.outputs.max-regression-pct }}
+      minver-tag-prefix: ${{ steps.init-params.outputs.minver-tag-prefix }}
+      minver-prerelease-id: ${{ steps.init-params.outputs.minver-prerelease-id }}
+      skip-push: ${{ steps.init-params.outputs.skip-push }}
     steps:
-      - name: Gather parameters
+      - name: Prepare argument values
         id: init-params
         shell: bash
         run: |
-          # the following outputs are invariant - no matter how we trigger the workflow, they stay the same as specified in env:
           build_projects='${{ env.BUILD_PROJECTS }}'
           test_projects='${{ env.TEST_PROJECTS }}'
           benchmark_projects='${{ env.BENCHMARK_PROJECTS }}'
-          dotnet_version='${{ env.dotnet_version }}'
-          configuration='${{ env.configuration }}'
-          min_coverage_pct='${{ env.min_coverage_pct }}'
-          max_regression_pct='${{ env.max_regression_pct }}'
+          package_projects='${{ env.PACKAGE_PROJECTS }}'
+          runners_os='${{ env.RUNNERS_OS }}'
+          dotnet_version='${{ env.DOTNET_VERSION }}'
+          configuration='${{ env.CONFIGURATION }}'
+          preprocessor_symbols='${{ env.PREPROCESSOR_SYMBOLS }}'
+          min_coverage_pct='${{ env.MIN_COVERAGE_PCT }}'
+          max_regression_pct='${{ env.MAX_REGRESSION_PCT }}'
+          minver_tag_prefix='${{ env.MINVERTAGPREFIX }}'
+          minver_prerelease_id='${{ env.MINVERDEFAULTPRERELEASEIDENTIFIERS }}'
+          skip_push='false'
 
-          if [ '${{ github.event_name }}' == "push" ]; then
-              # Set the values for push events, and add SHORT_RUN to preprocessor_symbols for faster benchmark tests (less precise, yet acceptable for CI runs).
-              os='${{ env.OS }}'
-              preprocessor_symbols='SHORT_RUN;${{ env.PREPROCESSOR_SYMBOLS }}' # *CP* Adjust as needed.
-          elif [ '${{ github.event_name }}' == "pull_request" ]; then
-              # Set the values for pull_request events
-              os='${{ env.OS }}'
-              preprocessor_symbols='${{ env.PREPROCESSOR_SYMBOLS }}'
+          if [ '${{ github.event_name }}' == "pull_request" ] || \
+             [ '${{ github.event_name }}' == "pull_request_review" ] || \
+             ([ '${{ github.event_name }}' == "push" ] && [ '${{ github.ref_name }}' == "main" ]); then
+              # For pull requests, reviews, and pushes to the main branch, use default values from env (no modifications needed)
+              echo "Event: ${{ github.event_name }}. Using default parameters from env." >> $GITHUB_STEP_SUMMARY
+          elif [ '${{ github.event_name }}' == "push" ] && [ '${{ github.ref_name }}' != "main" ]; then
+              # Skip push-triggered CI when an open PR exists for this branch.
+              export GH_TOKEN='${{ github.token }}'
+              if ! open_pr_count=$(gh pr list \
+                --repo "${{ github.repository }}" \
+                --state open \
+                --json headRefName \
+                --jq 'map(select(.headRefName == "${{ github.ref_name }}")) | length'); then
+                open_pr_count=0
+                echo "Failed to query PRs via gh. Running push-triggered CI with SHORT_RUN." >> $GITHUB_STEP_SUMMARY
+              fi
+              echo "Open PR count for '${{ github.ref_name }}': ${open_pr_count}" >> $GITHUB_STEP_SUMMARY
+              preprocessor_symbols="${preprocessor_symbols};SHORT_RUN"
+              if [ "${open_pr_count}" -gt 0 ]; then
+                  echo "Open PR exists for this branch. Skipping push-triggered CI." >> $GITHUB_STEP_SUMMARY
+                  skip_push='true'
+              else
+                  echo "No open PRs for this branch. Running push-triggered CI with SHORT_RUN preprocessor symbol." >> $GITHUB_STEP_SUMMARY
+              fi
           elif [ '${{ github.event_name }}' == "workflow_dispatch" ]; then
-              # Get the values from the UI inputs of workflow_dispatch event. Convert comma-separated runner's OS values to JSON array
+              # Get the values from the UI inputs of workflow_dispatch event. Convert comma-separated runners' OS values to JSON array
               # There is a known GitHub actions issue: the workflow dispatch UI doesn't properly handle JSON strings with quotes.
               # E.g. for the input '["ubuntu-latest"]', the UI removes the inner quotes and it becomes the invalid JSON: '[ubuntu-latest]'.
-              os=$(echo "${{ inputs.os }}" | jq -Rc 'split(",") | map(select(length > 0) | gsub("^\\s+|\\s+$";""))')
-              preprocessor_symbols='${{ inputs.preprocessor-symbols }}'
+              runners_os=$(echo "${{ inputs.runners-os }}" | jq -Rc 'split(",") | map(select(length > 0) | gsub("^\\s+|\\s+$";""))')
+              preprocessor_symbols="${preprocessor_symbols};${{ inputs.preprocessor-symbols }}"
           else
               echo "Unsupported event: ${{ github.event_name }}"
               exit 5
@@ -96,34 +151,46 @@ jobs:
 
           # Set the outputs:
           {
-            echo "build-projects=${build_projects}"
-            echo "test-projects=${test_projects}"
-            echo "benchmark-projects=${benchmark_projects}"
-            echo "os=${os}"
-            echo "preprocessor-symbols=${preprocessor_symbols}"
-            echo "dotnet-version=${dotnet_version}"
-            echo "configuration=${configuration}"
-            echo "min-coverage-pct=${min_coverage_pct}"
-            echo "max-regression-pct=${max_regression_pct}"
+              echo "build-projects=${build_projects}"
+              echo "test-projects=${test_projects}"
+              echo "benchmark-projects=${benchmark_projects}"
+              echo "package-projects=${package_projects}"
+              echo "runners-os=${runners_os}"
+              echo "dotnet-version=${dotnet_version}"
+              echo "configuration=${configuration}"
+              echo "preprocessor-symbols=${preprocessor_symbols}"
+              echo "min-coverage-pct=${min_coverage_pct}"
+              echo "max-regression-pct=${max_regression_pct}"
+              echo "minver-tag-prefix=${minver_tag_prefix}"
+              echo "minver-prerelease-id=${minver_prerelease_id}"
+              echo "skip-push=${skip_push}"
           }  >> $GITHUB_OUTPUT
 
   call-ci:
-    uses: vmelamed/vm2.DevOps/.github/workflows/_ci.yaml@main
+    name: "Run CI: Build, Test, Benchmark, Pack"
     needs:
       - get-params
-    secrets: inherit
+    if: ${{ needs.get-params.outputs.skip-push != 'true' }}
+    uses: vmelamed/vm2.DevOps/.github/workflows/_ci.yaml@main
+    secrets:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      BENCHER_API_TOKEN: ${{ secrets.BENCHER_API_TOKEN }}
+      REPORTGENERATOR_LICENSE: ${{ secrets.REPORTGENERATOR_LICENSE }}
     permissions:
-      contents: read
-      packages: read
-      pull-requests: write
-      checks: write
+      contents: read # Required to checkout the code
+      packages: read # Required to restore GitHub Packages NuGet packages
+      pull-requests: write # Required to comment on PRs
+      checks: write # Required to create GitHub Checks
     with:
-      os: ${{ needs.get-params.outputs.os }}
-      dotnet-version: ${{ needs.get-params.outputs.dotnet-version }}
-      configuration: ${{ needs.get-params.outputs.configuration }}
-      preprocessor-symbols: ${{ needs.get-params.outputs.preprocessor-symbols }}
       build-projects: ${{ needs.get-params.outputs.build-projects }}
       test-projects: ${{ needs.get-params.outputs.test-projects }}
       benchmark-projects: ${{ needs.get-params.outputs.benchmark-projects }}
+      package-projects: ${{ needs.get-params.outputs.package-projects }}
+      runners-os: ${{ needs.get-params.outputs.runners-os }}
+      dotnet-version: ${{ needs.get-params.outputs.dotnet-version }}
+      configuration: ${{ needs.get-params.outputs.configuration }}
+      preprocessor-symbols: ${{ needs.get-params.outputs.preprocessor-symbols }}
       min-coverage-pct: ${{ fromJSON(needs.get-params.outputs.min-coverage-pct) }}
       max-regression-pct: ${{ fromJSON(needs.get-params.outputs.max-regression-pct) }}
+      minver-tag-prefix: ${{ needs.get-params.outputs.minver-tag-prefix }}
+      minver-prerelease-id: ${{ needs.get-params.outputs.minver-prerelease-id }}

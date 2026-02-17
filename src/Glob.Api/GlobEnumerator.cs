@@ -237,7 +237,7 @@ public sealed partial class GlobEnumerator
     {
         // Track visited paths only when Distinct is enabled and pattern has multiple globstars
         HashSet<string>? visited = Distinct
-                                   && GlobstarRegex().Matches(_glob).Count > 1
+                                   && GlobstarRegex().Count(_glob) > 1
                                         ? new(StringComparer)
                                         : null;
 

@@ -1,21 +1,23 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <RootNamespace>vm2.Glob</RootNamespace>
+        <RootNamespace>vm2.GlobTool</RootNamespace>
+        <PackAsTool>true</PackAsTool>
+        <ToolCommandName>glob</ToolCommandName>
+    </PropertyGroup>
 
-        <PackageId>vm2.Glob</PackageId>
+    <PropertyGroup Label="NuGet">
+        <PackageId>vm2.GlobTool</PackageId>
         <Title>Cross-platform Glob Pattern Matching CLI Tool</Title>
         <Description>
             A fast, intuitive CLI tool for finding files and directories using glob patterns.
-            Install globally with 'dotnet tool install -g vm2.Glob' and use anywhere.
+            Install globally with 'dotnet tool install -g vm2.GlobTool' and use anywhere.
             Perfect for shell scripts, CI/CD pipelines, and developer workflows.
         </Description>
         <PackageTags>glob pattern matching cli tool cross-platform file-search directory-search</PackageTags>
-        <PackageProjectUrl>https://github.com/vmelamed/vm2.Glob/blob/main/src/Glob</PackageProjectUrl>
+        <PackageProjectUrl>https://github.com/vmelamed/vm2.Glob/blob/main/src/GlobTool</PackageProjectUrl>
         <RepositoryUrl>https://github.com/vmelamed/vm2.Glob</RepositoryUrl>
-        <PackAsTool>true</PackAsTool>
-        <ToolCommandName>glob</ToolCommandName>
         <PackageOutputPath>./nupkg</PackageOutputPath>
         <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
@@ -42,6 +44,8 @@
 
     <ItemGroup>
         <Content Include="README.md" Pack="true" PackagePath="\" />
+        <None Include="../../LICENSE" Pack="true" PackagePath="\" />
+        <None Include="../../CHANGELOG.md" Pack="true" PackagePath="\" />
     </ItemGroup>
 
 </Project>
