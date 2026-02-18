@@ -1,11 +1,3 @@
-# Changelog
-
-See prereleases below. This format follows:
-
-- [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
-- [Semantic Versioning](https://semver.org/)
-- Version numbers are produced by [MinVer](./ReleaseProcess.md) from Git tags.
-
 <!--
 ## [Unreleased]
 
@@ -21,3 +13,11 @@ See prereleases below. This format follows:
 ### Removed
 - (add removed features here)
 -->
+
+# Changelog
+
+See prereleases below. This format follows:
+
+- [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
+- [Semantic Versioning](https://semver.org/)
+- Version numbers are produced by [MinVer](./ReleaseProcess.md) from Git tags.
