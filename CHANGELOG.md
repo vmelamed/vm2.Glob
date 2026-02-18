@@ -1,9 +1,14 @@
 # Changelog
 
-
-
 ## v1.0.0 - 2026-02-18
+
 See prereleases below.
+
+This format follows:
+
+- [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
+- [Semantic Versioning](https://semver.org/)
+- Version numbers are produced by [MinVer](./ReleaseProcess.md) from Git tags.
 
 <!--
 ## [Unreleased]
@@ -20,9 +25,3 @@ See prereleases below.
 ### Removed
 - (add removed features here)
 -->
-
-See prereleases below. This format follows:
-
-- [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
-- [Semantic Versioning](https://semver.org/)
-- Version numbers are produced by [MinVer](./ReleaseProcess.md) from Git tags.
