@@ -15,8 +15,7 @@ public class GlobEnumerationDistinctTests(GlobUnitTestsFixture fixture, ITestOut
                                         .WithGlob("/**/[lb]*/**/[lb]*/*.txt")
                                         .FromDirectory("/")
                                         .CaseSensitive()
-                                        .SelectFiles()
-                                        .Build());
+                                        .SelectFiles());
         var enumerate = ge.Enumerate;
         var result = enumerate.Should().NotThrow().Which.ToList();
         string[] expected = [
@@ -42,7 +41,6 @@ public class GlobEnumerationDistinctTests(GlobUnitTestsFixture fixture, ITestOut
                                         .CaseInsensitive()
                                         .SelectFiles()
                                         .Distinct()
-                                        .Build()
                             );
         var enumerate = ge.Enumerate;
         var result = enumerate.Should().NotThrow().Which.ToList();

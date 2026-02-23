@@ -4,38 +4,34 @@
 namespace vm2.Glob.Api;
 
 /// <summary>
-/// Represents a glob _glob searcher.
+/// Represents a glob pattern searcher.
 /// </summary>
 public sealed partial class GlobEnumerator
 {
     /// <summary>
-    /// Escapes a span of characters for use in a regular expression _glob.
+    /// Escapes a span of characters for use in a regular expression glob.
     /// </summary>
     /// <remarks>
     /// Basically a rewrite of <see cref="Regex.Escape"/> for spans.<para/>
-    /// <b>Note</b> that if no character was escaped, the method will return the original span, saving one allocation.
     /// </remarks>
     /// <param name="span">The span of characters to escape.</param>
-    static ReadOnlySpan<char> RegexEscape(ReadOnlySpan<char> span)
+    /// <param name="writer">The <see cref="SpanWriter"/> to write the escaped characters to. Most conservatively should have 2 x the length of <paramref name="span"/>.</param>
+    static void RegexEscape(ReadOnlySpan<char> span, ref SpanWriter writer)
     {
-        var writer = new SpanWriter(stackalloc char[2 * span.Length]);
-
         foreach (var ch in span)
         {
             if (RegexEscapable.Contains(ch))
                 writer.Write('\\');
             writer.Write(ch);
         }
-
-        return writer.Position == span.Length ? span : writer.Chars.ToString().AsSpan();
     }
 
     /// <summary>
     /// Normalizes the specified GlobRegex by converting separators, removing duplicate / and *, and determining the starting directory.
-    /// Copies the normalized pattern into _glob.
-    /// Also sets the _fromDir field based on the FromDirectory and the contents of the glob.
+    /// Copies the normalized pattern into glob.
+    /// Also sets the fromDir field based on the FromDirectory and the contents of the glob.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>A tuple containing the normalized pattern and the starting directory.</returns>
     (string normPattern, string fromDir) NormalizeGlobAndStartDir()
     {
         var m = FileSystemRoot.Match(Glob);
@@ -45,7 +41,7 @@ public sealed partial class GlobEnumerator
         int start;
         if (m.Success)
         {
-            // then ignore _fromDirectory and the current directory and start from the root of the file system
+            // then ignore fromDir and the current directory and start from the root of the file system
             fromDir = m.Value;
             start = m.Length; // skip the root part in the GlobRegex - it is reflected in fromDir
         }
@@ -86,21 +82,21 @@ public sealed partial class GlobEnumerator
     }
 
     /// <summary>
-    /// Translates a glob _glob to .NET _glob used in EnumerateDirectories and to a regex _glob for final filtering.
+    /// Translates a POSIX glob to a .NET glob used in EnumerateDirectories and to a regex for final filtering.
     /// </summary>
     /// <param name="glob">The glob to translate.</param>
-    /// <returns>A .NET path segment _glob and the corresponding <see cref="Regex"/></returns>
+    /// <returns>A .NET path segment glob and the corresponding <see cref="Regex"/></returns>
     (string pattern, string regex) ComponentToPatternRegex(string glob)
     {
         // shortcut the easy cases
         var pr = glob switch
         {
-            "" => (SequenceWildcard, _fileSystem.NameSequence),     // "*", ".*"
-            SequenceWildcard => (glob, _fileSystem.NameSequence),   // "*", ".*"
-            CharacterWildcard => (glob, _fileSystem.NameCharacter), // "?", "."
-            Globstar => ("", ""),                                   // "", ""
-            CurrentDir or ParentDir => (glob, ""),                  // ".", "" or "..", ""
-            _ => default                                            // (null, null) <=> "I don't know yet"
+            ""                      => (SequenceWildcard, _fileSystem.NameSequence),    // "*", ".*"
+            SequenceWildcard        => (glob, _fileSystem.NameSequence),                // "*", ".*"
+            CharacterWildcard       => (glob, _fileSystem.NameCharacter),               // "?", "."
+            Globstar                => ("", ""),                                        // "", ""
+            CurrentDir or ParentDir => (glob, ""),                                      // ".", "" or "..", ""
+            _                       => default                                          // (null, null) <=> "I don't know yet"
         };
 
         if (pr is not (null, null))
@@ -115,7 +111,9 @@ public sealed partial class GlobEnumerator
             if (!glob.AsSpan().ContainsAny(RegexChars))
                 return (glob, "");                                 // no need to escape
 
-            return (glob, RegexEscape(glob).ToString());
+            var writer = new SpanWriter(stackalloc char[2 * glob.Length]);
+            RegexEscape(glob.AsSpan(), ref writer);
+            return (glob, writer.Chars.ToString());
         }
 
         // now the glob can be thought of as a sequence of non-matching and matching slices:
@@ -124,44 +122,55 @@ public sealed partial class GlobEnumerator
 
         // span to go through the glob
         var globReader = new SpanReader(glob.AsSpan());
+        var pool = ArrayPool<char>.Shared;
+        var rexBuffer = pool.Rent(Math.Max(256, 8 * glob.Length));
+        var patBuffer = pool.Rent(Math.Max(256, 8 * glob.Length));
         // escape the non-matches and translate the matches to regex equivalents
-        var rexWriter = new SpanWriter(stackalloc char[32 * glob.Length]);
-        // copy the non-matches and translate the matches to file system _glob equivalents - * and ?
-        var patWriter = new SpanWriter(stackalloc char[32 * glob.Length]);
+        var rexWriter = new SpanWriter(rexBuffer.AsSpan());
+        // copy the non-matches and translate the matches to file system glob equivalents - * and ?
+        var patWriter = new SpanWriter(patBuffer.AsSpan());
 
-        // replace all wildcards with '*'
-        foreach (Match match in matches)
+        try
         {
-            // the non-match is from the current position to the start of the match - escape and copy the next non-match
-            if (match.Index > globReader.Position)
+            // replace all wildcards with '*'
+            foreach (Match match in matches)
             {
-                var nonMatch = globReader.Read(match.Index - globReader.Position);
+                // the non-match is from the current position to the start of the match - escape and copy the next non-match
+                if (match.Index > globReader.Position)
+                {
+                    var nonMatch = globReader.Read(match.Index - globReader.Position);
 
-                rexWriter.Write(RegexEscape(nonMatch));
-                patWriter.Write(nonMatch);
+                    RegexEscape(nonMatch, ref rexWriter);
+                    patWriter.Write(nonMatch);
+                }
+
+                _ = globReader.Read(match.Length);  // consume the match
+
+                // translate the match
+                var (pat, rex) = TranslateGlobExpression(match);
+
+                // TranslateGlobExpression(match); already processed this part, so just advance the reader
+                rexWriter.Write(rex.AsSpan());
+                patWriter.Write(pat.AsSpan());
             }
 
-            _ = globReader.Read(match.Length);  // consume the match
+            // escape and copy the final non-match
+            if (!globReader.IsEmpty)
+            {
+                var finalNonMatch = globReader.ReadAll();
 
-            // translate the match
-            var (pat, rex) = TranslateGlobExpression(match);
+                RegexEscape(finalNonMatch, ref rexWriter);
+                patWriter.Write(finalNonMatch);
+            }
 
-            // TranslateGlobExpression(match); already processed this part, so just advance the reader
-            rexWriter.Write(rex.AsSpan());
-            patWriter.Write(pat.AsSpan());
+            return (patWriter.Chars.ToString(),
+                    rexWriter.Chars.ToString());
         }
-
-        // escape and copy the final non-match
-        if (!globReader.IsEmpty)
+        finally
         {
-            var finalNonMatch = globReader.ReadAll();
-
-            rexWriter.Write(RegexEscape(finalNonMatch));
-            patWriter.Write(finalNonMatch);
+            pool.Return(rexBuffer);
+            pool.Return(patBuffer);
         }
-
-        return (patWriter.Chars.ToString(),
-                rexWriter.Chars.ToString());
     }
 
     (string pattern, string regex) TranslateGlobExpression(Match match)
@@ -177,60 +186,70 @@ public sealed partial class GlobEnumerator
             .Groups
             .Values
             .FirstOrDefault(
-                g => !string.IsNullOrWhiteSpace(g.Name) && !char.IsDigit(g.Name[0]) && !string.IsNullOrWhiteSpace(g.Value)) switch
-        {
-            { Name: CharWildcardGr } question => (CharacterWildcard, _fileSystem.NameCharacter),
-            { Name: SeqWildcardGr } asterisk => (SequenceWildcard, _fileSystem.NameSequence),     // no need to filter the results
-            { Name: ClassGr } chrClass => (CharacterWildcard, $"[{TransformClass(chrClass.Value)}]"),
-            _ => throw new ArgumentException("Invalid glob _glob match.", nameof(match)),
-        };
+                g => !string.IsNullOrWhiteSpace(g.Name) && !char.IsDigit(g.Name[0]) && !string.IsNullOrWhiteSpace(g.Value)) switch {
+                    { Name: CharWildcardGr } question => (CharacterWildcard, _fileSystem.NameCharacter),
+                    { Name: SeqWildcardGr } asterisk => (SequenceWildcard, _fileSystem.NameSequence),     // no need to filter the results
+                    { Name: ClassGr } chrClass => (CharacterWildcard, $"[{TransformClass(chrClass.Value)}]"),
+                    _ => throw new ArgumentException("Invalid glob match.", nameof(match)),
+                };
 
     static ReadOnlySpan<char> TransformClass(string globClass)
     {
         var globReader = new SpanReader(globClass);
-        var globWriter = new SpanWriter(new Memory<char>(new char[32 * globClass.Length]).Span);
 
-        // the first char(s) can be '!' or ']' or '!]' that need special handling
-        if (globReader.Peek() is '!')
+        var pool = ArrayPool<char>.Shared;
+        var globBuffer = pool.Rent(Math.Max(256, 8 * globClass.Length));
+
+        try
         {
-            _ = globReader.Read();  // consume it
-            globWriter.Write(globReader.Remaining is > 1 ? '^' : '!'); // deal with the case of [!] vs [!class]
-        }
+            var globWriter = new SpanWriter(globBuffer.AsSpan());
 
-        if (globReader.IsEmpty)
+            // the first char(s) can be '!' or ']' or '!]' that need special handling
+            if (globReader.Peek() is '!')
+            {
+                _ = globReader.Read();  // consume it
+                globWriter.Write(globReader.Remaining is > 1 ? '^' : '!'); // deal with the case of [!] vs [!class]
+            }
+
+            if (globReader.IsEmpty)
+                return globWriter.Chars;
+
+            if (globReader.Peek() is ']')
+            {
+                _ = globReader.Read();  // consume it
+                globWriter.Write(']');
+            }
+
+            if (globReader.IsEmpty)
+                return globWriter.Chars;
+
+            var matches = NamedClassRegex().Matches(globClass);
+
+            // replace all wildcards with '*'
+            foreach (Match match in matches)
+            {
+                // the non-match is from the current position to the start of the match - escape and copy the next non-match
+                if (match.Index > globReader.Position)
+                    RegexEscape(globReader.Read(match.Index - globReader.Position), ref globWriter);
+
+                _ = globReader.Read(match.Length);  // consume the match
+
+                Debug.Assert(_namedClassTranslations.ContainsKey(match.Groups[ClassNameGr].Value), "We know this class name can be translated.");
+
+                // get the class name, translate it and write it to the writer
+                globWriter.Write(_namedClassTranslations[match.Groups[ClassNameGr].Value]);
+            }
+
+            // escape and copy the final non-match
+            if (!globReader.IsEmpty)
+                RegexEscape(globReader.ReadAll(), ref globWriter);
+
             return globWriter.Chars;
-
-        if (globReader.Peek() is ']')
-        {
-            _ = globReader.Read();  // consume it
-            globWriter.Write(']');
         }
-
-        if (globReader.IsEmpty)
-            return globWriter.Chars;
-
-        var matches = NamedClassRegex().Matches(globClass);
-
-        // replace all wildcards with '*'
-        foreach (Match match in matches)
+        finally
         {
-            // the non-match is from the current position to the start of the match - escape and copy the next non-match
-            if (match.Index > globReader.Position)
-                globWriter.Write(RegexEscape(globReader.Read(match.Index - globReader.Position)));
-
-            _ = globReader.Read(match.Length);  // consume the match
-
-            Debug.Assert(_namedClassTranslations.ContainsKey(match.Groups[ClassNameGr].Value), "We know this class name can be translated.");
-
-            // get the class name, translate it and write it to the writer
-            globWriter.Write(_namedClassTranslations[match.Groups[ClassNameGr].Value]);
+            pool.Return(globBuffer);
         }
-
-        // escape and copy the final non-match
-        if (!globReader.IsEmpty)
-            globWriter.Write(RegexEscape(globReader.ReadAll()));
-
-        return globWriter.Chars;
     }
 
     static readonly FrozenDictionary<string, string> _namedClassTranslations =

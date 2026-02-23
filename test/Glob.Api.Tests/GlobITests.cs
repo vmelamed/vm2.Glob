@@ -93,8 +93,7 @@ public partial class GlobEnumeratorIntegrationTests : IClassFixture<GlobIntegrat
         var ge = GetGlobEnumerator(builder => data
                                                 .ConfigureBuilder(builder)
                                                 .FromDirectory(Path.Combine(TestRootPath, data.Sd))
-                                                .SkipObjectsWithAttributes(FileAttributes.None)
-                                                .Build());
+                                                .SkipObjectsWithAttributes(FileAttributes.None));
         var enumerate = ge.Enumerate;
 
         if (data.Tx)

@@ -114,6 +114,5 @@ public class IntegrationTestData(
             .TraverseDepthFirst(Tdf ? TraverseOrder.DepthFirst : TraverseOrder.BreadthFirst)
             .Select(O)
             .WithDistinct(X)
-            .Build()
             ;
 }
