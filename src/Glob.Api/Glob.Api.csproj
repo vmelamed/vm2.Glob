@@ -17,6 +17,12 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <InternalsVisibleTo Include="Glob.Api.Tests" />
+        <InternalsVisibleTo Include="Glob.Api.FakeFileSystem.Tests" />
+        <InternalsVisibleTo Include="Glob.Api.FakeFileSystem" />
+    </ItemGroup>
+
+    <ItemGroup>
         <Content Include="../../README.md" Pack="true" PackagePath="\" />
         <None Include="../../LICENSE" Pack="true" PackagePath="\" />
         <None Include="../../CHANGELOG.md" Pack="true" PackagePath="\" />

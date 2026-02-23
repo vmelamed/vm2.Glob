@@ -103,6 +103,5 @@ public class UnitTestElement(
             .FromDirectory(Sd)
             .WithCaseSensitivity(M)
             .Select(O)
-            .Build()
             ;
 }
