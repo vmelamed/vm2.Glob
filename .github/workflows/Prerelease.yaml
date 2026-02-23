@@ -44,9 +44,10 @@ jobs:
     if: |
       github.event_name == 'workflow_dispatch' ||
       ( github.event_name == 'workflow_run' &&
+        github.event.workflow_run.head_branch == 'main' &&
         github.event.workflow_run.conclusion == 'success' &&
         github.event.workflow_run.event == 'push' &&
-        github.event.workflow_run.head_branch == 'main' )
+        !contains(github.event.workflow_run.head_commit.message, '[skip ci]') )
     outputs:
       dotnet-version: ${{ steps.init-params.outputs.dotnet-version }}
       package-projects: ${{ steps.init-params.outputs.package-projects }}
@@ -103,14 +104,14 @@ jobs:
       - get-params
     uses: vmelamed/vm2.DevOps/.github/workflows/_prerelease.yaml@main
     secrets:
-      # You don't need all three secrets, only the one corresponding to the chosen NuGet server above or the default 'github'
-      NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+      RELEASE_PAT: ${{ secrets.RELEASE_PAT }} # Required PAT for pushing changelog and tags past branch protection.
+      # You don't need all of the next three secrets, only the one corresponding to the chosen NuGet server above or the default 'github'
       NUGET_API_GITHUB_KEY: ${{ secrets.NUGET_API_GITHUB_KEY }}
       NUGET_API_NUGET_KEY: ${{ secrets.NUGET_API_NUGET_KEY }}
-      RELEASE_PAT: ${{ secrets.RELEASE_PAT }}
+      NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
     permissions:
       contents: write # Required to checkout the code, push changelog, and create tags
-      packages: read  # Required to restore GitHub Packages NuGet packages
+      packages: write # Required to add pre-release NuGet packages
     with:
       dotnet-version: ${{ needs.get-params.outputs.dotnet-version }}
       package-projects: ${{ needs.get-params.outputs.package-projects }}
