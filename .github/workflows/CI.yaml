@@ -9,11 +9,6 @@ on:
     branches:
       - "**" # trigger on PR for all branches.
 
-  pull_request_review:
-    types:
-      - submitted # trigger after any submitted code review (comments, changes requested, approved, including Copilot);
-                  # jobs further restrict to approved reviews via `if: github.event.review.state == 'approved'`.
-
   workflow_dispatch:
     inputs:
       runners-os:
@@ -31,7 +26,7 @@ on:
 
 # Concurrency: cancel in-progress runs for the same ref
 concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: true
 
 env:
@@ -78,9 +73,7 @@ jobs:
     runs-on: ubuntu-latest # in this workflow the runner doesn't matter - we're just preparing the inputs for the next workload(s).
     permissions:
       pull-requests: read
-    if: |
-      ( github.event_name != 'push' || !contains(github.event.head_commit.message, '[skip ci]') ) &&
-      ( github.event_name != 'pull_request_review' || github.event.review.state == 'approved' )
+    if: github.event_name != 'push' || !contains(github.event.head_commit.message, '[skip ci]')
     outputs:
       build-projects: ${{ steps.init-params.outputs.build-projects }}
       test-projects: ${{ steps.init-params.outputs.test-projects }}
@@ -100,53 +93,65 @@ jobs:
         id: init-params
         shell: bash
         run: |
-          build_projects='${{ env.BUILD_PROJECTS }}'
-          test_projects='${{ env.TEST_PROJECTS }}'
-          benchmark_projects='${{ env.BENCHMARK_PROJECTS }}'
-          package_projects='${{ env.PACKAGE_PROJECTS }}'
-          runners_os='${{ env.RUNNERS_OS }}'
-          dotnet_version='${{ env.DOTNET_VERSION }}'
-          configuration='${{ env.CONFIGURATION }}'
-          preprocessor_symbols='${{ env.PREPROCESSOR_SYMBOLS }}'
-          min_coverage_pct='${{ env.MIN_COVERAGE_PCT }}'
-          max_regression_pct='${{ env.MAX_REGRESSION_PCT }}'
-          minver_tag_prefix='${{ env.MINVERTAGPREFIX }}'
-          minver_prerelease_id='${{ env.MINVERDEFAULTPRERELEASEIDENTIFIERS }}'
+          build_projects='${{ env.BUILD_PROJECTS || "[]" }}'
+          test_projects='${{ env.TEST_PROJECTS || "[]" }}'
+          benchmark_projects='${{ env.BENCHMARK_PROJECTS || "[]" }}'
+          package_projects='${{ env.PACKAGE_PROJECTS || "[]" }}'
+          runners_os='${{ env.RUNNERS_OS || "[\"ubuntu-latest\"]" }}'
+          dotnet_version='${{ env.DOTNET_VERSION || "10.0.x" }}'
+          configuration='${{ env.CONFIGURATION || "Release" }}'
+          preprocessor_symbols='${{ env.PREPROCESSOR_SYMBOLS || "" }}'
+          min_coverage_pct='${{ env.MIN_COVERAGE_PCT || 80 }}'
+          max_regression_pct='${{ env.MAX_REGRESSION_PCT || 20 }}'
+          minver_tag_prefix='${{ env.MINVERTAGPREFIX || "v" }}'
+          minver_prerelease_id='${{ env.MINVERDEFAULTPRERELEASEIDENTIFIERS || "preview.0" }}'
           skip_push='false'
 
           if [ '${{ github.event_name }}' == "pull_request" ] || \
-             [ '${{ github.event_name }}' == "pull_request_review" ] || \
              ([ '${{ github.event_name }}' == "push" ] && [ '${{ github.ref_name }}' == "main" ]); then
+
               # For pull requests, reviews, and pushes to the main branch, use default values from env (no modifications needed)
-              echo "Event: ${{ github.event_name }}. Using default parameters from env." >> $GITHUB_STEP_SUMMARY
+              echo "ℹ️  INFO: Event: ${{ github.event_name }}. Using default parameters from env." >> $GITHUB_STEP_SUMMARY
+
           elif [ '${{ github.event_name }}' == "push" ] && [ '${{ github.ref_name }}' != "main" ]; then
+
               # Skip push-triggered CI when an open PR exists for this branch.
+
               export GH_TOKEN='${{ github.token }}'
+
               if ! open_pr_count=$(gh pr list \
                 --repo "${{ github.repository }}" \
                 --state open \
                 --json headRefName \
                 --jq 'map(select(.headRefName == "${{ github.ref_name }}")) | length'); then
                 open_pr_count=0
-                echo "Failed to query PRs via gh. Running push-triggered CI with SHORT_RUN." >> $GITHUB_STEP_SUMMARY
+                echo "⚠️  WARNING: Failed to query PRs via gh. Running push-triggered CI with SHORT_RUN." >> $GITHUB_STEP_SUMMARY
               fi
-              echo "Open PR count for '${{ github.ref_name }}': ${open_pr_count}" >> $GITHUB_STEP_SUMMARY
-              preprocessor_symbols="${preprocessor_symbols};SHORT_RUN"
+
+              echo "ℹ️  INFO: Open PR count for '${{ github.ref_name }}': ${open_pr_count}" >> $GITHUB_STEP_SUMMARY
+
               if [ "${open_pr_count}" -gt 0 ]; then
-                  echo "Open PR exists for this branch. Skipping push-triggered CI." >> $GITHUB_STEP_SUMMARY
+                  echo "ℹ️  INFO: There are open PRs for this branch. Skipping push-triggered CI." >> $GITHUB_STEP_SUMMARY
                   skip_push='true'
               else
-                  echo "No open PRs for this branch. Running push-triggered CI with SHORT_RUN preprocessor symbol." >> $GITHUB_STEP_SUMMARY
+                  preprocessor_symbols="${preprocessor_symbols};SHORT_RUN"
+                  echo "ℹ️  INFO: No open PRs for this branch. Running push-triggered CI with SHORT_RUN preprocessor symbol." >> $GITHUB_STEP_SUMMARY
               fi
+
           elif [ '${{ github.event_name }}' == "workflow_dispatch" ]; then
+
               # Get the values from the UI inputs of workflow_dispatch event. Convert comma-separated runners' OS values to JSON array
               # There is a known GitHub actions issue: the workflow dispatch UI doesn't properly handle JSON strings with quotes.
               # E.g. for the input '["ubuntu-latest"]', the UI removes the inner quotes and it becomes the invalid JSON: '[ubuntu-latest]'.
+
               runners_os=$(echo "${{ inputs.runners-os }}" | jq -Rc 'split(",") | map(select(length > 0) | gsub("^\\s+|\\s+$";""))')
               preprocessor_symbols="${preprocessor_symbols};${{ inputs.preprocessor-symbols }}"
+
           else
-              echo "Unsupported event: ${{ github.event_name }}"
+
+              echo "❌  ERROR: Unsupported event: ${{ github.event_name }}"
               exit 5
+
           fi
 
           # Set the outputs:

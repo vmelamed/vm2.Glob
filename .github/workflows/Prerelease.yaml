@@ -44,9 +44,8 @@ jobs:
     if: |
       github.event_name == 'workflow_dispatch' ||
       ( github.event_name == 'workflow_run' &&
-        github.event.workflow_run.head_branch == 'main' &&
-        github.event.workflow_run.conclusion == 'success' &&
         github.event.workflow_run.event == 'push' &&
+        github.event.workflow_run.conclusion == 'success' &&
         !contains(github.event.workflow_run.head_commit.message, '[skip ci]') )
     outputs:
       dotnet-version: ${{ steps.init-params.outputs.dotnet-version }}
@@ -107,8 +106,8 @@ jobs:
       RELEASE_PAT: ${{ secrets.RELEASE_PAT }} # Required PAT for pushing changelog and tags past branch protection.
       # You don't need all of the next three secrets, only the one corresponding to the chosen NuGet server above or the default 'github'
       NUGET_API_GITHUB_KEY: ${{ secrets.NUGET_API_GITHUB_KEY }}
-      NUGET_API_NUGET_KEY: ${{ secrets.NUGET_API_NUGET_KEY }}
       NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+      NUGET_API_NUGET_KEY: ${{ secrets.NUGET_API_NUGET_KEY }}
     permissions:
       contents: write # Required to checkout the code, push changelog, and create tags
       packages: write # Required to add pre-release NuGet packages

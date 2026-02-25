@@ -1,8 +1,6 @@
 # Changelog
 
-## v1.0.0 - 2026-02-18
-
-See prereleases below.
+All notable changes to this project will be documented in this file.
 
 This format follows:
 
@@ -12,16 +10,22 @@ This format follows:
 
 <!--
 ## [Unreleased]
-
 ### Added
 - (add new features here)
-
 ### Changed
 - (add behavior changes here)
-
 ### Fixed
 - (add bug fixes here)
-
+### Performance
+- (add performance improvements here)
 ### Removed
-- (add removed features here)
+- (add removed/obsolete items here)
+### Security
+- (add security-related changes here)
+### Internal
+- (tooling, infrastructure, build pipeline changes)
 -->
+
+## v1.0.0 - 2026-02-18
+
+Initial release.
