@@ -85,6 +85,12 @@ public static partial class GlobConstants
     public const string UnixNameChars = @"[^\x00/]";
 
     /// <summary>
+    /// Represents the maximum length of a Unix file or directory name character length in a regular expression. E.g. the pattern
+    /// `?` is equivalent to the regular expression `[^\x00/]` and has a length of 8.
+    /// </summary>
+    public static readonly int MaxUnixNameCharRegexLength = UnixNameChars.Length;
+
+    /// <summary>
     /// The regular expression pattern for validating Unix pathnames.
     /// </summary>
     internal const string UnixPathname = """
@@ -170,10 +176,16 @@ public static partial class GlobConstants
     /// </summary>
     public const string WinNameChars = @"[^\x00-\x1F""/<>\\|]";
 
+    // <summary>
+    // Represents a regular expression pattern that matches valid characters for the last character in a Windows file or directory name.
+    // </summary>
+    // public const string WinNameLastChars = @"[^\x00-\x1F""./<>\\|]"; - no need to use it for now
+
     /// <summary>
-    /// Represents a regular expression pattern that matches valid characters for the last character in a Windows file or directory name.
+    /// Represents the maximum length of a Unix file or directory name character length in a regular expression. E.g. the pattern
+    /// `?` is equivalent to the regular expression `[^\x00-\x1F""/&lt;&gt;\\|]` and has a length of 19.
     /// </summary>
-    public const string WinNameLastChars = @"[^\x00-\x1F""./<>\\|]";
+    public static readonly int MaxWinNameCharRegexLength = WinNameChars.Length;
 
     /// <summary>
     /// Represents the character used to separate the drive letter fromIndex the dirPath in f system paths.
@@ -334,7 +346,7 @@ public static partial class GlobConstants
     const string GlobExpression = $"""
           (?<{SeqWildcardGr}> \* )
         | (?<{CharWildcardGr}> \? )
-        | (?<br> \[ ) !?\]? ( [^\[\]] | \[(?!:) | {NmClassRegex} )* (?<{ClassGr}-br> \] )
+        | (?<br> \[) !?\]? ( [^\[\]] | \[(?!:) | {NmClassRegex} )* (?<{ClassGr}-br> \])
         """;
 
     /// <summary>
@@ -342,7 +354,7 @@ public static partial class GlobConstants
     /// <see cref="ClassNameGr"/>.
     /// </summary>
     const string NamedClass = $"""
-        (?<brcol> \[: ) (alnum | alpha | blank | cntrl | digit | graph | lower | print | punct | space | upper | xdigit) (?<{ClassNameGr}-brcol> :\] )
+        (?<brcol> \[:) (alnum | alpha | blank | cntrl | digit | graph | lower | print | punct | space | upper | xdigit) (?<{ClassNameGr}-brcol> :\])
         """;
 
     /// <summary>
