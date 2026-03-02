@@ -102,46 +102,52 @@ public sealed partial class GlobEnumerator
         if (pr is not (null, null))
             return pr;
 
-        // we don't know yet: analyze the glob
+        // go the hard way
         var (pattern, regex) = pr;
         var matches = GlobExpressionRegex().Matches(glob);
+        // now we can look at the glob expression as a sequence of terms: <non-match><match>*<non-match> where each non-match
+        // element can be empty and each match element is a single glob character: *, ?, [class], [!class]
 
-        if (matches.Count is 0)                                     // no wildcards
+        if (matches.Count is 0)
         {
+            // no pattern has no glob characters
             if (!glob.AsSpan().ContainsAny(RegexChars))
-                return (glob, "");                                 // no need to escape
+                return (glob, "");  // no need to regex-escape a pattern with no glob characters
 
+            // we need to regex-escape the characters of the pattern
             var writer = new SpanWriter(stackalloc char[2 * glob.Length]);
             RegexEscape(glob.AsSpan(), ref writer);
             return (glob, writer.Chars.ToString());
         }
 
-        // now the glob can be thought of as a sequence of non-matching and matching slices:
-        // (<non-match><match>)*<non-match>
-        // where each non-match element can be empty
+        // now the pattern can be thought of as a sequence of plain-character sub-sequences and a glob-character sub-sequences
+        // ( '?' '*' '[:class:]' '[!class]'), where each plain-chars sub-sequence can be empty. In EBNF:
+        // pattern ::= (<plain-chars><glob-chars>)*<plain-chars>
+        // plain-chars ::= <any sequence of characters that are not glob characters>
+        // glob-chars ::= '?' '*' '[:class:]' '[!class:]'
 
         // span to go through the glob
         var globReader = new SpanReader(glob.AsSpan());
         var pool = ArrayPool<char>.Shared;
-        var rexBuffer = pool.Rent(Math.Max(256, 8 * glob.Length));
-        var patBuffer = pool.Rent(Math.Max(256, 8 * glob.Length));
-        // escape the non-matches and translate the matches to regex equivalents
-        var rexWriter = new SpanWriter(rexBuffer.AsSpan());
+        var patBuffer = pool.Rent(Math.Max(128, glob.Length * 2));
+        var rexBuffer = pool.Rent(Math.Max(256, glob.Length * _fileSystem.MaxNameCharRegexLength));
         // copy the non-matches and translate the matches to file system glob equivalents - * and ?
         var patWriter = new SpanWriter(patBuffer.AsSpan());
+        // escape the non-matches and translate the matches to regex equivalents
+        var rexWriter = new SpanWriter(rexBuffer.AsSpan());
 
         try
         {
-            // replace all wildcards with '*'
             foreach (Match match in matches)
             {
-                // the non-match is from the current position to the start of the match - escape and copy the next non-match
+                // the non-match is from the current position to the start of the match
                 if (match.Index > globReader.Position)
                 {
                     var nonMatch = globReader.Read(match.Index - globReader.Position);
 
-                    RegexEscape(nonMatch, ref rexWriter);
                     patWriter.Write(nonMatch);
+                    // escape the non-match for the regex
+                    RegexEscape(nonMatch, ref rexWriter);
                 }
 
                 _ = globReader.Read(match.Length);  // consume the match
@@ -149,9 +155,8 @@ public sealed partial class GlobEnumerator
                 // translate the match
                 var (pat, rex) = TranslateGlobExpression(match);
 
-                // TranslateGlobExpression(match); already processed this part, so just advance the reader
-                rexWriter.Write(rex.AsSpan());
                 patWriter.Write(pat.AsSpan());
+                rexWriter.Write(rex.AsSpan());
             }
 
             // escape and copy the final non-match
@@ -159,8 +164,9 @@ public sealed partial class GlobEnumerator
             {
                 var finalNonMatch = globReader.ReadAll();
 
-                RegexEscape(finalNonMatch, ref rexWriter);
                 patWriter.Write(finalNonMatch);
+                // escape the non-match for the regex
+                RegexEscape(finalNonMatch, ref rexWriter);
             }
 
             return (patWriter.Chars.ToString(),
@@ -168,8 +174,8 @@ public sealed partial class GlobEnumerator
         }
         finally
         {
-            pool.Return(rexBuffer);
             pool.Return(patBuffer);
+            pool.Return(rexBuffer);
         }
     }
 
@@ -185,8 +191,8 @@ public sealed partial class GlobEnumerator
         => match
             .Groups
             .Values
-            .FirstOrDefault(
-                g => !string.IsNullOrWhiteSpace(g.Name) && !char.IsDigit(g.Name[0]) && !string.IsNullOrWhiteSpace(g.Value)) switch {
+            .FirstOrDefault(g => !string.IsNullOrWhiteSpace(g.Name) && !char.IsDigit(g.Name[0]) && !string.IsNullOrWhiteSpace(g.Value))
+                switch {
                     { Name: CharWildcardGr } question => (CharacterWildcard, _fileSystem.NameCharacter),
                     { Name: SeqWildcardGr } asterisk => (SequenceWildcard, _fileSystem.NameSequence),     // no need to filter the results
                     { Name: ClassGr } chrClass => (CharacterWildcard, $"[{TransformClass(chrClass.Value)}]"),

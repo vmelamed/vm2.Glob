@@ -24,6 +24,13 @@ public static class IFileSystemExtensions
         public string NameCharacter => fs.IsWindows ? WinNameChars : UnixNameChars;
 
         /// <summary>
+        /// Represents the maximum length of a file or directory name character length in a regular expression for the current
+        /// file system. E.g. the pattern `?` is equivalent to `[^\x00-\x1F""/&lt;&gt;\\|]` in Windows or `[^\x00/]` in Unix -
+        /// respectively 20 or 8.
+        /// </summary>
+        public int MaxNameCharRegexLength => fs.IsWindows ? MaxWinNameCharRegexLength : MaxUnixNameCharRegexLength;
+
+        /// <summary>
         /// A regular expression pattern that matches a sequence of valid file system name characters.
         /// </summary>
         public string NameSequence => fs.NameCharacter + "*";
