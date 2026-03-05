@@ -1,19 +1,38 @@
 ﻿// SPDX-License-Identifier: MIT
 // Copyright (c) 2025 Val Melamed
 
-#if DEBUG
-// for debugging the benchmarks:
-var config = new DebugInProcessConfig()
-#else
-var config = ManualConfig
-                .Create(DefaultConfig.Instance)
-#endif
-                .WithOptions(ConfigOptions.DisableOptimizationsValidator | ConfigOptions.StopOnFirstError)
-                .WithArtifactsPath(BmConfiguration.Options.ResultsPath)
-                .WithSummaryStyle(SummaryStyle.Default.WithRatioStyle(RatioStyle.Trend))
-                ;
-
 BenchmarkSwitcher
     .FromAssembly(typeof(Program).Assembly)
-    .Run(args, config)
+    .Run(args, GetConfig(args))
     ;
+
+static IConfig GetConfig(string[] args)
+{
+#if DEBUG
+    var config = new DebugInProcessConfig();   // for debugging the benchmarks only
+#else
+    var config = DefaultConfig.Instance;
+#endif
+    var options = ConfigOptions.StopOnFirstError;
+    var artifactsFolder = "./BenchmarkDotNet.Artifacts/results";
+
+    for (var i = 0; i < args.Length; i++)
+        switch (args[i])
+        {
+            case "--artifacts":
+                if (i + 1 < args.Length)
+                    artifactsFolder = args[i + 1];
+                break;
+
+            case "--disable-optimizations-validator":
+                options |= ConfigOptions.DisableOptimizationsValidator;
+                break;
+        }
+
+    return config
+#if RELEASE
+            .WithArtifactsPath(artifactsFolder)
+            .WithOptions(options)
+#endif
+            ;
+}
