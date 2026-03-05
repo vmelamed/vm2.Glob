@@ -8,11 +8,14 @@ BenchmarkSwitcher
 
 static IConfig GetConfig(string[] args)
 {
+    var config =
 #if DEBUG
-    var config = new DebugInProcessConfig();   // for debugging the benchmarks only
+                new DebugInProcessConfig()   // for debugging the benchmarks only
 #else
-    var config = DefaultConfig.Instance;
+                DefaultConfig.Instance
 #endif
+                ;
+                
     var options = ConfigOptions.StopOnFirstError;
     var artifactsFolder = "./BenchmarkDotNet.Artifacts/results";
 
@@ -30,9 +33,7 @@ static IConfig GetConfig(string[] args)
         }
 
     return config
-#if RELEASE
             .WithArtifactsPath(artifactsFolder)
             .WithOptions(options)
-#endif
             ;
 }
