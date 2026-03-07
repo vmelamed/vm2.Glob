@@ -130,7 +130,6 @@ jobs:
 
           elif [ '${{ github.event_name }}' == 'push' ] && [ '${{ github.ref_name }}' != 'main' ]; then
 
-              # For pushes to the non-main branch, use the argument values from the environment: vars, secrets, defaults.
               # To avoid duplicate runs when:
               #     1) push to main AND
               #     2) there is an open PR to main
