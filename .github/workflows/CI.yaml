@@ -41,31 +41,25 @@ env:
     [
     "./vm2.Glob.slnx"
     ]
-
   TEST_PROJECTS: >
     [
     "./test/Glob.Api.FakeFileSystem.Tests/Glob.Api.FakeFileSystem.Tests.csproj",
     "./test/Glob.Api.Tests/Glob.Api.Tests.csproj"
     ]
-
   BENCHMARK_PROJECTS: >
     [
     "./benchmarks/Glob.Api.Benchmarks/Glob.Api.Benchmarks.csproj"
     ]
-
   PACKAGE_PROJECTS: >
     [
     "src/Glob.Api/Glob.Api.csproj",
     "src/GlobTool/GlobTool.csproj"
     ]
-
   RUNNERS_OS: >
     [
     "ubuntu-latest"
     ]
-
   PREPROCESSOR_SYMBOLS: ""
-
   DOTNET_VERSION: ${{ vars.DOTNET_VERSION || '10.0.x' }} # The .NET SDK version to use.
   CONFIGURATION: ${{ vars.CONFIGURATION || 'Release' }} # The build configuration: Debug, Release, etc.
   MIN_COVERAGE_PCT: ${{ vars.MIN_COVERAGE_PCT || 80 }} # The minimum code coverage percentage required to pass the tests.
