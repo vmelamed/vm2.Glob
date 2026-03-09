@@ -62,6 +62,9 @@ jobs:
       nuget-server: ${{ steps.gather-params.outputs.nuget-server }}
       save-package-artifacts: ${{ steps.gather-params.outputs.save-package-artifacts }}
     steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
       - name: Setup DevOps environment variables
         id: setup-env
         uses: vmelamed/vm2.DevOps/.github/actions/setup-env@main
