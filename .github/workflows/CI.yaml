@@ -37,25 +37,25 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  BUILD_PROJECTS: >
+  BUILD_PROJECTS: >-
     [
     "./vm2.Glob.slnx"
     ]
-  TEST_PROJECTS: >
+  TEST_PROJECTS: >-
     [
     "./test/Glob.Api.FakeFileSystem.Tests/Glob.Api.FakeFileSystem.Tests.csproj",
     "./test/Glob.Api.Tests/Glob.Api.Tests.csproj"
     ]
-  BENCHMARK_PROJECTS: >
+  BENCHMARK_PROJECTS: >-
     [
     "./benchmarks/Glob.Api.Benchmarks/Glob.Api.Benchmarks.csproj"
     ]
-  PACKAGE_PROJECTS: >
+  PACKAGE_PROJECTS: >-
     [
     "src/Glob.Api/Glob.Api.csproj",
     "src/GlobTool/GlobTool.csproj"
     ]
-  RUNNERS_OS: >
+  RUNNERS_OS: >-
     [
     "ubuntu-latest"
     ]
