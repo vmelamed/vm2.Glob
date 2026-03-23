@@ -9,7 +9,7 @@ on:
     types:
       - completed
 
-  # we pre-release from main only, on manual trigger only
+  # we pre-release from main only, on completing "CI: Build, Test, Benchmark, Pack" in main (after merge) and on manual trigger
   workflow_dispatch:
     inputs:
       minver-prerelease-id:
