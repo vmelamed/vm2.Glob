@@ -8,7 +8,7 @@ namespace vm2.Glob.Api;
 /// patterns.
 /// </summary>
 [ExcludeFromCodeCoverage]
-public class GlobEnumeratorBuilder
+public sealed class GlobEnumeratorBuilder
 {
     #region fields
     string _glob = "*";
@@ -23,7 +23,7 @@ public class GlobEnumeratorBuilder
     #endregion
 
     /// <summary>
-    /// Configures the ge to use the specified glob expression for matching file or directory names. The pattern may
+    /// Configures the glob enumerator to use the specified glob expression for matching file or directory names. The pattern may
     /// include wildcards such as:
     /// <list type="bullet">
     /// <item>'*' - matches any character sequence of arbitrary length</item>
@@ -80,7 +80,7 @@ public class GlobEnumeratorBuilder
     /// Use this method when you want glob patterns to distinguish between uppercase and lowercase characters during matching.
     /// By default, matching is platform-specific: case-insensitive - on Windows, and case-sensitive - on Unix-like systems.
     /// </remarks>
-    /// <returns>The current <see cref="GlobEnumeratorBuilder"/> instance with case-sensitive matching enabled.</returns>
+    /// <returns>The current <see cref="GlobEnumeratorBuilder"/> instance with the specified case sensitivity applied.</returns>
     public GlobEnumeratorBuilder WithCaseSensitivity(MatchCasing sensitivity)
     {
         _matchCasing = sensitivity;
@@ -108,7 +108,7 @@ public class GlobEnumeratorBuilder
     /// Use this method when you want glob patterns to distinguish between uppercase and lowercase characters during matching.
     /// By default, matching is platform-specific: case-insensitive - on Windows, and case-sensitive - on Unix-like systems.
     /// </remarks>
-    /// <returns>The current <see cref="GlobEnumeratorBuilder"/> instance with case-sensitive matching enabled.</returns>
+    /// <returns>The current <see cref="GlobEnumeratorBuilder"/> instance with case-insensitive matching enabled.</returns>
     public GlobEnumeratorBuilder CaseInsensitive()
     {
         _matchCasing = MatchCasing.CaseInsensitive;
@@ -123,7 +123,7 @@ public class GlobEnumeratorBuilder
     /// Use this method when you want glob patterns to distinguish between uppercase and lowercase characters during matching.
     /// By default, matching is platform-specific: case-insensitive - on Windows, and case-sensitive - on Unix-like systems.
     /// </remarks>
-    /// <returns>The current <see cref="GlobEnumeratorBuilder"/> instance with case-sensitive matching enabled.</returns>
+    /// <returns>The current <see cref="GlobEnumeratorBuilder"/> instance with platform-sensitive matching enabled.</returns>
     public GlobEnumeratorBuilder PlatformSensitive()
     {
         _matchCasing = MatchCasing.PlatformDefault;
@@ -163,7 +163,7 @@ public class GlobEnumeratorBuilder
     /// </summary>
     /// <returns>The current <see cref="GlobEnumeratorBuilder"/> instance with the specified objects set.</returns>
     /// <remarks>
-    /// Note that the path components of the returned files and directories are separated by "/" and that the the paths of the
+    /// Note that the path components of the returned files and directories are separated by "/" and that the paths of the
     /// directories will include a terminating "/".
     /// </remarks>
     public GlobEnumeratorBuilder SelectDirectoriesAndFiles()
@@ -212,7 +212,6 @@ public class GlobEnumeratorBuilder
     /// <summary>
     /// Configures the enumerator to traverse directories using a depth-first search strategy (the default is breadth-first).
     /// </summary>
-    /// <returns>The current <see cref="GlobEnumeratorBuilder"/> instance to allow method chaining.</returns>
     /// <remarks>
     /// Use this method to control how file system entries are visited during glob enumeration. Depth-first traversal explores
     /// the current directory sub-trees before visiting the sibling directories, while breadth-first traversal visits all
@@ -320,18 +319,12 @@ public class GlobEnumeratorBuilder
     }
 
     /// <summary>
-    /// Builds and returns the configured <see cref="GlobEnumeratorBuilder"/> instance.
-    /// </summary>
-    /// <returns>This builder</returns>
-    public GlobEnumeratorBuilder Build() => this;
-
-    /// <summary>
     /// Creates and configures a new instance of the GlobEnumerator class.
     /// </summary>
     /// <returns>
     /// A <see cref="GlobEnumerator"/> instance that has been configured according to the settings in this instance.
     /// </returns>
-    public GlobEnumerator Create() => Configure(new GlobEnumerator());
+    public GlobEnumerator Build() => Configure(new GlobEnumerator());
 
     /// <summary>
     /// Configures and returns the passed instance of <see cref="GlobEnumerator"/> for enumerating file system entries that
@@ -340,15 +333,15 @@ public class GlobEnumeratorBuilder
     /// <returns>A <see cref="GlobEnumerator"/> that can be used to iterate over matching file system entries.</returns>
     public GlobEnumerator Configure(GlobEnumerator ge)
     {
-        ge.FromDirectory = _fromDirectory;
-        ge.Enumerated = _enumerated;
-        ge.MatchCasing = _matchCasing;
-        ge.Distinct = _distinct;
-        ge.DepthFirst = _depthFirst;
-        ge.Glob = _glob;
+        ge.FromDirectory            = _fromDirectory;
+        ge.Enumerated               = _enumerated;
+        ge.MatchCasing              = _matchCasing;
+        ge.Distinct                 = _distinct;
+        ge.DepthFirst               = _depthFirst;
+        ge.Glob                     = _glob;
         ge.ReturnSpecialDirectories = _returnSpecialDirectories;
-        ge.IgnoreInaccessible = _ignoreInaccessible;
-        ge.AttributesToSkip = _skipObjectsWithAttributes;
+        ge.IgnoreInaccessible       = _ignoreInaccessible;
+        ge.AttributesToSkip         = _skipObjectsWithAttributes;
 
         return ge;
     }

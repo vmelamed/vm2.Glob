@@ -234,7 +234,6 @@ builder
                     .SkipObjectsWithAttributes(
                         parseResult.GetRequiredValue(showHidden)
                             ? FileAttributes.None : FileAttributes.Hidden|FileAttributes.System)
-                    .Build()
     )
     ;
 

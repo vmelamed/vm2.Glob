@@ -7,9 +7,9 @@ namespace vm2.Glob.Api;
 /// A double-ended queue (deque) that can operate as a stack (LIFO) or a queue (FIFO).
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public class Deque<T> : IEnumerable<T>
+internal class Deque<T> : IEnumerable<T>
 {
-    List<T> _sequence;
+    readonly LinkedList<T> _sequence;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Deque{T}"/> class. By default it operates as a queue (FIFO).
@@ -18,7 +18,7 @@ public class Deque<T> : IEnumerable<T>
     /// <param name="capacity"></param>
     public Deque(bool isStack = false, int capacity = 0)
     {
-        _sequence = capacity is > 0 ? new(capacity) : new();
+        _sequence = new LinkedList<T>();
         IsStack = isStack;
     }
 
@@ -43,10 +43,10 @@ public class Deque<T> : IEnumerable<T>
     }
 
     /// <summary>
-    /// Adds the specified element to the end of the sequence.
+    /// Adds the specified element to the sequence.
     /// </summary>
     /// <param name="element">The element to add to the sequence. Cannot be null if the sequence does not accept null values.</param>
-    public void Add(T element) => _sequence.Add(element);
+    public void Add(T element) => _ = IsStack ? _sequence.AddFirst(element) : _sequence.AddLast(element);
 
     /// <summary>
     /// Attempts to remove and return the next element from the collection.
@@ -68,10 +68,9 @@ public class Deque<T> : IEnumerable<T>
             return false;
         }
 
-        var index = IsStack ? _sequence.Count - 1 : 0;
+        element = _sequence.First!.Value;
+        _sequence.RemoveFirst();
 
-        element = _sequence[index];
-        _sequence.RemoveAt(index);
         return true;
     }
 
@@ -115,24 +114,17 @@ public class Deque<T> : IEnumerable<T>
 
     class DequeEnumerator : IEnumerator<T>
     {
-        readonly Deque<T> _deque;
-        int _index;
+        readonly IEnumerator<T> _enumerator;
 
-        public DequeEnumerator(Deque<T> deque)
-        {
-            _deque = deque;
-            Reset();
-        }
+        public DequeEnumerator(Deque<T> deque) => _enumerator = deque._sequence.GetEnumerator();
 
-        public T Current => _deque._sequence[_index];
+        public T Current => _enumerator.Current;
 
         object? IEnumerator.Current => Current;
 
-        public bool MoveNext() => _deque.IsStack
-                                            ? --_index >= 0
-                                            : ++_index < _deque.Count;
+        public bool MoveNext() => _enumerator.MoveNext();
 
-        public void Reset() => _index = _deque.IsStack ? _deque.Count : -1;
+        public void Reset() => _enumerator.Reset();
 
         public void Dispose() { }
     }

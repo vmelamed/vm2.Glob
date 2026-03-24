@@ -9,9 +9,9 @@
         <DefineConstants Condition="'$(OS)' == 'WINDOWS_NT'">$(DefineConstants);WINDOWS</DefineConstants>
         <DefineConstants Condition="'$(OS)' != 'WINDOWS_NT'">$(DefineConstants);UNIX</DefineConstants>
 
-        <!-- Use to define custom preprocessor symbols, e.g. "dotnet build -p:preprocessor_symbols="SHORT_RUN FEATURE_A FEATURE_B" ...",
+        <!-- Use to define custom preprocessor symbols as a semicolon-separated list, e.g. dotnet build -p:preprocessor_symbols="SHORT_RUN;FEATURE_A;FEATURE_B"
              without overriding the rest of the symbols like DEBUG, TRACE, etc. -->
-        <DefineConstants Condition="'$([System.String]::IsNullOrWhiteSpace($(preprocessor_symbols)))' != 'true'">$(DefineConstants);$(preprocessor_symbols)</DefineConstants>
+        <DefineConstants Condition="'$([System.String]::IsNullOrWhiteSpace($(preprocessor_symbols)))' != 'true'">$(preprocessor_symbols);$(DefineConstants)</DefineConstants>
 
         <RepoRoot>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), 'Directory.Build.props'))</RepoRoot>
     </PropertyGroup>
@@ -40,6 +40,10 @@
         <ContinuousIntegrationBuild Condition="'$(CI)' == 'true'">true</ContinuousIntegrationBuild>
         <MinVerTagPrefix>v</MinVerTagPrefix>
         <MinVerDefaultPreReleaseIdentifiers>preview</MinVerDefaultPreReleaseIdentifiers>
+        <!-- Fallback defaults for MinVer variables (e.g., Dependabot runs without git tags) -->
+        <MinVerMajor Condition="'$(MinVerMajor)' == ''">0</MinVerMajor>
+        <MinVerMinor Condition="'$(MinVerMinor)' == ''">0</MinVerMinor>
+        <MinVerPatch Condition="'$(MinVerPatch)' == ''">1</MinVerPatch>
         <AssemblyVersion>$(MinVerMajor).$(MinVerMinor).$(GITHUB_RUN_NUMBER).$(MinVerPatch)</AssemblyVersion>
         <FileVersion>$(MinVerMajor).$(MinVerMinor).$(MinVerPatch).$(GITHUB_RUN_NUMBER)</FileVersion>
     </PropertyGroup>
@@ -201,8 +205,8 @@
     <!-- ================ Property to be used in conditions about benchmarks ================ -->
     <PropertyGroup>
         <IsInBenchmarksFolder Condition="
-                $([System.Text.RegularExpressions.Regex]::IsMatch($(MSBuildProjectDirectory), '[/\\]benchmarks?[/\\]', RegexOptions.IgnoreCase))
-                ">true</IsInBenchmarksFolder>
+            $([System.Text.RegularExpressions.Regex]::IsMatch($(MSBuildProjectDirectory), '[/\\]benchmarks?[/\\]', RegexOptions.IgnoreCase))
+            ">true</IsInBenchmarksFolder>
     </PropertyGroup>
 
     <PropertyGroup Condition="$(IsInBenchmarksFolder) == 'true'">
@@ -257,8 +261,8 @@
     <!-- ================ Property to be used in conditions about examples projects ================ -->
     <PropertyGroup>
         <IsInExamplesFolder Condition="
-                $([System.Text.RegularExpressions.Regex]::IsMatch($(MSBuildProjectDirectory), '[/\\]examples?[/\\]', RegexOptions.IgnoreCase))
-                ">true</IsInExamplesFolder>
+            $([System.Text.RegularExpressions.Regex]::IsMatch($(MSBuildProjectDirectory), '[/\\]examples?[/\\]', RegexOptions.IgnoreCase))
+            ">true</IsInExamplesFolder>
     </PropertyGroup>
 
     <PropertyGroup Condition="$(IsInExamplesFolder) == 'true'">

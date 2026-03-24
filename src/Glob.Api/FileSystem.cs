@@ -7,7 +7,7 @@ namespace vm2.Glob.Api;
 /// Provides methods for interacting with the actual file system as implemented in .NET.
 /// </summary>
 [ExcludeFromCodeCoverage]
-public class FileSystem : IFileSystem
+public sealed class FileSystem : IFileSystem
 {
     /// <summary>
     /// Gets a value indicating whether the current operating system is Windows.
@@ -94,7 +94,6 @@ public class FileSystem : IFileSystem
     /// Retrieves the names of files within the specified directory.
     /// </summary>
     /// <param name="path">The path of the directory to search. This must be a valid, existing directory path.</param>
-    /// <returns>
     /// <param name="pattern">
     /// The search string to match against the names of directories in path. This parameter can contain a combination of valid
     /// literal path and wildcard (* and ?) characters, but it doesn't support regular expressions.
@@ -102,6 +101,7 @@ public class FileSystem : IFileSystem
     /// <param name="options">
     /// An object that describes the search and enumeration configuration to use.
     /// </param>
+    /// <returns>
     /// An enumerable collection of strings, where each string represents the name of a file within the
     /// specified directory. If the directory contains no files, the collection will be empty.
     /// </returns>

@@ -1,27 +1,56 @@
 # Changelog
 
 
+## v2.0.0-preview.1 - 2026-03-24
 
+### Internal
+
+DevOps changes only.
 ## v1.0.0 - 2026-02-18
-See prereleases below.
 
-<!--
-## [Unreleased]
+## Usage Notes
 
-### Added
-- (add new features here)
+> [!TIP] Be disciplined with your commit messages and let git-cliff do the work of updating this file.
+>
+> **Added:**
+>
+> - add new features here
+> - commit prefix for git-cliff: `feat:`
+>
+> **Changed:**
+>
+> - add behavior changes here
+> - commit prefix for git-cliff: `refactor:`
+>
+> **Fixed:**
+>
+> - add bug fixes here
+> - commit prefix for git-cliff: `fix:`
+>
+> **Performance**
+>
+> - add performance improvements here
+> - commit prefix for git-cliff: `perf:`
+>
+> **Removed**
+>
+> - add removed/obsolete items here
+> - commit prefix for git-cliff: `revert:`
+>
+> **Security**
+>
+> - add security-related changes here
+> - commit prefix for git-cliff: `security:`
+>
+> **Internal**
+>
+> - add internal changes here
+> - commit prefix for git-cliff: `refactor:`, `docs:`, `style:`, `test:`, `chore:`, `ci:`, `build:`
+>
 
-### Changed
-- (add behavior changes here)
+## References
 
-### Fixed
-- (add bug fixes here)
-
-### Removed
-- (add removed features here)
--->
-
-See prereleases below. This format follows:
+This format follows:
 
 - [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 - [Semantic Versioning](https://semver.org/)

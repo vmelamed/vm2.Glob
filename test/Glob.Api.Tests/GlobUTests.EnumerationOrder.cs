@@ -18,7 +18,6 @@ public class GlobEnumerationOrderTests(GlobUnitTestsFixture fixture, ITestOutput
                                         .SelectFiles()
                                         .DepthFirst()
                                         .Distinct()
-                                        .Build()
                             );
         var enumerate = ge.Enumerate;
         var result = enumerate.Should().NotThrow().Which.ToList();
@@ -50,7 +49,6 @@ public class GlobEnumerationOrderTests(GlobUnitTestsFixture fixture, ITestOutput
                                         .SelectFiles()
                                         .BreadthFirst()
                                         .Distinct()
-                                        .Build()
                             );
         var enumerate = ge.Enumerate;
         var result = enumerate.Should().NotThrow().Which.ToList();
