@@ -1,15 +1,17 @@
 # Changelog
 
-
-
 ## v2.0.0 - 2026-03-24
+
 See prereleases below.
 
 ## v2.0.0-preview.2 - 2026-03-24
+
 See prereleases below.
 
 ## v2.0.0-preview.1 - 2026-03-24
+
 See prereleases below.
+
 ## v2.0.0-preview.2 - 2026-03-24
 
 ### Internal
@@ -18,9 +20,13 @@ DevOps changes only.
 
 ## v2.0.0-preview.1 - 2026-03-24
 
+Fixed an edge case bug where there was a buffer overflow when the replacement of the source text was larger than the destination span.
+Small but breaking API changes.
+
 ### Internal
 
 DevOps changes only.
+
 ## v1.0.0 - 2026-02-18
 
 ## Usage Notes
