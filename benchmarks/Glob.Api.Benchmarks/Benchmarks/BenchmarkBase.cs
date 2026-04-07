@@ -11,10 +11,6 @@ namespace vm2.Glob.Api.Benchmarks;
 #else
 [SimpleJob(RuntimeMoniker.HostProcess)]
 #endif
-[MemoryDiagnoser]
-[MarkdownExporter]
-[JsonExporter]
-[Orderer(SummaryOrderPolicy.FastestToSlowest, MethodOrderPolicy.Declared)]
 public abstract class BenchmarkBase
 {
     // these must be initialized in GlobalSetup(), so we use the old dirty hack - the null-forgiving operator:

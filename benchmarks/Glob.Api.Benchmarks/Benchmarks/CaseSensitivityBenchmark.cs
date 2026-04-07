@@ -6,8 +6,6 @@ namespace vm2.Glob.Api.Benchmarks;
 /// <summary>
 /// Compares case-sensitive vs case-insensitive matching performance.
 /// </summary>
-[Orderer(SummaryOrderPolicy.Declared, MethodOrderPolicy.Declared)]
-[MemoryDiagnoser]
 public class CaseSensitivityBenchmark : BenchmarkBase
 {
     [GlobalSetup]

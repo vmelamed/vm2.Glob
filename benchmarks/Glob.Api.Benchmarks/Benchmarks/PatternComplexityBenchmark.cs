@@ -6,8 +6,6 @@ namespace vm2.Glob.Api.Benchmarks;
 /// <summary>
 /// Benchmarks different glob pattern complexities to identify performance characteristics.
 /// </summary>
-[Orderer(SummaryOrderPolicy.Declared, MethodOrderPolicy.Declared)]
-[MemoryDiagnoser]
 public class PatternComplexityBenchmark : BenchmarkBase
 {
     [GlobalSetup]

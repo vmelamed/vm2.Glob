@@ -7,8 +7,6 @@ namespace vm2.Glob.Api.Benchmarks;
 /// Benchmarks to measure the overhead of real filesystem vs in-memory FakeFS.
 /// This provides baseline measurements to understand I/O impact.
 /// </summary>
-[Orderer(SummaryOrderPolicy.Declared, MethodOrderPolicy.Declared)]
-[MemoryDiagnoser]
 public class FileSystemBenchmark : BenchmarkBase
 {
     GlobEnumerator _globRealFS = null!;
