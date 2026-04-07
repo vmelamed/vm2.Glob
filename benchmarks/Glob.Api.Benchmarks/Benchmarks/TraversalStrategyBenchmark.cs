@@ -6,8 +6,6 @@ namespace vm2.Glob.Api.Benchmarks;
 /// <summary>
 /// Compares depth-first vs breadth-first traversal strategies.
 /// </summary>
-[Orderer(SummaryOrderPolicy.Declared, MethodOrderPolicy.Declared)]
-[MemoryDiagnoser]
 public class TraversalStrategyBenchmark : BenchmarkBase
 {
     [GlobalSetup]

@@ -6,8 +6,6 @@ namespace vm2.Glob.Api.Benchmarks;
 /// <summary>
 /// Benchmarks performance across different test structure sizes.
 /// </summary>
-[Orderer(SummaryOrderPolicy.Declared, MethodOrderPolicy.Declared)]
-[MemoryDiagnoser]
 public class StructureSizeBenchmark : BenchmarkBase
 {
     const string FsLargeJsonModelFileName = "large-test-tree.json";

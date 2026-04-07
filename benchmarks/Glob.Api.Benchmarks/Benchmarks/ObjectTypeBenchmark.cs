@@ -6,8 +6,6 @@ namespace vm2.Glob.Api.Benchmarks;
 /// <summary>
 /// Compares performance of enumerating files vs directories vs both.
 /// </summary>
-[Orderer(SummaryOrderPolicy.Declared, MethodOrderPolicy.Declared)]
-[MemoryDiagnoser]
 public class ObjectTypeBenchmark : BenchmarkBase
 {
     [GlobalSetup]
