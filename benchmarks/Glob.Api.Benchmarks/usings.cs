@@ -11,3 +11,4 @@ global using vm2.Glob.Api;
 global using vm2.Glob.Api.Benchmarks.Options;
 global using vm2.Glob.Api.DI;
 global using vm2.Glob.Api.FakeFileSystem;
+global using System.Text;
