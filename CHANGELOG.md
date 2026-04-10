@@ -1,5 +1,12 @@
 # Changelog
 
+
+## v2.0.1-preview.3 - 2026-04-10
+
+### Internal
+
+- update changelog formatting and improve commit grouping in cliff.prerelease.toml
+
 ## v2.0.1-preview.2 - 2026-04-10
 
 ### Fixed
