@@ -1,20 +1,12 @@
 # Changelog
 
-
-## v2.0.0 - 2026-03-24
+## v2.0.1-preview.1 - 2026-03-25
 
 ### Internal
 
-DevOps changes only.
+- Update changelog entries for v2.0.0-preview.1 and v2.0.0-preview.2
+
 ## v2.0.0 - 2026-03-24
-
-See prereleases below.
-
-## v2.0.0-preview.2 - 2026-03-24
-
-See prereleases below.
-
-## v2.0.0-preview.1 - 2026-03-24
 
 See prereleases below.
 
@@ -22,18 +14,30 @@ See prereleases below.
 
 ### Internal
 
-DevOps changes only.
+- Update GitHub Actions workflows to use environment variables directly
 
 ## v2.0.0-preview.1 - 2026-03-24
 
-Fixed an edge case bug where there was a buffer overflow when the replacement of the source text was larger than the destination span.
-Small but breaking API changes.
+### Changed
+
+- **BREAKING:** Removed `GlobEnumeratorBuilder.Build()` method
+- **BREAKING:** `FileSystem` is now sealed
+- Refactor `Deque` implementation to use `LinkedList<T>`
+- Improve `GlobEnumerator` for better performance and clarity
+
+### Fixed
+
+- Fix insufficient buffer when replacement text is larger than destination span
+- Add `--suppress-optimization-validator` option requiring high process priority
 
 ### Internal
 
-DevOps changes only.
+- Update CI workflows, Dependabot config, and package dependencies
+- Add CI gate job, benchmark threshold reset, and various workflow improvements
 
 ## v1.0.0 - 2026-02-18
+
+Initial stable release.
 
 ## Usage Notes
 
