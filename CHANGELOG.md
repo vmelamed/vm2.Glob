@@ -1,5 +1,27 @@
 # Changelog
 
+
+## v2.0.1-preview.2 - 2026-04-10
+
+### Fixed
+- update commit parsers in changelog configuration for improved categorization
+- update .gitignore to include VS Code configuration files
+- Update copyright year in all source files from 2025 to 2025-2026
+- add missing global using directive for System.Text
+- remove unused attributes from benchmark classes
+- update workflow variables to provide default values for SAVE_PACKAGE_ARTIFACTS
+- add missing attributes for JSON and Markdown export in BenchmarkBase
+- update CI and Prerelease workflows to set default values for RESET_BENCHMARK_THRESHOLDS and VERBOSE variables; update package versions in lock files
+- update DisableTestingPlatformServerCapability condition for Visual Studio builds
+- update vm2.TestUtilities version to 1.3.1 in package lock files
+- correct casing of 'items' in solution folder name
+- curate CHANGELOG and fix git-cliff template for v2.x
+
+
+### Internal
+- update package versions in packages.lock.json and global.json to 10.0.5 [skip ci]
+- diff-shared
+
 ## v2.0.1-preview.1 - 2026-03-25
 
 ### Internal
