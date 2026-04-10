@@ -4,26 +4,32 @@
     </Folder>
     <Folder Name="/.github/workflows/">
         <File Path=".github/workflows/CI.yaml" />
-        <File Path=".github/workflows/ClearCache.yaml" />
         <File Path=".github/workflows/Prerelease.yaml" />
         <File Path=".github/workflows/Release.yaml" />
+        <File Path=".github/workflows/AutoMerge.yaml" />
+        <File Path=".github/workflows/ClearCache.yaml" />
     </Folder>
-    <Folder Name="/Solution Items/">
+    <Folder Name="/benchmarks/">
+        <Project Path="benchmarks/Glob.Api.Benchmarks/Glob.Api.Benchmarks.csproj" />
+    </Folder>
+    <Folder Name="/changelog/">
+        <File Path="changelog/cliff.prerelease.toml" />
+        <File Path="changelog/cliff.release-header.toml" />
+    </Folder>
+    <Folder Name="/solution Items/">
         <File Path=".editorconfig" />
-        <File Path=".gitignore" />
         <File Path=".gitattributes" />
+        <File Path=".gitignore" />
+        <File Path="CHANGELOG.md" />
         <File Path="codecov.yaml" />
-        <File Path="COPILOT_INSTRUCTIONS.md" />
+        <File Path="coverage.settings.xml" />
         <File Path="Directory.Build.props" />
         <File Path="Directory.Packages.props" />
         <File Path="global.json" />
         <File Path="LICENSE" />
         <File Path="NuGet.config" />
         <File Path="README.md" />
-        <File Path="test.runsettings" />
-    </Folder>
-    <Folder Name="/benchmarks/">
-        <Project Path="benchmarks/Glob.Api.Benchmarks/Glob.Api.Benchmarks.csproj" />
+        <File Path="testconfig.json" />
     </Folder>
     <Folder Name="/src/">
         <Project Path="src/Glob.Api/Glob.Api.csproj" />
