@@ -16,7 +16,7 @@
         <File Path="changelog/cliff.prerelease.toml" />
         <File Path="changelog/cliff.release-header.toml" />
     </Folder>
-    <Folder Name="/solution Items/">
+    <Folder Name="/solution items/">
         <File Path=".editorconfig" />
         <File Path=".gitattributes" />
         <File Path=".gitignore" />
