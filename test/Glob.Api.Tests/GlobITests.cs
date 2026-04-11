@@ -4,18 +4,21 @@
 namespace vm2.Glob.Api.Tests;
 
 [ExcludeFromCodeCoverage]
-public partial class GlobEnumeratorIntegrationTests : IClassFixture<GlobIntegrationTestsFixture>, IDisposable
+public partial class GlobEnumeratorIntegrationTests : TestBase, IClassFixture<GlobIntegrationTestsFixture>, IDisposable
 {
     public const string TestStructureJsonFile = "./FSFiles/Integration.json";
 
-    IHost _host;
+    IHost _host = null!;
     bool _tempTestRootPath;
+
+    GlobIntegrationTestsFixture Fixture { get; } = null!;
+
+    string TestRootPath { get; } = null!;
 
     public GlobEnumeratorIntegrationTests(
         GlobIntegrationTestsFixture fixture,
-        ITestOutputHelper output)
+        ITestOutputHelper output) : base(output)
     {
-        Output = output;
         Fixture = fixture;
 
         _host = Fixture.BuildHost(output);
@@ -65,12 +68,6 @@ public partial class GlobEnumeratorIntegrationTests : IClassFixture<GlobIntegrat
         }
     }
 
-    GlobIntegrationTestsFixture Fixture { get; }
-
-    ITestOutputHelper Output { get; }
-
-    string TestRootPath { get; }
-
     protected GlobEnumerator GetGlobEnumerator()
         => _host.Services.GetRequiredService<GlobEnumerator>();
 
@@ -85,7 +82,7 @@ public partial class GlobEnumeratorIntegrationTests : IClassFixture<GlobIntegrat
         // Skip platform-incompatible tests
         if (OperatingSystem.IsWindows() ? data.Unix : data.Win)
         {
-            Output.WriteLine($"Skipping OS-specific test: {data.D}");
+            WriteLine($"Skipping OS-specific test: {data.D}");
             return;
         }
 
@@ -113,8 +110,8 @@ public partial class GlobEnumeratorIntegrationTests : IClassFixture<GlobIntegrat
                         ;
 
         // Assert
-        Output.WriteLine("Expected Results: \"{0}\"", string.Join("\", \"", data.R));
-        Output.WriteLine("  Actual Results: \"{0}\"", string.Join("\", \"", result));
+        Out.WriteLine("Expected Results: \"{0}\"", string.Join("\", \"", data.R));
+        Out.WriteLine("  Actual Results: \"{0}\"", string.Join("\", \"", result));
 
         result.Should().BeEquivalentTo(data.R, opt => opt.WithoutStrictOrdering());
     }

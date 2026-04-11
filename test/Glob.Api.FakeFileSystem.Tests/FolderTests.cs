@@ -6,7 +6,7 @@ namespace vm2.Glob.Api.FakeFileSystem.Tests;
 using System.Text.Json;
 
 [ExcludeFromCodeCoverage]
-public sealed class FolderTests
+public sealed class FolderTests(ITestOutputHelper output) : TestBase(output)
 {
     #region Constructor Tests
 

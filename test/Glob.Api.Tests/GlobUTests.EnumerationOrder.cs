@@ -31,8 +31,8 @@ public class GlobEnumerationOrderTests(GlobUnitTestsFixture fixture, ITestOutput
             "/x/y/z/zz.txt",
         ];
 
-        Output.WriteLine("Expected Results:\n    \"{0}\"", string.Join("\",\n    \"", expected));
-        Output.WriteLine("Actual Results:\n    \"{0}\"", string.Join("\",\n    \"", result));
+        Out.WriteLine("Expected Results:\n    \"{0}\"", string.Join("\",\n    \"", expected));
+        Out.WriteLine("Actual Results:\n    \"{0}\"", string.Join("\",\n    \"", result));
 
         result.Should().BeEquivalentTo(expected);
     }
@@ -62,8 +62,8 @@ public class GlobEnumerationOrderTests(GlobUnitTestsFixture fixture, ITestOutput
             "/x/y/z/zz.txt",
         ];
 
-        Output.WriteLine("Expected Results:\n    \"{0}\"", string.Join("\",\n    \"", expected));
-        Output.WriteLine("Actual Results:\n    \"{0}\"", string.Join("\",\n    \"", result));
+        Out.WriteLine("Expected Results:\n    \"{0}\"", string.Join("\",\n    \"", expected));
+        Out.WriteLine("Actual Results:\n    \"{0}\"", string.Join("\",\n    \"", result));
 
         result.Should().BeEquivalentTo(expected);
     }

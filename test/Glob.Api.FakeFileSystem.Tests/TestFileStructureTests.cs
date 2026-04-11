@@ -4,12 +4,12 @@
 namespace vm2.Glob.Api.FakeFileSystem.Tests;
 
 [ExcludeFromCodeCoverage]
-public sealed class TestFileStructureTests : IDisposable
+public sealed class TestFileStructureTests : TestBase, IDisposable
 {
     string _testRootPath = null!;
     string _jsonModelPath = null!;
 
-    public TestFileStructureTests()
+    public TestFileStructureTests(ITestOutputHelper output) : base(output)
     {
         _testRootPath = Path.Combine(Path.GetTempPath(), $"TestFileStructure_{Guid.NewGuid():N}");
         _jsonModelPath = Path.Combine(_testRootPath, "model.json");

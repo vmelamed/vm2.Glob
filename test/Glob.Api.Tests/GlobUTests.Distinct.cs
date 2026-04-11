@@ -24,8 +24,8 @@ public class GlobEnumerationDistinctTests(GlobUnitTestsFixture fixture, ITestOut
             "/deep-recursive/level1/level2/mid1.txt",
         ];
 
-        Output.WriteLine("Expected Results: \"{0}\"", string.Join("\", \"", expected));
-        Output.WriteLine("  Actual Results: \"{0}\"", string.Join("\", \"", result));
+        Out.WriteLine("Expected Results: \"{0}\"", string.Join("\", \"", expected));
+        Out.WriteLine("  Actual Results: \"{0}\"", string.Join("\", \"", result));
 
         result.Should().BeEquivalentTo(expected);
     }
@@ -49,8 +49,8 @@ public class GlobEnumerationDistinctTests(GlobUnitTestsFixture fixture, ITestOut
             "/deep-recursive/level1/level2/mid1.txt",
         ];
 
-        Output.WriteLine("Expected Results: \"{0}\"", string.Join("\", \"", expected));
-        Output.WriteLine("  Actual Results: \"{0}\"", string.Join("\", \"", result));
+        Out.WriteLine("Expected Results: \"{0}\"", string.Join("\", \"", expected));
+        Out.WriteLine("  Actual Results: \"{0}\"", string.Join("\", \"", result));
 
         result.Should().BeEquivalentTo(expected);
     }

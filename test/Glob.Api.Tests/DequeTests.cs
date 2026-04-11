@@ -6,7 +6,7 @@ namespace vm2.Glob.Api.Tests;
 /// <summary>
 /// Unit tests for the Deque{T} class.
 /// </summary>
-public class DequeTests
+public class DequeTests(ITestOutputHelper output) : TestBase(output)
 {
     #region Constructor Tests
 

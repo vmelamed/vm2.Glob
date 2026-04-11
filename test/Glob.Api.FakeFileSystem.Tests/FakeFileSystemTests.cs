@@ -3,7 +3,7 @@
 
 namespace vm2.Glob.Api.FakeFileSystem.Tests;
 
-public partial class FakeFileSystemTests
+public partial class FakeFileSystemTests(ITestOutputHelper output) : TestBase(output)
 {
     [Theory]
     [MemberData(nameof(Text_Files_To_Add))]
