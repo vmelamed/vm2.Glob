@@ -1,6 +1,13 @@
 # Changelog
 
 
+## v2.0.1-preview.4 - 2026-04-11
+
+### Internal
+
+- update vm2.TestUtilities package version to 1.4.0 and refactor the test classes to inherit from TestBase
+
+
 ## v2.0.1-preview.3 - 2026-04-10
 
 ### Internal
