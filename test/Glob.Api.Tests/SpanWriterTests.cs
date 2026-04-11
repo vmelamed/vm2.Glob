@@ -6,7 +6,7 @@ namespace vm2.Glob.Api.Tests;
 /// <summary>
 /// Unit tests for the SpanWriter ref struct.
 /// </summary>
-public class SpanWriterTests
+public class SpanWriterTests(ITestOutputHelper output) : TestBase(output)
 {
     #region Constructor Tests
 

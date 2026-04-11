@@ -7,7 +7,7 @@ namespace vm2.Glob.Api.Tests;
 /// Unit tests for the SpanReader ref struct.
 /// </summary>
 [ExcludeFromCodeCoverage]
-public class SpanReaderTests
+public class SpanReaderTests(ITestOutputHelper output) : TestBase(output)
 {
     #region Constructor Tests
 
