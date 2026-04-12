@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v2.0.1-preview.5 - 2026-04-12
+
+### Internal
+
+- correct validation command in codecov.yaml and update source pattern in coverage.settings.xml
+- collapse YAML block scalar in CI.yaml preprocessor description
+
+
 ## v2.0.1-preview.4 - 2026-04-11
 
 ### Internal
