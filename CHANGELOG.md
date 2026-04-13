@@ -1,5 +1,12 @@
 # Changelog
 
+
+## v2.0.1-preview.6 - 2026-04-13
+
+### Internal
+
+- update changelog formatting and correct commit prefix for git-cliff
+
 ## v2.0.1-preview.5 - 2026-04-12
 
 ### Internal
