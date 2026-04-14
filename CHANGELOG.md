@@ -1,6 +1,14 @@
 # Changelog
 
 
+## v2.0.1-preview.8 - 2026-04-14
+
+### Internal
+
+- update vm2.TestUtilities to 1.4.3; adjust changelog header formatting
+- refresh lock files for vm2.TestUtilities 1.4.3
+
+
 ## v2.0.1-preview.7 - 2026-04-14
 
 ### Internal
