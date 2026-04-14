@@ -272,5 +272,10 @@
     </PropertyGroup>
 
     <!-- Add project-specific properties and packages here -->
+    <ItemGroup>
+        <!-- e.g.
+        <PackageReference Include="Newtonsoft.Json" />
+        -->
+    </ItemGroup>
 
 </Project>
