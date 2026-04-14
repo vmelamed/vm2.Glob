@@ -1,6 +1,20 @@
 # Changelog
 
 
+## v2.0.1-preview.7 - 2026-04-14
+
+### Internal
+
+- bump vm2.TestUtilities to 1.4.2 and align changelog parser
+- update tag pattern in changelog configuration for semantic versioning
+- update .gitattributes and add support for .slnx files; enhance Prerelease workflow with CHANGELOG reminder; modify changelog parsers for documentation messages; add PULL_REQUEST_TEMPLATE and .gitmessage for commit guidelines
+
+
+### deps
+
+- Bump the minor-and-patch group with 1 update
+
+
 ## v2.0.1-preview.6 - 2026-04-13
 
 ### Internal
