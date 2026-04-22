@@ -5,6 +5,24 @@
 
 
 
+## v2.0.1-preview.10 - 2026-04-22
+
+
+### Internal
+
+- fix formatting in changelog body for consistency
+- update dependencies and rebuild the packages.lock.json files
+
+
+### deps
+
+- Bump the minor-and-patch group with 1 update
+
+
+
+
+
+
 ## v2.0.1-preview.9 - 2026-04-17
 
 
