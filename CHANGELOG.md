@@ -5,6 +5,18 @@
 
 
 
+## v2.0.2-preview.2 - 2026-04-22
+
+
+### Fixed
+
+- correct invalid prerelease version headers in CHANGELOG
+
+
+
+
+
+
 ## v2.0.2-preview.1 - 2026-04-22
 
 
