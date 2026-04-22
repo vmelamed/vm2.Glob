@@ -1,30 +1,17 @@
 # Changelog
 
-
-
-
-
-
 ## v2.0.1-preview.10 - 2026-04-22
-
 
 ### Internal
 
 - fix formatting in changelog body for consistency
 - update dependencies and rebuild the packages.lock.json files
 
-
 ### deps
 
 - Bump the minor-and-patch group with 1 update
 
-
-
-
-
-
 ## v2.0.1-preview.9 - 2026-04-17
-
 
 ### Internal
 
@@ -32,12 +19,6 @@
 - update changelog for v2.0.1 [skip ci]
 - add workflow to refresh NuGet lock files on schedule
 - update dependencies
-
-
-
-
-
-
 
 ## v2.0.1 - 2026-04-14
 
@@ -50,7 +31,6 @@ See prereleases below.
 - update vm2.TestUtilities to 1.4.3; adjust changelog header formatting
 - refresh lock files for vm2.TestUtilities 1.4.3
 
-
 ## v2.0.1-preview.7 - 2026-04-14
 
 ### Internal
@@ -59,11 +39,9 @@ See prereleases below.
 - update tag pattern in changelog configuration for semantic versioning
 - update .gitattributes and add support for .slnx files; enhance Prerelease workflow with CHANGELOG reminder; modify changelog parsers for documentation messages; add PULL_REQUEST_TEMPLATE and .gitmessage for commit guidelines
 
-
 ### deps
 
 - Bump the minor-and-patch group with 1 update
-
 
 ## v2.0.1-preview.6 - 2026-04-13
 
