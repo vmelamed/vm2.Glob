@@ -1,5 +1,15 @@
 # Changelog
 
+## v2.0.2-preview.3 - 2026-04-24
+
+### Fixed
+
+- adjust trim setting in changelog files for consistent formatting
+
+### Internal
+
+- clean-up changelog formatting [skip ci]
+
 ## v2.0.2-preview.2 - 2026-04-22
 
 ### Fixed
