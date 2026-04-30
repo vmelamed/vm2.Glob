@@ -137,7 +137,7 @@ The project owner is a non-native English speaker.
   - `.github/workflows/` — **GitHub Actions CI/CD**:
     - `CI.yaml` kicks-in the **inputs validation, build, test, benchmark, and package** shared workflows
     - `Prerelease.yaml` for **prerelease workflows**: computes the pre-release version, e.g. `1.2.0-preview.3`; tags the main branch with a tag like `v1.2.0-preview.3`; builds pre-release package(s); **publishes the pre-release packages to GitHub Packages or NuGet.org**; **updates CHANGELOG.md** using cliff-git. Triggered by a successful merge of a pull request
-    - `Release.yaml` for **release workflows**: computes the release version, e.g. `1.2.0`; tags the main branch with a tag like `v1.2.0`; builds release package(s); **publishes the pre-release packages to GitHub Packages or NuGet.org**; **updates CHANGELOG.md** using cliff-git. Triggered manually when we want to cut a release, usually after a successful prerelease validation
+    - `Release.yaml` for **release workflows**: computes the release version, e.g. `1.2.0`; tags the main branch with a tag like `v1.2.0`; builds release package(s); **publishes the release packages to GitHub Packages or NuGet.org**; **updates CHANGELOG.md** using git-cliff. Triggered manually when we want to cut a release, usually after a successful prerelease validation
 
 ### Files with shared content
 
@@ -201,7 +201,7 @@ The project owner is a non-native English speaker.
 - **Prefer `ILogger<T>`** with structured logging over static loggers or string-based logging
 - In services with external dependencies, prefer **circuit breakers and retries** over exceptions for transient faults
 - In services use **health checks and monitoring** to detect and respond to failures instead of relying on exceptions for observability
-- In services for distributed systems **use Open Telemetry** for distributed tracing and metrics to understand system behavior and failures instead of relying on exceptions alone
+- In services for distributed systems **use OpenTelemetry** for distributed tracing and metrics to understand system behavior and failures instead of relying on exceptions alone
 
 ## Testing
 
