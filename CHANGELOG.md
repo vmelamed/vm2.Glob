@@ -1,5 +1,12 @@
 # Changelog
 
+## v2.0.3-preview.1 - 2026-04-30
+
+### Internal
+
+- promote to stable v2.0.2 [skip ci]
+- update changelog for v2.0.2 [skip ci]
+
 
 
 
