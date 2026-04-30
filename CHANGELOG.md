@@ -1,5 +1,22 @@
 # Changelog
 
+## v2.0.2-preview.4 - 2026-04-30
+
+### Fixed
+
+- commit prefix
+
+### Internal
+
+- Bump the minor-and-patch group with 1 update
+- addressed copilot comments
+- Bump the minor-and-patch group with 1 update
+- dotnet restore --force-evaluate
+
+### deps
+
+- Bump the minor-and-patch group with 1 update
+
 ## v2.0.2-preview.3 - 2026-04-24
 
 ### Fixed
