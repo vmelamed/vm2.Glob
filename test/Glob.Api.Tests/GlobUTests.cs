@@ -4,7 +4,7 @@
 namespace vm2.Glob.Api.Tests;
 
 [ExcludeFromCodeCoverage]
-public abstract partial class GlobEnumeratorUnitTests(ITestOutputHelper output) : TestBase(output), IClassFixture<GlobUnitTestsFixture>
+public abstract partial class GlobEnumeratorUnitTests(ITestOutputHelper output) : TestBase(output), IClassFixture<GlobUnitTestsFixture>, IDisposable
 {
     protected IHost _host = null!;
 
@@ -17,6 +17,12 @@ public abstract partial class GlobEnumeratorUnitTests(ITestOutputHelper output) 
         Fixture = fixture;
 
         _host = Fixture.BuildHost(output);
+    }
+
+    public void Dispose()
+    {
+        _host.Dispose();
+        GC.SuppressFinalize(this);
     }
 
     protected GlobEnumerator GetGlobEnumerator(

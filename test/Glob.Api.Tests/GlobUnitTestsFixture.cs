@@ -8,7 +8,10 @@ public class GlobUnitTestsFixture : IDisposable
 {
     public virtual IHost BuildHost(ITestOutputHelper testOutputHelper)
     {
-        var builder = Host.CreateApplicationBuilder();
+         // *TODO*: Remove this workaround after the broken C# Dev Kit / test-host
+         // release stops creating file watchers during default host initialization.
+         // ==> var builder = Host.CreateApplicationBuilder();
+         var builder = Host.CreateApplicationBuilder(new HostApplicationBuilderSettings { DisableDefaults = true });
 
         builder
             .Configuration
