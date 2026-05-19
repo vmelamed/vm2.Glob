@@ -36,7 +36,7 @@ Keep this file focused on *intent* and *preferences* so Copilot infers patterns.
   - `.github/` for GitHub workflows and issue templates (optional)
   - `.github/workflows/` for GitHub Actions workflows (optional)
   - `src/` for source code
-  - `tests/` for test projects (very rarely optional - only for test and other tiny utilities)
+  - `test/` for test projects (very rarely optional - only for test and other tiny utilities)
   - `benchmarks/` for performance benchmarks (desirable)
   - `examples/` for sample code and usage examples (desirable)
   - `docs/` for documentation (optional)
@@ -310,7 +310,7 @@ When asking Copilot for code:
 
 ## Future Enhancements (Track Separately)
 
-- Evaluate using `IClock` abstraction to remove direct time providers.
+- Evaluate using `TimeProvider` abstraction to remove direct time providers.
 - Introduce domain events dispatch hook post-commit.
 - Expand multi-tenant tests to include row-level security simulation.
 
