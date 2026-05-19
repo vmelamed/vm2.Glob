@@ -7,13 +7,6 @@
 - promote to stable v2.0.2 [skip ci]
 - update changelog for v2.0.2 [skip ci]
 
-
-
-
-
-
-
-
 ## v2.0.2 - 2026-04-30
 
 See prereleases below.
