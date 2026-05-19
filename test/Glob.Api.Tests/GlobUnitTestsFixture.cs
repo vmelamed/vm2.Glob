@@ -6,12 +6,15 @@ namespace vm2.Glob.Api.Tests;
 [ExcludeFromCodeCoverage]
 public class GlobUnitTestsFixture : IDisposable
 {
+    // *TODO*: Remove this workaround after the broken C# Dev Kit / test-host
+    // release stops creating file watchers during default host initialization.
+    // ==> return Host.CreateApplicationBuilder();
+    protected static HostApplicationBuilder CreateHostApplicationBuilder()
+        => Host.CreateApplicationBuilder(new HostApplicationBuilderSettings { DisableDefaults = true });
+
     public virtual IHost BuildHost(ITestOutputHelper testOutputHelper)
     {
-         // *TODO*: Remove this workaround after the broken C# Dev Kit / test-host
-         // release stops creating file watchers during default host initialization.
-         // ==> var builder = Host.CreateApplicationBuilder();
-         var builder = Host.CreateApplicationBuilder(new HostApplicationBuilderSettings { DisableDefaults = true });
+         var builder = CreateHostApplicationBuilder();
 
         builder
             .Configuration
