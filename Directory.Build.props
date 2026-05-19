@@ -84,7 +84,6 @@
         <PackageReference Include="Microsoft.Extensions.Configuration.Json" />
         <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
-        <PackageReference Include="Microsoft.Extensions.Hosting" />
         <PackageReference Include="Microsoft.Extensions.Logging" />
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
         <PackageReference Include="Microsoft.Extensions.Logging.Configuration" />
@@ -280,9 +279,7 @@
 
     <!-- Add project-specific properties and packages here -->
     <ItemGroup>
-        <!-- e.g.
-        <PackageReference Include="Newtonsoft.Json" />
-        -->
+        <PackageReference Include="Microsoft.Extensions.Hosting" />
     </ItemGroup>
 
 </Project>
