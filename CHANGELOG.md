@@ -1,5 +1,24 @@
 # Changelog
 
+## v2.1.0-preview.1 - 2026-05-20
+
+### Added
+
+- add telemetry opt-out and first-time experience skip for .NET CLI [skip ci]
+- add NSubstitute package references to test projects
+
+### Fixed
+
+- update test fixtures to handle broken C# Dev Kit and add IDisposable implementation
+
+### Internal
+
+- sync with diff-shared [skip ci]
+- Bump the minor-and-patch group with 15 updates
+- update project dependencies and configurations
+- update package dependencies and add Copilot guidance
+- update Copilot instructions and refactor test fixture setup
+
 ## v2.0.3-preview.1 - 2026-04-30
 
 ### Internal
