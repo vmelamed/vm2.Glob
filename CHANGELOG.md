@@ -1,5 +1,13 @@
 # Changelog
 
+## v2.1.2-preview.1 - 2026-05-21
+
+### Internal
+
+- promote to stable v2.1.1 [skip ci]
+- update changelog for v2.1.1 [skip ci]
+- fix typos in conventions and CI warning message
+
 ## v2.1.1 - 2026-05-21
 
 See prereleases below.
