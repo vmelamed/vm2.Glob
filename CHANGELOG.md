@@ -1,5 +1,16 @@
 # Changelog
 
+## v2.1.1-preview.1 - 2026-05-21
+
+### Internal
+
+- promote to stable v2.1.0 [skip ci]
+- update changelog for v2.1.0 [skip ci]
+- sync with diff-shared.sh
+- update vm2.TestUtilities to version 1.5.1
+- update vm2.TestUtilities to version 1.5.1 in package locks
+- fix typo in conventions for merge or copy action description
+
 ## v2.1.0 - 2026-05-20
 
 See prereleases below.
