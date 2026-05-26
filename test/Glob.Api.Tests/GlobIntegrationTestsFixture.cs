@@ -3,8 +3,6 @@
 
 namespace vm2.Glob.Api.Tests;
 
-using vm2.Glob.Api.DI;
-
 [ExcludeFromCodeCoverage]
 public sealed class GlobIntegrationTestsFixture : GlobUnitTestsFixture
 {
