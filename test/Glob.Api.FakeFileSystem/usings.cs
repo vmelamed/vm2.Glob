@@ -12,6 +12,4 @@ global using System.Text.RegularExpressions;
 global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.Extensions.Logging;
 
-global using vm2.Glob.Api;
-
 global using static vm2.Glob.Api.GlobConstants;
