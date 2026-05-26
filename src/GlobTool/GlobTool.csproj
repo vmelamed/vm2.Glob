@@ -3,6 +3,8 @@
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <RootNamespace>vm2.GlobTool</RootNamespace>
+        <IsAotCompatible>false</IsAotCompatible>
+        <VerifyReferenceAotCompatibility>false</VerifyReferenceAotCompatibility>
         <PackAsTool>true</PackAsTool>
         <ToolCommandName>glob</ToolCommandName>
     </PropertyGroup>

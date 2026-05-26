@@ -10,7 +10,6 @@ global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.Extensions.Hosting;
 global using Microsoft.Extensions.Logging;
 
-global using vm2.Glob.Api;
 global using vm2.Glob.Api.DI;
 global using vm2.Glob.Api.FakeFileSystem;
 global using vm2.Glob.Api.FakeFileSystem.DI;
