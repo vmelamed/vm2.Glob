@@ -465,7 +465,13 @@
           "Microsoft.Bcl.AsyncInterfaces": "6.0.0"
         }
       },
-      "glob.api.fakefilesystem": {
+      "vm2.Glob.Api": {
+        "type": "Project",
+        "dependencies": {
+          "Microsoft.Extensions.Hosting": "[10.0.8, )"
+        }
+      },
+      "vm2.Glob.Api.FakeFileSystem": {
         "type": "Project",
         "dependencies": {
           "FluentAssertions": "[8.10.0, )",
@@ -473,12 +479,6 @@
           "NSubstitute": "[5.3.0, )",
           "vm2.Glob.Api": "[1.0.0, )",
           "xunit.v3.extensibility.core": "[3.2.2, )"
-        }
-      },
-      "vm2.Glob.Api": {
-        "type": "Project",
-        "dependencies": {
-          "Microsoft.Extensions.Hosting": "[10.0.8, )"
         }
       },
       "FluentAssertions": {

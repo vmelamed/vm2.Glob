@@ -2,6 +2,7 @@
 
     <PropertyGroup>
         <RootNamespace>vm2.Glob.Api.FakeFileSystem</RootNamespace>
+        <AssemblyName>vm2.Glob.Api.FakeFileSystem</AssemblyName>
     </PropertyGroup>
 
     <ItemGroup>

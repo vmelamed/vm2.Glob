@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2025-2026 Val Melamed
 
-namespace vm2.Glob.Api.Benchmarks;
+namespace vm2.Benchmarks.Glob.Api;
 
 /// <summary>
 /// Base class for all glob benchmarks providing common setup and teardown functionality.
