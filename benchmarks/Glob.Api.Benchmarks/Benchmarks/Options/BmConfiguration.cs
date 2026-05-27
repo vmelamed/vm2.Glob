@@ -2,7 +2,7 @@
 // Copyright (c) 2025-2026 Val Melamed
 
 
-namespace vm2.Glob.Api.Benchmarks.Options;
+namespace vm2.Benchmarks.Glob.Api.Options;
 
 public static class BmConfiguration
 {

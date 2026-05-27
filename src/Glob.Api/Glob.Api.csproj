@@ -2,12 +2,13 @@
 
     <PropertyGroup>
         <RootNamespace>vm2.Glob.Api</RootNamespace>
+        <AssemblyName>vm2.Glob.Api</AssemblyName>
 
         <!-- NuGet Package Metadata -->
         <PackageId>vm2.Glob.Api</PackageId>
         <Title>Cross-platform Glob Pattern Matching API</Title>
         <Description>
-        A fast, cross-platform glob pattern matching API for finding files and directories. Implements POSIX.2 glob specification.
+            A fast, cross-platform glob pattern matching API for finding files and directories. Implements POSIX.2 glob specification.
         </Description>
         <PackageTags>glob pattern matching api cross-platform file-search directory-search</PackageTags>
         <PackageProjectUrl>https://github.com/vmelamed/vm2.Glob/blob/main/src/Glob.Api/Glob.Api.csproj</PackageProjectUrl>
@@ -17,9 +18,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <InternalsVisibleTo Include="Glob.Api.Tests" />
-        <InternalsVisibleTo Include="Glob.Api.FakeFileSystem.Tests" />
-        <InternalsVisibleTo Include="Glob.Api.FakeFileSystem" />
+        <InternalsVisibleTo Include="vm2.Glob.Api.Tests" />
+        <InternalsVisibleTo Include="vm2.Glob.Api.FakeFileSystem.Tests" />
+        <InternalsVisibleTo Include="vm2.Glob.Api.FakeFileSystem" />
     </ItemGroup>
 
     <ItemGroup>

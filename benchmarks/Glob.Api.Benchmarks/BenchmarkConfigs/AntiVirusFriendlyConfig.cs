@@ -1,7 +1,7 @@
 ﻿// SPDX-License-Identifier: MIT
 // Copyright (c) 2025-2026 Val Melamed
 
-namespace vm2.Glob.Api.Benchmarks.Configs;
+namespace vm2.Benchmarks.Glob.Api.Configs;
 
 /// <summary>
 /// Configuration for benchmarks that interact with the real file system.

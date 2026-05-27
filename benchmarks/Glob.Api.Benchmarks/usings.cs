@@ -4,5 +4,6 @@
 global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.DependencyInjection;
 
-global using vm2.Glob.Api.Benchmarks.Options;
+global using vm2.Benchmarks.Glob.Api.Options;
 global using vm2.Glob.Api.FakeFileSystem;
+global using vm2.Glob.Api;

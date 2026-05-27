@@ -1,6 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
+        <RootNamespace>vm2.Benchmarks.Glob.Api</RootNamespace>
+        <AssemblyName>vm2.Glob.Api.Benchmarks</AssemblyName>
+
         <EnableTrimAnalyzer>false</EnableTrimAnalyzer>
         <IsTrimmable>false</IsTrimmable>
         <DefineConstants>$(DefineConstants);$(UserDefined)</DefineConstants>

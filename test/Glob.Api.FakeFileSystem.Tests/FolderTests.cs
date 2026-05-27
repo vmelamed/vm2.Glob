@@ -1,9 +1,7 @@
 ﻿// SPDX-License-Identifier: MIT
 // Copyright (c) 2025-2026 Val Melamed
 
-namespace vm2.Glob.Api.FakeFileSystem.Tests;
-
-using System.Text.Json;
+namespace vm2.Tests.Glob.Api.FakeFileSystem;
 
 [ExcludeFromCodeCoverage]
 public sealed class FolderTests(ITestOutputHelper output) : TestBase(output)

@@ -1,7 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <RootNamespace>vm2.Glob.Api.Tests</RootNamespace>
+        <RootNamespace>vm2.Tests.Glob.Api</RootNamespace>
+        <AssemblyName>vm2.Glob.Api.Tests</AssemblyName>
     </PropertyGroup>
 
     <ItemGroup>
