@@ -1,5 +1,19 @@
 # Changelog
 
+## v3.0.0-preview.1 - 2026-05-28
+
+### Fixed
+
+- disable AoT, refactor Directory.Build.props
+- update benchmark file references to use new naming conventions
+
+### Internal
+
+- package dependencies and update project references
+- clean up usings
+- **BREAKING:** renamed namespaces to follow the convention
+- renamed test/ to tests/ for consistency
+
 ## v2.1.2-preview.1 - 2026-05-21
 
 ### Internal
