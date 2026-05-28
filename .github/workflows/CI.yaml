@@ -56,8 +56,8 @@ env:
     ]
   TEST_PROJECTS: >-
     [
-    "./test/Glob.Api.FakeFileSystem.Tests/Glob.Api.FakeFileSystem.Tests.csproj",
-    "./test/Glob.Api.Tests/Glob.Api.Tests.csproj"
+    "./tests/Glob.Api.FakeFileSystem.Tests/Glob.Api.FakeFileSystem.Tests.csproj",
+    "./tests/Glob.Api.Tests/Glob.Api.Tests.csproj"
     ]
   BENCHMARK_PROJECTS: >-
     [
