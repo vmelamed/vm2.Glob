@@ -85,6 +85,16 @@
           "Castle.Core": "5.1.1"
         }
       },
+      "System.Configuration.ConfigurationManager": {
+        "type": "Direct",
+        "requested": "[10.0.8, )",
+        "resolved": "10.0.8",
+        "contentHash": "QG+HHwJjLyUiRuA9axr5pDqHAxboo7FXCTRakxMABE9CUAUij/tsd/MsgQPJUEppkf+YBLT+F/P/wKIVCAIcNg==",
+        "dependencies": {
+          "System.Diagnostics.EventLog": "10.0.8",
+          "System.Security.Cryptography.ProtectedData": "10.0.8"
+        }
+      },
       "vm2.TestUtilities": {
         "type": "Direct",
         "requested": "[2.0.1, )",
@@ -413,6 +423,11 @@
         "resolved": "10.0.8",
         "contentHash": "+dJsbPJ3FyUbTZNplFj0RCKePFizmv6ewDV46JE9q/IVH4c3xTCftHfHelLsAKf0jryIPqgMb5GpS0x7TAY3mg=="
       },
+      "System.Security.Cryptography.ProtectedData": {
+        "type": "Transitive",
+        "resolved": "10.0.8",
+        "contentHash": "/ldVgSfImIBp6fLWS7sLH0BnmtFj0ZwGlZo4Xx2q0K3ZhJNDbW45kj2f6zPoC+L+BTINuHdMzTsopuwmkbgcNA=="
+      },
       "xunit.analyzers": {
         "type": "Transitive",
         "resolved": "1.27.0",
@@ -462,13 +477,7 @@
           "xunit.v3.runner.common": "[3.2.2]"
         }
       },
-      "vm2.Glob.Api": {
-        "type": "Project",
-        "dependencies": {
-          "Microsoft.Extensions.Hosting": "[10.0.8, )"
-        }
-      },
-      "vm2.Glob.Api.FakeFileSystem": {
+      "glob.api.fakefilesystem": {
         "type": "Project",
         "dependencies": {
           "FluentAssertions": "[8.10.0, )",
@@ -476,6 +485,12 @@
           "NSubstitute": "[5.3.0, )",
           "vm2.Glob.Api": "[1.0.0, )",
           "xunit.v3.extensibility.core": "[3.2.2, )"
+        }
+      },
+      "vm2.Glob.Api": {
+        "type": "Project",
+        "dependencies": {
+          "Microsoft.Extensions.Hosting": "[10.0.8, )"
         }
       },
       "Microsoft.Testing.Extensions.Telemetry": {

@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
+        <OutputType>Exe</OutputType>
         <RootNamespace>vm2.Benchmarks.Glob.Api</RootNamespace>
-        <AssemblyName>vm2.Glob.Api.Benchmarks</AssemblyName>
 
         <EnableTrimAnalyzer>false</EnableTrimAnalyzer>
         <IsTrimmable>false</IsTrimmable>
@@ -28,7 +28,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\src\Glob.Api\Glob.Api.csproj" />
-        <ProjectReference Include="..\..\test\Glob.Api.FakeFileSystem\Glob.Api.FakeFileSystem.csproj" />
+        <ProjectReference Include="..\..\tests\Glob.Api.FakeFileSystem\Glob.Api.FakeFileSystem.csproj" />
     </ItemGroup>
 
 </Project>

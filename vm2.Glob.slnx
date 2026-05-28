@@ -8,6 +8,7 @@
         <File Path=".github/workflows/Release.yaml" />
         <File Path=".github/workflows/AutoMerge.yaml" />
         <File Path=".github/workflows/ClearCache.yaml" />
+        <File Path=".github/workflows/RefreshLockfiles.yaml" />
     </Folder>
     <Folder Name="/benchmarks/">
         <Project Path="benchmarks/Glob.Api.Benchmarks/Glob.Api.Benchmarks.csproj" />
@@ -35,9 +36,9 @@
         <Project Path="src/Glob.Api/Glob.Api.csproj" />
         <Project Path="src/GlobTool/GlobTool.csproj" />
     </Folder>
-    <Folder Name="/test/">
-        <Project Path="test/Glob.Api.FakeFileSystem.Tests/Glob.Api.FakeFileSystem.Tests.csproj" />
-        <Project Path="test/Glob.Api.FakeFileSystem/Glob.Api.FakeFileSystem.csproj" />
-        <Project Path="test/Glob.Api.Tests/Glob.Api.Tests.csproj" />
+    <Folder Name="/tests/">
+        <Project Path="tests/Glob.Api.FakeFileSystem.Tests/Glob.Api.FakeFileSystem.Tests.csproj" />
+        <Project Path="tests/Glob.Api.FakeFileSystem/Glob.Api.FakeFileSystem.csproj" />
+        <Project Path="tests/Glob.Api.Tests/Glob.Api.Tests.csproj" />
     </Folder>
 </Solution>
