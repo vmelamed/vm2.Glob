@@ -6,6 +6,7 @@
 
         <IsAotCompatible>false</IsAotCompatible>
         <VerifyReferenceAotCompatibility>false</VerifyReferenceAotCompatibility>
+
         <PackAsTool>true</PackAsTool>
         <ToolCommandName>glob</ToolCommandName>
     </PropertyGroup>
