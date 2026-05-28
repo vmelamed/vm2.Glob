@@ -52,16 +52,16 @@ concurrency:
 env:
   BUILD_PROJECTS: >-
     [
-    "./vm2.Glob.slnx"
+    "vm2.Glob.slnx"
     ]
   TEST_PROJECTS: >-
     [
-    "./tests/Glob.Api.FakeFileSystem.Tests/Glob.Api.FakeFileSystem.Tests.csproj",
-    "./tests/Glob.Api.Tests/Glob.Api.Tests.csproj"
+    "tests/Glob.Api.FakeFileSystem.Tests/Glob.Api.FakeFileSystem.Tests.csproj",
+    "tests/Glob.Api.Tests/Glob.Api.Tests.csproj"
     ]
   BENCHMARK_PROJECTS: >-
     [
-    "./benchmarks/Glob.Api.Benchmarks/Glob.Api.Benchmarks.csproj"
+    "benchmarks/Glob.Api.Benchmarks/Glob.Api.Benchmarks.csproj"
     ]
   PACKAGE_PROJECTS: >-
     [
