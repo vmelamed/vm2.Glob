@@ -1,5 +1,9 @@
 # Changelog
 
+## v3.0.0 - 2026-05-29
+
+See prereleases below.
+
 ## v3.0.0-preview.1 - 2026-05-28
 
 ### Fixed
