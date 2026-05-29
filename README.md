@@ -10,54 +10,55 @@
 
 <!-- TOC tocDepth:2..4 chapterDepth:2..6 -->
 
-- [Overview](#overview)
-  - [Features](#features)
-- [Prerequisites](#prerequisites)
-- [Install the Package (NuGet)](#install-the-package-nuget)
-- [Quick Start](#quick-start)
-- [Glob Pattern Syntax](#glob-pattern-syntax)
-- [Get the Code](#get-the-code)
-- [Build from the Source Code](#build-from-the-source-code)
-- [Tests](#tests)
-- [Benchmark Tests](#benchmark-tests)
-- [Usage](#usage)
-  - [Basic Enumeration](#basic-enumeration)
-  - [Using the Fluent Builder](#using-the-fluent-builder)
-  - [Dependency Injection](#dependency-injection)
-  - [Advanced Configuration](#advanced-configuration)
-  - [File System Access Control](#file-system-access-control)
-    - [Include Hidden and System Files](#include-hidden-and-system-files)
-    - [Skip Only Specific Attributes](#skip-only-specific-attributes)
-    - [Handle Access-Denied Scenarios](#handle-access-denied-scenarios)
-    - [Include Special Directory Entries](#include-special-directory-entries)
-- [Configuration Options](#configuration-options)
-  - [Object Type Selection](#object-type-selection)
-  - [Case Sensitivity](#case-sensitivity)
-  - [Traversal Order](#traversal-order)
-  - [Deduplication](#deduplication)
-- [Real-World Examples](#real-world-examples)
-  - [Find Source Files, Excluding Build Output](#find-source-files-excluding-build-output)
-  - [Find Test Assemblies](#find-test-assemblies)
-  - [Clean Up Old Log Files](#clean-up-old-log-files)
-  - [Load Configuration Files](#load-configuration-files)
-- [Testing with IFileSystem](#testing-with-ifilesystem)
-- [Performance](#performance)
-  - [Best Practices](#best-practices)
-  - [Memory Usage](#memory-usage)
-  - [Benchmarks](#benchmarks)
-- [API Reference](#api-reference)
-  - [GlobEnumerator Class](#globenumerator-class)
-    - [Constructor](#constructor)
-    - [Properties](#properties)
-    - [Methods](#methods)
-  - [GlobEnumeratorBuilder Class](#globenumeratorbuilder-class)
-  - [Extension Methods (Dependency Injection)](#extension-methods-dependency-injection)
-- [Feature Requests & Roadmap](#feature-requests--roadmap)
-  - [Pattern Extensions](#pattern-extensions)
-  - [Tool Enhancements](#tool-enhancements)
-- [Related Packages](#related-packages)
-- [License](#license)
-- [Version History](#version-history)
+- [vm2.Glob — Cross-Platform Glob Pattern Matching for .NET](#vm2glob--cross-platform-glob-pattern-matching-for-net)
+  - [Overview](#overview)
+    - [Features](#features)
+  - [Prerequisites](#prerequisites)
+  - [Install the Package (NuGet)](#install-the-package-nuget)
+  - [Quick Start](#quick-start)
+  - [Glob Pattern Syntax](#glob-pattern-syntax)
+  - [Get the Code](#get-the-code)
+  - [Build from the Source Code](#build-from-the-source-code)
+  - [Tests](#tests)
+  - [Benchmark Tests](#benchmark-tests)
+  - [Usage](#usage)
+    - [Basic Enumeration](#basic-enumeration)
+    - [Using the Fluent Builder](#using-the-fluent-builder)
+    - [Dependency Injection](#dependency-injection)
+    - [Advanced Configuration](#advanced-configuration)
+    - [File System Access Control](#file-system-access-control)
+      - [Include Hidden and System Files](#include-hidden-and-system-files)
+      - [Skip Only Specific Attributes](#skip-only-specific-attributes)
+      - [Handle Access-Denied Scenarios](#handle-access-denied-scenarios)
+      - [Include Special Directory Entries](#include-special-directory-entries)
+  - [Configuration Options](#configuration-options)
+    - [Object Type Selection](#object-type-selection)
+    - [Case Sensitivity](#case-sensitivity)
+    - [Traversal Order](#traversal-order)
+    - [Deduplication](#deduplication)
+  - [Real-World Examples](#real-world-examples)
+    - [Find Source Files, Excluding Build Output](#find-source-files-excluding-build-output)
+    - [Find Test Assemblies](#find-test-assemblies)
+    - [Clean Up Old Log Files](#clean-up-old-log-files)
+    - [Load Configuration Files](#load-configuration-files)
+  - [Testing with IFileSystem](#testing-with-ifilesystem)
+  - [Performance](#performance)
+    - [Best Practices](#best-practices)
+    - [Memory Usage](#memory-usage)
+    - [Benchmarks](#benchmarks)
+  - [API Reference](#api-reference)
+    - [GlobEnumerator Class](#globenumerator-class)
+      - [Constructor](#constructor)
+      - [Properties](#properties)
+      - [Methods](#methods)
+    - [GlobEnumeratorBuilder Class](#globenumeratorbuilder-class)
+    - [Extension Methods (Dependency Injection)](#extension-methods-dependency-injection)
+  - [Feature Requests \& Roadmap](#feature-requests--roadmap)
+    - [Pattern Extensions](#pattern-extensions)
+    - [Tool Enhancements](#tool-enhancements)
+  - [Related Packages](#related-packages)
+  - [License](#license)
+  - [Version History](#version-history)
 
 <!-- /TOC -->
 
@@ -131,7 +132,7 @@ foreach (var path in enumerator.Enumerate())
 | `[abc]`     | Any character in set                                     | `[abc].txt` matches `a.txt`       |
 | `[a-z]`     | Any character in range                                   | `[0-9].txt` matches `5.txt`       |
 | `[!abc]`    | Any character NOT in set                                 | `[!.]*.txt` excludes hidden files |
-| `**`        | Zero or more directory levels (globstar)                 | `**/test/**/*.cs` — recursive     |
+| `**`        | Zero or more directory levels (globstar)                 | `**/tests/**/*.cs` — recursive    |
 | `[:class:]` | Named character class (alpha, digit, lower, upper, etc.) | `[[:digit:]]*.log`                |
 
 ## Get the Code
@@ -169,7 +170,7 @@ runnable from the command line and from Visual Studio Code across operating syst
 
   ```bash
   dotnet build
-  test/Glob.Api.Tests/bin/Debug/net10.0/Glob.Api.Tests
+  tests/Glob.Api.Tests/bin/Debug/net10.0/Glob.Api.Tests
   ```
 
 ## Benchmark Tests
@@ -449,7 +450,7 @@ public Dictionary<string, string> LoadConfigurations(string configPath)
 ## Testing with IFileSystem
 
 The library provides an `IFileSystem` abstraction so that code depending on `GlobEnumerator` can be tested without touching the
-file system. The repository includes a ready-made `FakeFileSystem` in the `test/Glob.Api.FakeFileSystem` project, but you can
+file system. The repository includes a ready-made `FakeFileSystem` in the `tests/Glob.Api.FakeFileSystem` project, but you can
 also supply your own implementation:
 
 ```csharp
