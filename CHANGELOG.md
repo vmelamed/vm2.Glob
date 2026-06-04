@@ -8,7 +8,7 @@ See prereleases below.
 
 ### Fixed
 
-- disable AoT, refactor Directory.Build.props
+- enable AoT, refactor Directory.Build.props
 - update benchmark file references to use new naming conventions
 
 ### Internal
