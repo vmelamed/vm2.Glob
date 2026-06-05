@@ -261,7 +261,7 @@ Initial stable release.
 > **Internal**
 >
 > - add internal changes here
-> - commit prefix for git-cliff: `refactor:`, `doc:`, `docs:`, `style:`, `test:`, `chore:`, `ci:`, `build:`
+> - commit prefix for git-cliff: `refactor:`, `doc:`, `docs:`, `style:`, `test:`, `tests:`, `chore:`, `ci:`, `build:`
 >
 
 ## References
