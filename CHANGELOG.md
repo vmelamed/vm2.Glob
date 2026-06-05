@@ -1,5 +1,24 @@
 # Changelog
 
+## v3.0.1-preview.1 - 2026-06-05
+
+### Fixed
+
+- update .gitattributes for consistent line endings and add AOT guidelines to conventions
+- update dependencies in lock files
+- clarify comment in .gitattributes for text file normalization [skip ci]
+- streamline the dev. environment for multi-OS/multi-IDE and for consistent configuration of AI [skip ci]
+- correct AoT enablement in v3.0.0-preview.1 section
+- update commit prefix for git-cliff to include 'tests' and adjust documentation
+- remove trailing newline from file header template
+
+### Internal
+
+- diff-shared.sh
+- change "test/" to "tests/"
+- update dependencies
+- update changelog for v3.0.0 [skip ci]
+
 ## v3.0.0 - 2026-05-29
 
 See prereleases below.
