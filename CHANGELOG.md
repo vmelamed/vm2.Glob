@@ -1,5 +1,19 @@
 # Changelog
 
+## v3.1.0-preview.1 - 2026-06-09
+
+### Added
+
+- add max generation collection thresholds to CI environment variables [skip ci]
+
+### Internal
+
+- promote to stable v3.0.1 [skip ci]
+- update changelog for v3.0.1 [skip ci]
+- Bump the minor-and-patch group with 1 update
+- update vm2.TestUtilities to version 2.1.0
+- update vm2.TestUtilities to version 2.1.0
+
 ## v3.0.1 - 2026-06-05
 
 See prereleases below.
