@@ -51,8 +51,11 @@ public sealed class GlobEnumeratorBuilder
     /// <returns>
     /// The updated GlobEnumeratorBuilder instance for method chaining.
     /// </returns>
-    public GlobEnumeratorBuilder WithGlob(string glob)
+    public GlobEnumeratorBuilder WithGlob(
+        [NotNull] string glob)
     {
+        ArgumentNullException.ThrowIfNull(glob, nameof(glob));
+
         _glob = glob;
         return this;
     }
@@ -65,8 +68,11 @@ public sealed class GlobEnumeratorBuilder
     /// <returns>
     /// The updated GlobEnumeratorBuilder instance for method chaining.
     /// </returns>
-    public GlobEnumeratorBuilder FromDirectory(string startDirectory)
+    public GlobEnumeratorBuilder FromDirectory(
+        [NotNull] string startDirectory)
     {
+        ArgumentNullException.ThrowIfNull(startDirectory, nameof(startDirectory));
+
         _fromDirectory = startDirectory;
         return this;
     }
