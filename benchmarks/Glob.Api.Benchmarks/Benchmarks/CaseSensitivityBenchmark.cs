@@ -16,7 +16,7 @@ public class CaseSensitivityBenchmark : BenchmarkBase
         "**/*.md")]
     public string Pattern { get; set; } = "**/*.CS";
 
-    [Benchmark(Description = "Case Sensitive")]
+    [Benchmark(Description = "Case Sensitive", OperationsPerInvoke = 1000)]
     public int CaseSensitiveTest()
         => EnumerateAll(
                 new GlobEnumeratorBuilder()
@@ -25,7 +25,7 @@ public class CaseSensitivityBenchmark : BenchmarkBase
                         .Configure(_glob)
             );
 
-    [Benchmark(Description = "Case Insensitive", Baseline = true)]
+    [Benchmark(Description = "Case Insensitive", OperationsPerInvoke = 1000, Baseline = true)]
     public int CaseInsensitiveTest()
         => EnumerateAll(
                 new GlobEnumeratorBuilder()

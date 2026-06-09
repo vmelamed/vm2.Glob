@@ -29,7 +29,7 @@ public class StructureSizeBenchmark : BenchmarkBase
     [Params("**/*.cs", "**/*.md")]
     public string Pattern { get; set; } = "**/*.cs";
 
-    [Benchmark(Description = "Small File System", Baseline = true)]
+    [Benchmark(Description = "Small File System", OperationsPerInvoke = 1000, Baseline = true)]
     public int SmallFileSystemTest()
         => EnumerateAll(
                 new GlobEnumeratorBuilder()
@@ -37,7 +37,7 @@ public class StructureSizeBenchmark : BenchmarkBase
                         .Configure(_glob)
             );
 
-    [Benchmark(Description = "Large File System")]
+    [Benchmark(Description = "Large File System", OperationsPerInvoke = 1000)]
     public int LargeFileSystemTest()
         => EnumerateAll(
                 new GlobEnumeratorBuilder()

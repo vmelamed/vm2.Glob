@@ -14,7 +14,7 @@ public class TraversalStrategyBenchmark : BenchmarkBase
     [Params("**/*.cs", "**/docs/**/*.md")]
     public string Pattern { get; set; } = "**/*.cs";
 
-    [Benchmark(Description = "Traverse Depth First", Baseline = true)]
+    [Benchmark(Description = "Traverse Depth First", OperationsPerInvoke = 1000, Baseline = true)]
     public int TdfStrategyTest()
         => EnumerateAll(
                 new GlobEnumeratorBuilder()
@@ -23,7 +23,7 @@ public class TraversalStrategyBenchmark : BenchmarkBase
                     .Configure(_glob)
             );
 
-    [Benchmark(Description = "Traverse Breadth First")]
+    [Benchmark(Description = "Traverse Breadth First", OperationsPerInvoke = 1000)]
     public int TbfStrategyTest()
         => EnumerateAll(
                 new GlobEnumeratorBuilder()

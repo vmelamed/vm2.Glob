@@ -23,7 +23,7 @@ public class PatternComplexityBenchmark : BenchmarkBase
     )]
     public string Pattern { get; set; } = "*.md";
 
-    [Benchmark(Description = "Pattern Complexity")]
+    [Benchmark(Description = "Pattern Complexity", OperationsPerInvoke = 1000)]
     public int PatternComplexityTest()
         => EnumerateAll(
                 new GlobEnumeratorBuilder()

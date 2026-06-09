@@ -14,7 +14,7 @@ public class ObjectTypeBenchmark : BenchmarkBase
     [Params("**/*", "**/test/**/*")]
     public string Pattern { get; set; } = "**/*";
 
-    [Benchmark(Description = "Get Files", Baseline = true)]
+    [Benchmark(Description = "Get Files", OperationsPerInvoke = 1000, Baseline = true)]
     public int FilesTest()
         => EnumerateAll(
                 new GlobEnumeratorBuilder()
@@ -23,7 +23,7 @@ public class ObjectTypeBenchmark : BenchmarkBase
                     .Configure(_glob)
             );
 
-    [Benchmark(Description = "Get Directories")]
+    [Benchmark(Description = "Get Directories", OperationsPerInvoke = 1000)]
     public int DirectoriesTest()
         => EnumerateAll(
                 new GlobEnumeratorBuilder()
@@ -32,7 +32,7 @@ public class ObjectTypeBenchmark : BenchmarkBase
                     .Configure(_glob)
             );
 
-    [Benchmark(Description = "Get Files and Directories")]
+    [Benchmark(Description = "Get Files and Directories", OperationsPerInvoke = 1000)]
     public int DirectoriesAndFilesTest()
         => EnumerateAll(
                 new GlobEnumeratorBuilder()

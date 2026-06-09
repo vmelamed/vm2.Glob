@@ -89,8 +89,8 @@ public sealed class FileSystem : IFileSystem
         [NotNull] string pattern,
         EnumerationOptions options)
     {
-        ArgumentException.ThrowIfNullOrEmpty(path, nameof(path));
-        ArgumentNullException.ThrowIfNull(pattern, nameof(pattern));
+        ArgumentException.ThrowIfNullOrEmpty(path);
+        ArgumentNullException.ThrowIfNull(pattern);
 
         try
         {

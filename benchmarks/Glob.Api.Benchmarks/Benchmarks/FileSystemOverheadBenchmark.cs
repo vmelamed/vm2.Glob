@@ -24,7 +24,7 @@ public class FileSystemBenchmark : BenchmarkBase
     [Params("**/*.cs", "**/*.md", "**/test/**/*.cs")]
     public string Pattern { get; set; } = "**/*.cs";
 
-    [Benchmark(Description = "Fake File System Base", Baseline = true)]
+    [Benchmark(Description = "Fake File System Base", OperationsPerInvoke = 1000, Baseline = true)]
     public int FakeFileSystemTest()
         => EnumerateAll(
                 new GlobEnumeratorBuilder()
@@ -32,7 +32,7 @@ public class FileSystemBenchmark : BenchmarkBase
                         .Configure(_glob)
             );
 
-    [Benchmark(Description = "Real File System Overhead")]
+    [Benchmark(Description = "Real File System Overhead", OperationsPerInvoke = 1000)]
     public int RealFileSystemTest()
         => EnumerateAll(
                 new GlobEnumeratorBuilder()

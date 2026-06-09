@@ -15,7 +15,7 @@ public class DistinctResultsBenchmark : BenchmarkBase
     [Params("**/docs/**/*.md", "**/test/**/*.cs")]
     public string Pattern { get; set; } = "**/docs/**/*.md";
 
-    [Benchmark(Description = "Non-distinct", Baseline = true)]
+    [Benchmark(Description = "Non-distinct", OperationsPerInvoke = 1000, Baseline = true)]
     public int NonDistinctResultsTest()
         => EnumerateAll(
                 new GlobEnumeratorBuilder()
@@ -23,7 +23,7 @@ public class DistinctResultsBenchmark : BenchmarkBase
                     .Configure(_glob)
             );
 
-    [Benchmark(Description = "Distinct")]
+    [Benchmark(Description = "Distinct", OperationsPerInvoke = 1000)]
     public int DistinctResultsTest()
         => EnumerateAll(
                 new GlobEnumeratorBuilder()
