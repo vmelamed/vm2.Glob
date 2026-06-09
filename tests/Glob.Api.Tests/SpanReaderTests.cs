@@ -74,7 +74,7 @@ public class SpanReaderTests(ITestOutputHelper output) : TestBase(output)
         // Assert
         read.Should()
             .Throw<ArgumentOutOfRangeException>()
-            .WithMessage("Not enough characters in span or size is negative. (Parameter 'size')")
+            .WithMessage("Not enough characters in span or invalid size to read. (Parameter 'size')")
             .And
             .ParamName
             .Should()
@@ -126,7 +126,7 @@ public class SpanReaderTests(ITestOutputHelper output) : TestBase(output)
 
         read.Should()
             .Throw<ArgumentOutOfRangeException>()
-            .WithMessage("Not enough characters in span (Parameter 'size')")
+            .WithMessage("Not enough characters in span or invalid size to read. (Parameter 'size')")
             .And
             .ParamName
             .Should()
@@ -341,7 +341,7 @@ public class SpanReaderTests(ITestOutputHelper output) : TestBase(output)
         // Act & Assert
         peak.Should()
             .Throw<ArgumentOutOfRangeException>()
-            .WithMessage("Not enough characters in span (Parameter 'size')")
+            .WithMessage("Not enough characters in span or invalid size to peek. (Parameter 'size')")
             .And
             .ParamName
             .Should()
