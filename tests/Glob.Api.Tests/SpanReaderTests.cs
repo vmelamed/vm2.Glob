@@ -58,6 +58,31 @@ public class SpanReaderTests(ITestOutputHelper output) : TestBase(output)
     }
 
     [Fact]
+    public void Read_WithNegativeSize_Throws()
+    {
+        var reader = new SpanReader("Hello World".AsSpan());
+
+        var read = () =>
+        {
+            // Arrange
+            var reader = new SpanReader("Hello World".AsSpan());
+
+            // Act
+            reader.Read(-5);
+        };
+
+        // Assert
+        read.Should()
+            .Throw<ArgumentOutOfRangeException>()
+            .WithMessage("Not enough characters in span or size is negative. (Parameter 'size')")
+            .And
+            .ParamName
+            .Should()
+            .Be("size")
+            ;
+    }
+
+    [Fact]
     public void Read_MultipleReads_AdvancesPositionCorrectly()
     {
         // Arrange
