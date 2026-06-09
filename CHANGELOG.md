@@ -1,5 +1,19 @@
 # Changelog
 
+## v3.1.0-preview.2 - 2026-06-09
+
+### Added
+
+- add null checks for path parameters in FileSystem and GlobEnumerator classes
+
+### Fixed
+
+- broken test messages
+
+### Internal
+
+- enhance error handling in SpanReader and add tests for negative size
+
 ## v3.1.0-preview.1 - 2026-06-09
 
 ### Added
