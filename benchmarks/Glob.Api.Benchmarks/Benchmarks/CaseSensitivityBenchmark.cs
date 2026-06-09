@@ -8,6 +8,8 @@ namespace vm2.Benchmarks.Glob.Api;
 /// </summary>
 public class CaseSensitivityBenchmark : BenchmarkBase
 {
+    const int operationsPerInvoke = 1000;
+
     [GlobalSetup]
     public void GlobalSetup() => SetupFakeStandardFileSystem();
 
@@ -16,21 +18,35 @@ public class CaseSensitivityBenchmark : BenchmarkBase
         "**/*.md")]
     public string Pattern { get; set; } = "**/*.CS";
 
-    [Benchmark(Description = "Case Sensitive", OperationsPerInvoke = 1000)]
+    [Benchmark(Description = "Case Sensitive", OperationsPerInvoke = operationsPerInvoke)]
     public int CaseSensitiveTest()
-        => EnumerateAll(
-                new GlobEnumeratorBuilder()
-                        .WithGlob(Pattern)
-                        .CaseSensitive()
-                        .Configure(_glob)
-            );
+    {
+        int a = 0;
 
-    [Benchmark(Description = "Case Insensitive", OperationsPerInvoke = 1000, Baseline = true)]
+        for (int i = 0; i < operationsPerInvoke; i++)
+            a = EnumerateAll(
+                    new GlobEnumeratorBuilder()
+                            .WithGlob(Pattern)
+                            .CaseSensitive()
+                            .Configure(_glob)
+                );
+
+        return a;
+    }
+
+    [Benchmark(Description = "Case Insensitive", OperationsPerInvoke = operationsPerInvoke, Baseline = true)]
     public int CaseInsensitiveTest()
-        => EnumerateAll(
+    {
+        int a = 0;
+
+        for (int i = 0; i < operationsPerInvoke; i++)
+            a = EnumerateAll(
                 new GlobEnumeratorBuilder()
-                        .WithGlob(Pattern)
-                        .CaseInsensitive()
-                        .Configure(_glob)
-            );
+                            .WithGlob(Pattern)
+                            .CaseInsensitive()
+                            .Configure(_glob)
+                );
+
+        return a;
+    }
 }

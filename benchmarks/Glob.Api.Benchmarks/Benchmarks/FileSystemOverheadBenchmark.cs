@@ -9,6 +9,8 @@ namespace vm2.Benchmarks.Glob.Api;
 /// </summary>
 public class FileSystemBenchmark : BenchmarkBase
 {
+    const int operationsPerInvoke = 1000;
+
     GlobEnumerator _globRealFS = null!;
 
     [GlobalSetup]
@@ -24,19 +26,31 @@ public class FileSystemBenchmark : BenchmarkBase
     [Params("**/*.cs", "**/*.md", "**/test/**/*.cs")]
     public string Pattern { get; set; } = "**/*.cs";
 
-    [Benchmark(Description = "Fake File System Base", OperationsPerInvoke = 1000, Baseline = true)]
+    [Benchmark(Description = "Fake File System Base", OperationsPerInvoke = operationsPerInvoke, Baseline = true)]
     public int FakeFileSystemTest()
-        => EnumerateAll(
+    {
+        int a = 0;
+
+        for (int i = 0; i < operationsPerInvoke; i++)
+            a = EnumerateAll(
                 new GlobEnumeratorBuilder()
                         .WithGlob(Pattern)
                         .Configure(_glob)
             );
+        return a;
+    }
 
-    [Benchmark(Description = "Real File System Overhead", OperationsPerInvoke = 1000)]
+    [Benchmark(Description = "Real File System Overhead", OperationsPerInvoke = operationsPerInvoke)]
     public int RealFileSystemTest()
-        => EnumerateAll(
+    {
+        int a = 0;
+
+        for (int i = 0; i < operationsPerInvoke; i++)
+            a = EnumerateAll(
                 new GlobEnumeratorBuilder()
                         .WithGlob(Pattern)
                         .Configure(_globRealFS)
             );
+        return a;
+    }
 }
