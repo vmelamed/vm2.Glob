@@ -9,26 +9,40 @@ namespace vm2.Benchmarks.Glob.Api;
 /// </summary>
 public class DistinctResultsBenchmark : BenchmarkBase
 {
+    const int operationsPerInvoke = 1000;
+
     [GlobalSetup]
     public void GlobalSetup() => SetupFakeStandardFileSystem();
 
     [Params("**/docs/**/*.md", "**/test/**/*.cs")]
     public string Pattern { get; set; } = "**/docs/**/*.md";
 
-    [Benchmark(Description = "Non-distinct", OperationsPerInvoke = 1000, Baseline = true)]
+    [Benchmark(Description = "Non-distinct", OperationsPerInvoke = operationsPerInvoke, Baseline = true)]
     public int NonDistinctResultsTest()
-        => EnumerateAll(
-                new GlobEnumeratorBuilder()
-                    .WithGlob(Pattern)
-                    .Configure(_glob)
-            );
+    {
+        int a = 0;
 
-    [Benchmark(Description = "Distinct", OperationsPerInvoke = 1000)]
+        for (int i = 0; i < operationsPerInvoke; i++)
+            a = EnumerateAll(
+                    new GlobEnumeratorBuilder()
+                        .WithGlob(Pattern)
+                        .Configure(_glob)
+                );
+        return a;
+    }
+
+    [Benchmark(Description = "Distinct", OperationsPerInvoke = operationsPerInvoke)]
     public int DistinctResultsTest()
-        => EnumerateAll(
+    {
+        int a = 0;
+
+        for (int i = 0; i < operationsPerInvoke; i++)
+            a = EnumerateAll(
                 new GlobEnumeratorBuilder()
                     .WithGlob(Pattern)
                     .Distinct()
                     .Configure(_glob)
             );
+        return a;
+    }
 }

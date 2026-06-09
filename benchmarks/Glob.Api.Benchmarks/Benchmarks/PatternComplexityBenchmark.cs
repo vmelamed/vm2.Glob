@@ -8,6 +8,8 @@ namespace vm2.Benchmarks.Glob.Api;
 /// </summary>
 public class PatternComplexityBenchmark : BenchmarkBase
 {
+    const int operationsPerInvoke = 1000;
+
     [GlobalSetup]
     public void GlobalSetup() => SetupFakeStandardFileSystem();
 
@@ -23,11 +25,17 @@ public class PatternComplexityBenchmark : BenchmarkBase
     )]
     public string Pattern { get; set; } = "*.md";
 
-    [Benchmark(Description = "Pattern Complexity", OperationsPerInvoke = 1000)]
+    [Benchmark(Description = "Pattern Complexity", OperationsPerInvoke = operationsPerInvoke)]
     public int PatternComplexityTest()
-        => EnumerateAll(
-                new GlobEnumeratorBuilder()
-                    .WithGlob(Pattern)
-                    .Configure(_glob)
-            );
+    {
+        int a = 0;
+
+        for (int i = 0; i < operationsPerInvoke; i++)
+            a = EnumerateAll(
+                    new GlobEnumeratorBuilder()
+                        .WithGlob(Pattern)
+                        .Configure(_glob)
+                );
+        return a;
+    }
 }

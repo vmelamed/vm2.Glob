@@ -9,6 +9,7 @@ namespace vm2.Benchmarks.Glob.Api;
 public class StructureSizeBenchmark : BenchmarkBase
 {
     const string FsLargeJsonModelFileName = "large-test-tree.json";
+    const int operationsPerInvoke = 1000;
 
     protected string _fsLargeJsonModelPath = null!;
     GlobEnumerator _globLarge = null!;
@@ -29,19 +30,31 @@ public class StructureSizeBenchmark : BenchmarkBase
     [Params("**/*.cs", "**/*.md")]
     public string Pattern { get; set; } = "**/*.cs";
 
-    [Benchmark(Description = "Small File System", OperationsPerInvoke = 1000, Baseline = true)]
+    [Benchmark(Description = "Small File System", OperationsPerInvoke = operationsPerInvoke, Baseline = true)]
     public int SmallFileSystemTest()
-        => EnumerateAll(
+    {
+        int a = 0;
+
+        for (int i = 0; i < operationsPerInvoke; i++)
+            a = EnumerateAll(
                 new GlobEnumeratorBuilder()
                         .WithGlob(Pattern)
                         .Configure(_glob)
             );
+        return a;
+    }
 
-    [Benchmark(Description = "Large File System", OperationsPerInvoke = 1000)]
+    [Benchmark(Description = "Large File System", OperationsPerInvoke = operationsPerInvoke)]
     public int LargeFileSystemTest()
-        => EnumerateAll(
+    {
+        int a = 0;
+
+        for (int i = 0; i < operationsPerInvoke; i++)
+            a = EnumerateAll(
                 new GlobEnumeratorBuilder()
                         .WithGlob(Pattern)
                         .Configure(_globLarge)
             );
+        return a;
+    }
 }

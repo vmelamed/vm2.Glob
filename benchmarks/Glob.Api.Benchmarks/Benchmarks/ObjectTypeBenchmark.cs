@@ -8,36 +8,57 @@ namespace vm2.Benchmarks.Glob.Api;
 /// </summary>
 public class ObjectTypeBenchmark : BenchmarkBase
 {
+    const int operationsPerInvoke = 1000;
+
     [GlobalSetup]
     public void GlobalSetup() => SetupFakeStandardFileSystem();
 
     [Params("**/*", "**/test/**/*")]
     public string Pattern { get; set; } = "**/*";
 
-    [Benchmark(Description = "Get Files", OperationsPerInvoke = 1000, Baseline = true)]
+    [Benchmark(Description = "Get Files", OperationsPerInvoke = operationsPerInvoke, Baseline = true)]
     public int FilesTest()
-        => EnumerateAll(
+    {
+        int a = 0;
+
+        for (int i = 0; i < operationsPerInvoke; i++)
+            a = EnumerateAll(
                 new GlobEnumeratorBuilder()
                     .WithGlob(Pattern)
                     .SelectFiles()
                     .Configure(_glob)
             );
+        return a;
+    }
 
-    [Benchmark(Description = "Get Directories", OperationsPerInvoke = 1000)]
+    [Benchmark(Description = "Get Directories", OperationsPerInvoke = operationsPerInvoke)]
     public int DirectoriesTest()
-        => EnumerateAll(
+    {
+        int a = 0;
+
+        for (int i = 0; i < operationsPerInvoke; i++)
+            a = EnumerateAll(
                 new GlobEnumeratorBuilder()
                     .WithGlob(Pattern)
                     .SelectDirectories()
                     .Configure(_glob)
             );
 
-    [Benchmark(Description = "Get Files and Directories", OperationsPerInvoke = 1000)]
+        return a;
+    }
+
+    [Benchmark(Description = "Get Files and Directories", OperationsPerInvoke = operationsPerInvoke)]
     public int DirectoriesAndFilesTest()
-        => EnumerateAll(
+    {
+        int a = 0;
+
+        for (int i = 0; i < operationsPerInvoke; i++)
+            a = EnumerateAll(
                 new GlobEnumeratorBuilder()
                     .WithGlob(Pattern)
                     .SelectDirectoriesAndFiles()
                     .Configure(_glob)
             );
+        return a;
+    }
 }
