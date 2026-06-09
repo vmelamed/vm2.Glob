@@ -73,8 +73,6 @@ public sealed partial class GlobEnumerator
         get;
         set
         {
-            ArgumentNullException.ThrowIfNull(value);
-
             var fullPath = _fileSystem.GetFullPath(value);
 
             if (!_fileSystem.DirectoryExists(fullPath))

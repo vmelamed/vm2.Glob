@@ -51,7 +51,7 @@ public ref struct SpanReader
     public ReadOnlySpan<char> Read(int size)
     {
         if (size > Remaining || size < 0)
-            throw new ArgumentOutOfRangeException(nameof(size), "Not enough characters in span");
+            throw new ArgumentOutOfRangeException(nameof(size), "Not enough characters in span or");
 
         var s = _chars[Position..(Position + size)];
 
@@ -101,7 +101,7 @@ public ref struct SpanReader
     public readonly ReadOnlySpan<char> Peek(int size)
     {
         if (size > Remaining || size < 0)
-            throw new ArgumentOutOfRangeException(nameof(size), "Not enough characters in span");
+            throw new ArgumentOutOfRangeException(nameof(size), "Not enough characters in span or invalid size.");
 
         return _chars[Position..(Position + size)];
     }
