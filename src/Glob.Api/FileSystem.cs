@@ -23,7 +23,12 @@ public sealed class FileSystem : IFileSystem
     /// </summary>
     /// <param name="path">The relative or absolute path to convert. Cannot be null or empty.</param>
     /// <returns>The fully qualified path that corresponds to the specified <paramref name="path"/>.</returns>
-    public string GetFullPath(string path) => Path.GetFullPath(path);
+    public string GetFullPath([NotNull] string path)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(path, nameof(path));
+
+        return Path.GetFullPath(path);
+    }
 
     /// <summary>
     /// Retrieves the absolute path of the current working directory.
@@ -36,7 +41,12 @@ public sealed class FileSystem : IFileSystem
     /// </summary>
     /// <param name="path">The full path of the directory to check. This can be an absolute or relative path.</param>
     /// <returns><see langword="true"/> if the directory exists; otherwise, <see langword="false"/>.</returns>
-    public bool DirectoryExists(string path) => Directory.Exists(path);
+    public bool DirectoryExists([NotNull] string path)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(path, nameof(path));
+
+        return Directory.Exists(path);
+    }
 
     /// <summary>
     /// Determines whether the specified file exists.
@@ -46,7 +56,12 @@ public sealed class FileSystem : IFileSystem
     /// </remarks>
     /// <param name="path">The path of the file to check. This can be an absolute or relative path.</param>
     /// <returns><see langword="true"/> if the file exists at the specified path; otherwise, <see langword="false"/>.</returns>
-    public bool FileExists(string path) => File.Exists(path);
+    public bool FileExists(string path)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(path, nameof(path));
+
+        return File.Exists(path);
+    }
 
     string PathWithSlashes(string path) => IsWindows ? path.Replace(WinSepChar, SepChar) : path;
 
@@ -69,8 +84,14 @@ public sealed class FileSystem : IFileSystem
     /// An enumerable collection of strings, where each string represents the name of a sub-directory within the
     /// specified directory. If the directory contains no subdirectories, the collection will be empty.
     /// </returns>
-    public IEnumerable<string> EnumerateDirectories(string path, string pattern, EnumerationOptions options)
+    public IEnumerable<string> EnumerateDirectories(
+        [NotNull] string path,
+        [NotNull] string pattern,
+        EnumerationOptions options)
     {
+        ArgumentException.ThrowIfNullOrEmpty(path, nameof(path));
+        ArgumentNullException.ThrowIfNull(pattern, nameof(pattern));
+
         try
         {
             return Directory
@@ -105,8 +126,14 @@ public sealed class FileSystem : IFileSystem
     /// An enumerable collection of strings, where each string represents the name of a file within the
     /// specified directory. If the directory contains no files, the collection will be empty.
     /// </returns>
-    public IEnumerable<string> EnumerateFiles(string path, string pattern, EnumerationOptions options)
+    public IEnumerable<string> EnumerateFiles(
+        [NotNull] string path,
+        [NotNull] string pattern,
+        EnumerationOptions options)
     {
+        ArgumentException.ThrowIfNullOrEmpty(path, nameof(path));
+        ArgumentNullException.ThrowIfNull(pattern, nameof(pattern));
+
         try
         {
             return Directory
