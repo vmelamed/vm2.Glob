@@ -19,31 +19,31 @@ public class TraversalStrategyBenchmark : BenchmarkBase
     [Benchmark(Description = "Traverse Depth First", OperationsPerInvoke = operationsPerInvoke, Baseline = true)]
     public int TdfStrategyTest()
     {
-        int a = 0;
+        int suppressOptimizationDiscard = 0;
 
         for (int i = 0; i < operationsPerInvoke; i++)
-            a = EnumerateAll(
+            suppressOptimizationDiscard = EnumerateAll(
                 new GlobEnumeratorBuilder()
                     .WithGlob(Pattern)
                     .DepthFirst()
                     .Configure(_glob)
             );
-            
-        return a;
+
+        return suppressOptimizationDiscard;
     }
 
     [Benchmark(Description = "Traverse Breadth First", OperationsPerInvoke = operationsPerInvoke)]
     public int TbfStrategyTest()
     {
-        int a = 0;
+        int suppressOptimizationDiscard = 0;
 
         for (int i = 0; i < operationsPerInvoke; i++)
-            a = EnumerateAll(
+            suppressOptimizationDiscard = EnumerateAll(
                 new GlobEnumeratorBuilder()
                     .WithGlob(Pattern)
                     .BreadthFirst()
                     .Configure(_glob)
             );
-        return a;
+        return suppressOptimizationDiscard;
     }
 }

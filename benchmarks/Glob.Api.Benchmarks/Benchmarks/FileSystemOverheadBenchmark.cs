@@ -29,28 +29,28 @@ public class FileSystemBenchmark : BenchmarkBase
     [Benchmark(Description = "Fake File System Base", OperationsPerInvoke = operationsPerInvoke, Baseline = true)]
     public int FakeFileSystemTest()
     {
-        int a = 0;
+        int suppressOptimizationDiscard = 0;
 
         for (int i = 0; i < operationsPerInvoke; i++)
-            a = EnumerateAll(
+            suppressOptimizationDiscard = EnumerateAll(
                 new GlobEnumeratorBuilder()
                         .WithGlob(Pattern)
                         .Configure(_glob)
             );
-        return a;
+        return suppressOptimizationDiscard;
     }
 
     [Benchmark(Description = "Real File System Overhead", OperationsPerInvoke = operationsPerInvoke)]
     public int RealFileSystemTest()
     {
-        int a = 0;
+        int suppressOptimizationDiscard = 0;
 
         for (int i = 0; i < operationsPerInvoke; i++)
-            a = EnumerateAll(
+            suppressOptimizationDiscard = EnumerateAll(
                 new GlobEnumeratorBuilder()
                         .WithGlob(Pattern)
                         .Configure(_globRealFS)
             );
-        return a;
+        return suppressOptimizationDiscard;
     }
 }

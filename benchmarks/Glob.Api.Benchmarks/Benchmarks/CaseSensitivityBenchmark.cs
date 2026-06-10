@@ -21,32 +21,32 @@ public class CaseSensitivityBenchmark : BenchmarkBase
     [Benchmark(Description = "Case Sensitive", OperationsPerInvoke = operationsPerInvoke)]
     public int CaseSensitiveTest()
     {
-        int a = 0;
+        int suppressOptimizationDiscard = 0;
 
         for (int i = 0; i < operationsPerInvoke; i++)
-            a = EnumerateAll(
+            suppressOptimizationDiscard = EnumerateAll(
                     new GlobEnumeratorBuilder()
                             .WithGlob(Pattern)
                             .CaseSensitive()
                             .Configure(_glob)
                 );
 
-        return a;
+        return suppressOptimizationDiscard;
     }
 
     [Benchmark(Description = "Case Insensitive", OperationsPerInvoke = operationsPerInvoke, Baseline = true)]
     public int CaseInsensitiveTest()
     {
-        int a = 0;
+        int suppressOptimizationDiscard = 0;
 
         for (int i = 0; i < operationsPerInvoke; i++)
-            a = EnumerateAll(
+            suppressOptimizationDiscard = EnumerateAll(
                 new GlobEnumeratorBuilder()
                             .WithGlob(Pattern)
                             .CaseInsensitive()
                             .Configure(_glob)
                 );
 
-        return a;
+        return suppressOptimizationDiscard;
     }
 }

@@ -20,29 +20,29 @@ public class DistinctResultsBenchmark : BenchmarkBase
     [Benchmark(Description = "Non-distinct", OperationsPerInvoke = operationsPerInvoke, Baseline = true)]
     public int NonDistinctResultsTest()
     {
-        int a = 0;
+        int suppressOptimizationDiscard = 0;
 
         for (int i = 0; i < operationsPerInvoke; i++)
-            a = EnumerateAll(
+            suppressOptimizationDiscard = EnumerateAll(
                     new GlobEnumeratorBuilder()
                         .WithGlob(Pattern)
                         .Configure(_glob)
                 );
-        return a;
+        return suppressOptimizationDiscard;
     }
 
     [Benchmark(Description = "Distinct", OperationsPerInvoke = operationsPerInvoke)]
     public int DistinctResultsTest()
     {
-        int a = 0;
+        int suppressOptimizationDiscard = 0;
 
         for (int i = 0; i < operationsPerInvoke; i++)
-            a = EnumerateAll(
+            suppressOptimizationDiscard = EnumerateAll(
                 new GlobEnumeratorBuilder()
                     .WithGlob(Pattern)
                     .Distinct()
                     .Configure(_glob)
             );
-        return a;
+        return suppressOptimizationDiscard;
     }
 }
