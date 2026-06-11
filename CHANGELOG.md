@@ -1,5 +1,18 @@
 # Changelog
 
+## v3.1.1-preview.2 - 2026-06-11
+
+### Fixed
+
+- refactor TdfStrategyTest method for clarity and structure
+
+### Internal
+
+- standardize operations per invoke in benchmarks and update .gitignore
+- update vm2.TestUtilities to version 2.1.1
+- rename variables `a` with `suppressOptimizationDiscard` in benchmark tests
+- changed comments and UI for clarity [skip ci]
+
 ## v3.1.1-preview.1 - 2026-06-09
 
 ### Internal
