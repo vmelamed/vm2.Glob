@@ -3,12 +3,12 @@
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <RootNamespace>vm2.Benchmarks.Glob.Api</RootNamespace>
-
-        <EnableTrimAnalyzer>false</EnableTrimAnalyzer>
-        <IsTrimmable>false</IsTrimmable>
-
         <DefineConstants>$(DefineConstants);$(UserDefined)</DefineConstants>
+
+        <IsTrimmable>false</IsTrimmable>
+        <EnableTrimAnalyzer>false</EnableTrimAnalyzer>
         <PublishTrimmed>False</PublishTrimmed>
+
         <UserSecretsId>0d71ff3a-19a8-4f6e-b857-a8653ae30fa6</UserSecretsId>
     </PropertyGroup>
 

@@ -1,11 +1,8 @@
-# Copilot Instructions for vm2.Glob
+# vm2.Glob — Claude Context
 
-## Shared Conventions
-
-Copilot MUST read and follow [CONVENTIONS.md](CONVENTIONS.md) before suggesting or making changes.
-
-Do not duplicate shared rules here — shared instructions belong in [CONVENTIONS.md](CONVENTIONS.md) so all AI systems
-use the same source of truth.
+@~/.claude/CLAUDE.md
+@~/repos/vm2/CLAUDE.md
+@.github/CONVENTIONS.md
 
 ## Package Identity
 

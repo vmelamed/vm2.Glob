@@ -15,7 +15,7 @@ public sealed partial class GlobEnumerator
     #region Fields and private properties
     RegexOptions _regexOptions = RegexOptions.IgnorePatternWhitespace
                                 | RegexOptions.ExplicitCapture
-                                | (OperatingSystem.RegexOptions);
+                                | OperatingSystem.RegexOptions;
 
     EnumerationOptions _options = new()
     {
@@ -32,6 +32,7 @@ public sealed partial class GlobEnumerator
     string _glob = "";
     string _fromDir = "";
     Deque<(string dir, Range patternComponentRange, bool recursively)> _deque = [];
+    Dictionary<string, Regex> _regexCache = new();
 
     /// <summary>
     /// The string comparer depends on the MatchCasing
@@ -41,7 +42,9 @@ public sealed partial class GlobEnumerator
     /// <summary>
     /// The string comparer depends on the MatchCasing
     /// </summary>
-    StringComparer StringComparer { get; set; } = OperatingSystem.Comparison is StringComparison.Ordinal ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase;
+    StringComparer StringComparer { get; set; } = OperatingSystem.Comparison is StringComparison.Ordinal
+                                                        ? StringComparer.Ordinal
+                                                        : StringComparer.OrdinalIgnoreCase;
 
     /// <summary>
     /// Gets a regex object that matches the root of the file system in a path.
@@ -52,6 +55,13 @@ public sealed partial class GlobEnumerator
 
     #region Public Properties
     /// <summary>
+    /// Gets a value indicating whether the current instance of <see cref="GlobEnumerator"/> is frozen. A frozen instance cannot
+    /// be modified; attempts to change its properties or enumerate again will result in an <see cref="InvalidOperationException"/>
+    /// exception.
+    /// </summary>
+    public bool IsFrozen { get; private set; } = false;
+
+    /// <summary>
     /// Gets or sets the glob used to match file or directory names. Default - an empty string, which is equivalent to "*".
     /// </summary>
     public string Glob
@@ -61,7 +71,7 @@ public sealed partial class GlobEnumerator
         {
             ArgumentNullException.ThrowIfNull(value);
 
-            field = value;
+            field = !IsFrozen ? value : throw new InvalidOperationException("The GlobEnumerator instance is frozen and cannot be modified.");
         }
     } = "";
 
@@ -73,6 +83,9 @@ public sealed partial class GlobEnumerator
         get;
         set
         {
+            if (IsFrozen)
+                throw new InvalidOperationException("The GlobEnumerator instance is frozen and cannot be modified.");
+
             var fullPath = _fileSystem.GetFullPath(value);
 
             if (!_fileSystem.DirectoryExists(fullPath))
@@ -85,13 +98,21 @@ public sealed partial class GlobEnumerator
     /// <summary>
     /// Gets or sets the type of file system objects to search for - files, directories, or both.
     /// </summary>
-    public Objects Enumerated { get; set; } = Objects.Files;
+    public Objects Enumerated
+    {
+        get;
+        set => field = !IsFrozen ? value : throw new InvalidOperationException("The GlobEnumerator instance is frozen and cannot be modified.");
+    } = Objects.Files;
 
     /// <summary>
     /// Gets or sets a value indicating whether the enumeration should be performed in depth-first order vs breadth-first. The
     /// default is <c>false</c> - breadth-first.
     /// </summary>
-    public bool DepthFirst { get; set; }
+    public bool DepthFirst
+    {
+        get;
+        set => field = !IsFrozen ? value : throw new InvalidOperationException("The GlobEnumerator instance is frozen and cannot be modified.");
+    }
 
     /// <summary>
     /// Gets or sets the case sensitivity behavior for matching operations.
@@ -101,6 +122,9 @@ public sealed partial class GlobEnumerator
         get => _options.MatchCasing;
         set
         {
+            if (IsFrozen)
+                throw new InvalidOperationException("The GlobEnumerator instance is frozen and cannot be modified.");
+
             switch (value)
             {
                 case MatchCasing.PlatformDefault:
@@ -136,7 +160,11 @@ public sealed partial class GlobEnumerator
     /// Some globs may lead to repeating matches, e.g., /**/docs/**/*.txt, which may not be desirable. But also it comes with
     /// a price in memory, performance, and loss of lazy enumeration. Therefore use judiciously.
     /// </remarks>
-    public bool Distinct { get; set; } = false;
+    public bool Distinct
+    {
+        get;
+        set => field = !IsFrozen ? value : throw new InvalidOperationException("The GlobEnumerator instance is frozen and cannot be modified.");
+    } = false;
 
     /// <summary>
     /// Indicates whether to return the special directory entries "." and "..". Default: <c>false</c>
@@ -144,7 +172,7 @@ public sealed partial class GlobEnumerator
     public bool ReturnSpecialDirectories
     {
         get => _options.ReturnSpecialDirectories;
-        set => _options.ReturnSpecialDirectories = value;
+        set => _options.ReturnSpecialDirectories = !IsFrozen ? value : throw new InvalidOperationException("The GlobEnumerator instance is frozen and cannot be modified.");
     }
 
     /// <summary>
@@ -155,7 +183,7 @@ public sealed partial class GlobEnumerator
     public bool IgnoreInaccessible
     {
         get => _options.IgnoreInaccessible;
-        set => _options.IgnoreInaccessible = value;
+        set => _options.IgnoreInaccessible = !IsFrozen ? value : throw new InvalidOperationException("The GlobEnumerator instance is frozen and cannot be modified.");
     }
 
     /// <summary>
@@ -165,7 +193,7 @@ public sealed partial class GlobEnumerator
     public FileAttributes AttributesToSkip
     {
         get => _options.AttributesToSkip;
-        set => _options.AttributesToSkip = value;
+        set => _options.AttributesToSkip = !IsFrozen ? value : throw new InvalidOperationException("The GlobEnumerator instance is frozen and cannot be modified.");
     }
     #endregion
 
@@ -195,6 +223,9 @@ public sealed partial class GlobEnumerator
     /// </threadsafety>
     public IEnumerable<string> Enumerate()
     {
+        if (IsFrozen)
+            throw new InvalidOperationException("The GlobEnumerator instance is frozen and cannot be restarted until finished.");
+
         if (Enumerated is Objects.Files
             && Glob is not ""
             && (Glob.Last() is ('/' or '\\') || EndsWithGlobstarRegex().IsMatch(Glob)))
@@ -204,6 +235,7 @@ public sealed partial class GlobEnumerator
         if (!_fileSystem.GlobRegex().IsMatch(_glob))
             throw new ArgumentException("Invalid pattern.");
 
+        IsFrozen = true;
         if (_logger?.IsEnabled(LogLevel.Trace) is true)
             _logger.LogTrace("""
                 ================================
@@ -242,6 +274,11 @@ public sealed partial class GlobEnumerator
                                             ? _glob.Length.._glob.Length // no next globComponent
                                             : (range.End.Value + 1)..EndOfNextComponent(range);
 
+    Regex GetRegex(string pattern)
+        => _regexCache.TryGetValue(pattern, out var regex)
+                ? regex
+                : _regexCache[pattern] = new Regex(pattern, _regexOptions);
+
     IEnumerable<string> Traverse()
     {
         // Track visited paths only when Distinct is enabled and pattern has multiple globstars
@@ -251,14 +288,9 @@ public sealed partial class GlobEnumerator
 
         bool NotVisited(string path) => visited is null || visited.Add(path);
 
-#if DEBUG
-        Debug.Assert(_deque.Count is 0, "The queue must be empty after the previous search!");
-#else
         if (_deque?.Count is not 0)
-            throw new InvalidOperationException("The internal queue is not empty. Are you trying to start a new search before finishing the previous one?"+
+            throw new InvalidOperationException("The internal queue is not empty. Are you trying to start a new search before finishing the previous one? " +
                                                 "This is not allowed. Please create a new instance of GlobEnumerator for the new search.");
-#endif
-
 
         _deque.Clear();                                   // just in case
         _deque.IsStack = DepthFirst;                      // honor the order of traversing
@@ -274,7 +306,7 @@ public sealed partial class GlobEnumerator
                                                                         // regex to filter the names of the objects in dir
             var rex = regex is "" || regex == _fileSystem.NameSequence
                         ? null
-                        : new Regex($"(^|/){regex}$", _regexOptions);
+                        : GetRegex($"(^|/){regex}$");
 
             Func<string, bool> lastComponentMatches = regex switch
             {
@@ -363,8 +395,7 @@ public sealed partial class GlobEnumerator
                     break;
 
                 case (_, isLast: true, recursively: true):
-                    foreach (var subDir in _fileSystem
-                                                .EnumerateDirectories(dir, SequenceWildcard, _options))
+                    foreach (var subDir in _fileSystem.EnumerateDirectories(dir, SequenceWildcard, _options))
                     {
                         // we need to continue the recursive search in the sub-dirs to find matching objects deeper in the tree
                         _deque.Add((subDir, componentRange, true));
