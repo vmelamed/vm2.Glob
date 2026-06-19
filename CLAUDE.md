@@ -56,6 +56,11 @@ dotnet pack vm2.Glob.slnx --configuration Release
 
 # Run benchmarks (Release only)
 dotnet run --project benchmarks/Glob.Api.Benchmarks/Glob.Api.Benchmarks.csproj --configuration Release -- --filter "*"
+
+# If the benchmark tests are already built, you can run the compiled executable directly:
+benchmarks/Glob.Api.Benchmarks/bin/Release/net10.0/Glob.Api.Benchmarks --help
+benchmarks/Glob.Api.Benchmarks/bin/Release/net10.0/Glob.Api.Benchmarks --filter "*" # on Linux
+benchmarks/Glob.Api.Benchmarks/bin/Release/net10.0/Glob.Api.Benchmarks.exe --filter "*" # on Windows
 ```
 
 ### Glob Pattern Syntax

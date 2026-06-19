@@ -22,7 +22,7 @@ patterns:
 
 - **[vm2.Glob.Api](https://www.nuget.org/packages/vm2.Glob.Api/)** — A high-performance library for embedding glob-based file
   enumeration in .NET applications.
-- **[vm2.GlobTool](src/GlobTool/README.md)** — A cross-platform command-line tool for finding files and directories from the
+- **[vm2.GlobTool](../src/GlobTool/README.md)** — A cross-platform command-line tool for finding files and directories from the
   terminal.
 
 Both implement the [POSIX.2 glob specification](https://www.man7.org/linux/man-pages/man7/glob.7.html) with extensions for
@@ -30,7 +30,7 @@ Windows and Unix-like systems, including environment variable expansion and plat
 
 ## Features
 
-See the [README](README.md) file for a detailed list of features and explanations.
+See the [README](../README.md) file for a detailed list of features and explanations.
 
 ## Common Local Commands
 
@@ -59,7 +59,11 @@ dotnet pack vm2.Glob.slnx --configuration Release
 
 # Run benchmarks (Release only)
 dotnet run --project benchmarks/Glob.Api.Benchmarks/Glob.Api.Benchmarks.csproj --configuration Release -- --filter "*"
-```
+
+# If the benchmark tests are already built, you can run the compiled executable directly:
+benchmarks/Glob.Api.Benchmarks/bin/Release/net10.0/Glob.Api.Benchmarks --help
+benchmarks/Glob.Api.Benchmarks/bin/Release/net10.0/Glob.Api.Benchmarks --filter "*" # on Linux
+benchmarks/Glob.Api.Benchmarks/bin/Release/net10.0/Glob.Api.Benchmarks.exe --filter "*" # on Windows```
 
 ### Glob Pattern Syntax
 
