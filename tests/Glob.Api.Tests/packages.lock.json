@@ -97,12 +97,12 @@
       },
       "vm2.TestUtilities": {
         "type": "Direct",
-        "requested": "[2.1.1, )",
-        "resolved": "2.1.1",
-        "contentHash": "30s+vCk9vGJA2wVrMMcBXNye56vYgWbzEYLolKNGMc3GB61wvCMrS+ZM8W5enqrYXxwusvWq9Ygw7pZF6VfKdA==",
+        "requested": "[2.1.2, )",
+        "resolved": "2.1.2",
+        "contentHash": "B2x3FDOhg6HwCQpEch09GCYnOvsMxCnVNcK2DF+WamJyALtj0KGuNUU1jurm8dA9jdhE8OR0R6RU4g/3ncOtLA==",
         "dependencies": {
           "FluentAssertions": "8.10.0",
-          "Microsoft.Extensions.Logging.Abstractions": "10.0.8",
+          "Microsoft.Extensions.Logging.Abstractions": "10.0.9",
           "xunit.v3.extensibility.core": "3.2.2"
         }
       },
