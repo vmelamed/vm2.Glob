@@ -1,15 +1,6 @@
 ﻿// SPDX-License-Identifier: MIT
 // Copyright (c) 2025-2026 Val Melamed
 
-global using System.Diagnostics;
-global using System.Diagnostics.CodeAnalysis;
-global using System.Globalization;
-global using System.Text;
-global using System.Text.Json;
 global using System.Text.Json.Serialization;
-global using System.Text.RegularExpressions;
-
-global using Microsoft.Extensions.DependencyInjection;
-global using Microsoft.Extensions.Logging;
 
 global using static vm2.Glob.Api.GlobConstants;
