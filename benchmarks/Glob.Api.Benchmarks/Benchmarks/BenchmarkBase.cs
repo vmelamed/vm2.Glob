@@ -3,6 +3,10 @@
 
 namespace vm2.Benchmarks.Glob.Api;
 
+/// <summary>
+/// Stores the reusable file system context needed to create a fresh <see cref="GlobEnumerator"/> for each benchmark
+/// invocation.
+/// </summary>
 public readonly record struct GlobContext(IFileSystem FileSystem, string FromDirectory = ".");
 
 /// <summary>
@@ -114,10 +118,18 @@ public abstract class BenchmarkBase
         return count;
     }
 
-    // Benchmarks must start from a fresh enumerator every invocation because GlobEnumerator becomes permanently frozen after
-    // the first Enumerate() call.
+    /// <summary>
+    /// Creates a fresh <see cref="GlobEnumerator"/> from the default benchmark file system context.
+    /// </summary>
+    /// <remarks>
+    /// Benchmarks must start from a fresh enumerator every invocation because <see cref="GlobEnumerator"/> becomes permanently
+    /// frozen after the first <see cref="GlobEnumerator.Enumerate"/> call.
+    /// </remarks>
     protected GlobEnumerator CreateGlob() => CreateGlob(_glob);
 
+    /// <summary>
+    /// Creates a fresh <see cref="GlobEnumerator"/> from the specified benchmark file system context.
+    /// </summary>
     protected static GlobEnumerator CreateGlob(GlobContext context)
         => new(context.FileSystem) { FromDirectory = context.FromDirectory };
 }
