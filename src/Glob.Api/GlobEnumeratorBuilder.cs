@@ -52,7 +52,7 @@ public sealed class GlobEnumeratorBuilder
     /// The updated GlobEnumeratorBuilder instance for method chaining.
     /// </returns>
     public GlobEnumeratorBuilder WithGlob(
-        [NotNull] string glob)
+        string glob)
     {
         ArgumentNullException.ThrowIfNull(glob, nameof(glob));
 
@@ -69,7 +69,7 @@ public sealed class GlobEnumeratorBuilder
     /// The updated GlobEnumeratorBuilder instance for method chaining.
     /// </returns>
     public GlobEnumeratorBuilder FromDirectory(
-        [NotNull] string startDirectory)
+        string startDirectory)
     {
         ArgumentNullException.ThrowIfNull(startDirectory, nameof(startDirectory));
 
