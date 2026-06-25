@@ -34,7 +34,7 @@ public class PatternComplexityBenchmark : BenchmarkBase
             suppressOptimizationDiscard = EnumerateAll(
                     new GlobEnumeratorBuilder()
                         .WithGlob(Pattern)
-                        .Configure(_glob)
+                        .Configure(CreateGlob())
                 );
         return suppressOptimizationDiscard;
     }

@@ -12,7 +12,7 @@ public class StructureSizeBenchmark : BenchmarkBase
     const int operationsPerInvoke = 1000;
 
     protected string _fsLargeJsonModelPath = null!;
-    GlobEnumerator _globLarge = null!;
+    GlobContext _globLarge;
 
     [GlobalSetup]
     public void GlobalSetup()
@@ -39,7 +39,7 @@ public class StructureSizeBenchmark : BenchmarkBase
             suppressOptimizationDiscard = EnumerateAll(
                 new GlobEnumeratorBuilder()
                         .WithGlob(Pattern)
-                        .Configure(_glob)
+                        .Configure(CreateGlob())
             );
         return suppressOptimizationDiscard;
     }
@@ -53,7 +53,7 @@ public class StructureSizeBenchmark : BenchmarkBase
             suppressOptimizationDiscard = EnumerateAll(
                 new GlobEnumeratorBuilder()
                         .WithGlob(Pattern)
-                        .Configure(_globLarge)
+                        .Configure(CreateGlob(_globLarge))
             );
         return suppressOptimizationDiscard;
     }

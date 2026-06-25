@@ -11,7 +11,7 @@ public class FileSystemBenchmark : BenchmarkBase
 {
     const int operationsPerInvoke = 1000;
 
-    GlobEnumerator _globRealFS = null!;
+    GlobContext _globRealFS;
 
     [GlobalSetup]
     public void GlobalSetup()
@@ -35,7 +35,7 @@ public class FileSystemBenchmark : BenchmarkBase
             suppressOptimizationDiscard = EnumerateAll(
                 new GlobEnumeratorBuilder()
                         .WithGlob(Pattern)
-                        .Configure(_glob)
+                        .Configure(CreateGlob())
             );
         return suppressOptimizationDiscard;
     }
@@ -49,7 +49,7 @@ public class FileSystemBenchmark : BenchmarkBase
             suppressOptimizationDiscard = EnumerateAll(
                 new GlobEnumeratorBuilder()
                         .WithGlob(Pattern)
-                        .Configure(_globRealFS)
+                        .Configure(CreateGlob(_globRealFS))
             );
         return suppressOptimizationDiscard;
     }
