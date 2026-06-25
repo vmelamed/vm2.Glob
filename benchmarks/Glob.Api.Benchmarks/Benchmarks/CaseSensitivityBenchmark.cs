@@ -28,7 +28,7 @@ public class CaseSensitivityBenchmark : BenchmarkBase
                     new GlobEnumeratorBuilder()
                             .WithGlob(Pattern)
                             .CaseSensitive()
-                            .Configure(_glob)
+                            .Configure(CreateGlob())
                 );
 
         return suppressOptimizationDiscard;
@@ -44,7 +44,7 @@ public class CaseSensitivityBenchmark : BenchmarkBase
                 new GlobEnumeratorBuilder()
                             .WithGlob(Pattern)
                             .CaseInsensitive()
-                            .Configure(_glob)
+                            .Configure(CreateGlob())
                 );
 
         return suppressOptimizationDiscard;

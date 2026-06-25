@@ -3,6 +3,8 @@
 
 namespace vm2.Benchmarks.Glob.Api;
 
+public readonly record struct GlobContext(IFileSystem FileSystem, string FromDirectory = ".");
+
 /// <summary>
 /// Base class for all glob benchmarks providing common setup and teardown functionality.
 /// </summary>
@@ -14,7 +16,7 @@ namespace vm2.Benchmarks.Glob.Api;
 public abstract class BenchmarkBase
 {
     // these must be initialized in GlobalSetup(), so we use the old dirty hack - the null-forgiving operator:
-    protected GlobEnumerator _glob = null!;
+    protected GlobContext _glob;
     protected string _realFSRootsPath = "";
     protected const string FsStandardJsonModelFileName = "standard-test-tree.json";
     protected string _fsStandardJsonModelPath = null!;
@@ -34,13 +36,13 @@ public abstract class BenchmarkBase
                     ? fsJsonModelPath
                     : throw new FileNotFoundException($"Did not find the test file system structure file {fsJsonModelPath} (CWD: {Directory.GetCurrentDirectory()}).", fsJsonModelPath);
 
-    protected virtual GlobEnumerator SetupFakeFileSystem(string fsJsonModelPath)
+    protected virtual GlobContext SetupFakeFileSystem(string fsJsonModelPath)
         => new(
             new FakeFS(
-                    FSJsonModelExist(fsJsonModelPath),
-                    DataType.Json));
+                FSJsonModelExist(fsJsonModelPath),
+                DataType.Json));
 
-    protected virtual GlobEnumerator SetupRealFileSystems(string fsJsonModelPath)
+    protected virtual GlobContext SetupRealFileSystems(string fsJsonModelPath)
     {
         FSJsonModelExist(fsJsonModelPath);
 
@@ -77,7 +79,7 @@ public abstract class BenchmarkBase
             TestFileStructure.CreateTestFileStructure(fsJsonModelPath, realDirectoryPath);
         }
 
-        return new GlobEnumerator(new FileSystem()) { FromDirectory = realDirectoryPath };
+        return new(new FileSystem(), realDirectoryPath);
     }
 
     protected virtual void CleanupRealFileSystems()
@@ -111,4 +113,11 @@ public abstract class BenchmarkBase
 
         return count;
     }
+
+    // Benchmarks must start from a fresh enumerator every invocation because GlobEnumerator becomes permanently frozen after
+    // the first Enumerate() call.
+    protected GlobEnumerator CreateGlob() => CreateGlob(_glob);
+
+    protected static GlobEnumerator CreateGlob(GlobContext context)
+        => new(context.FileSystem) { FromDirectory = context.FromDirectory };
 }
