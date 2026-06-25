@@ -23,7 +23,7 @@ public sealed class FileSystem : IFileSystem
     /// </summary>
     /// <param name="path">The relative or absolute path to convert. Cannot be null or empty.</param>
     /// <returns>The fully qualified path that corresponds to the specified <paramref name="path"/>.</returns>
-    public string GetFullPath([NotNull] string path)
+    public string GetFullPath(string path)
     {
         ArgumentException.ThrowIfNullOrEmpty(path, nameof(path));
 
@@ -41,7 +41,7 @@ public sealed class FileSystem : IFileSystem
     /// </summary>
     /// <param name="path">The full path of the directory to check. This can be an absolute or relative path.</param>
     /// <returns><see langword="true"/> if the directory exists; otherwise, <see langword="false"/>.</returns>
-    public bool DirectoryExists([NotNull] string path)
+    public bool DirectoryExists(string path)
     {
         ArgumentException.ThrowIfNullOrEmpty(path, nameof(path));
 
@@ -85,8 +85,8 @@ public sealed class FileSystem : IFileSystem
     /// specified directory. If the directory contains no subdirectories, the collection will be empty.
     /// </returns>
     public IEnumerable<string> EnumerateDirectories(
-        [NotNull] string path,
-        [NotNull] string pattern,
+        string path,
+        string pattern,
         EnumerationOptions options)
     {
         ArgumentException.ThrowIfNullOrEmpty(path);
@@ -127,8 +127,8 @@ public sealed class FileSystem : IFileSystem
     /// specified directory. If the directory contains no files, the collection will be empty.
     /// </returns>
     public IEnumerable<string> EnumerateFiles(
-        [NotNull] string path,
-        [NotNull] string pattern,
+        string path,
+        string pattern,
         EnumerationOptions options)
     {
         ArgumentException.ThrowIfNullOrEmpty(path, nameof(path));
