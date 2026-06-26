@@ -1,5 +1,29 @@
 # Changelog
 
+## v3.2.0-preview.1 - 2026-06-26
+
+### Added
+
+- rename the workflow that refreshes the NuGet lock files on schedule
+
+### Fixed
+
+- update conventions for async handling and error management [skip ci]
+- recreate benchmark glob enumerators per invocation
+
+### Internal
+
+- sync, no code changes [skip ci]
+- Bump the minor-and-patch group with 3 updates
+- sync CONVENTIONS.md
+- update dependencies
+- Bump the minor-and-patch group with 1 update
+- Refactor dependency management and clean up using directives
+- remove [NotNull] attribute from method parameters for consistency
+- update vm2.TestUtilities to version 2.1.3 and add dependencies for Microsoft.Extensions.DependencyInjection and Microsoft.Extensions.Logging
+- document fresh benchmark enumerator context
+- update .gitignore and add diff-shared configuration for merge tools
+
 ## v3.1.2-preview.1 - 2026-06-11
 
 ### Internal
