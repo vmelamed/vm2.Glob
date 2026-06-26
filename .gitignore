@@ -435,3 +435,6 @@ examples/**/bin/
 
 # Local settings for Claude AI
 .claude/
+
+# Local temporary data for benchmarks
+TestsRootPath/

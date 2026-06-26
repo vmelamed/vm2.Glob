@@ -1,0 +1,13 @@
+{
+    "diff": {
+        "tool": "delta",
+        "command": "delta --side-by-side --line-numbers --paging never \"$LOCAL\" \"$REMOTE\""
+    },
+    "merge": {
+        "tool": "code",
+        "command": "code --new-window --wait --diff \"$REMOTE\" \"$LOCAL\" \"$REMOTE\" \"$LOCAL\""
+    },
+    "action_overrides": {
+        ".gitignore": "merge"
+    }
+}

@@ -26,8 +26,7 @@ public class TraversalStrategyBenchmark : BenchmarkBase
                 new GlobEnumeratorBuilder()
                     .WithGlob(Pattern)
                     .DepthFirst()
-                    .Configure(CreateGlob())
-            );
+                    .Configure(CreateGlob()));
 
         return suppressOptimizationDiscard;
     }
@@ -42,8 +41,7 @@ public class TraversalStrategyBenchmark : BenchmarkBase
                 new GlobEnumeratorBuilder()
                     .WithGlob(Pattern)
                     .BreadthFirst()
-                    .Configure(CreateGlob())
-            );
+                    .Configure(CreateGlob()));
         return suppressOptimizationDiscard;
     }
 }
