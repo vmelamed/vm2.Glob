@@ -26,8 +26,7 @@ public class DistinctResultsBenchmark : BenchmarkBase
             suppressOptimizationDiscard = EnumerateAll(
                     new GlobEnumeratorBuilder()
                         .WithGlob(Pattern)
-                        .Configure(CreateGlob())
-                );
+                        .Configure(CreateGlob()));
         return suppressOptimizationDiscard;
     }
 
@@ -41,8 +40,7 @@ public class DistinctResultsBenchmark : BenchmarkBase
                 new GlobEnumeratorBuilder()
                     .WithGlob(Pattern)
                     .Distinct()
-                    .Configure(CreateGlob())
-            );
+                    .Configure(CreateGlob()));
         return suppressOptimizationDiscard;
     }
 }

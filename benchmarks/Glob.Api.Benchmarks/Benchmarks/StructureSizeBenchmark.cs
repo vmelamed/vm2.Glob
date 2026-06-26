@@ -39,8 +39,7 @@ public class StructureSizeBenchmark : BenchmarkBase
             suppressOptimizationDiscard = EnumerateAll(
                 new GlobEnumeratorBuilder()
                         .WithGlob(Pattern)
-                        .Configure(CreateGlob())
-            );
+                        .Configure(CreateGlob()));
         return suppressOptimizationDiscard;
     }
 
@@ -53,8 +52,7 @@ public class StructureSizeBenchmark : BenchmarkBase
             suppressOptimizationDiscard = EnumerateAll(
                 new GlobEnumeratorBuilder()
                         .WithGlob(Pattern)
-                        .Configure(CreateGlob(_globLarge))
-            );
+                        .Configure(CreateGlob(_globLarge)));
         return suppressOptimizationDiscard;
     }
 }

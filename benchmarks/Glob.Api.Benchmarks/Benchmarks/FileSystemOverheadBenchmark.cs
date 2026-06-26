@@ -35,8 +35,7 @@ public class FileSystemBenchmark : BenchmarkBase
             suppressOptimizationDiscard = EnumerateAll(
                 new GlobEnumeratorBuilder()
                         .WithGlob(Pattern)
-                        .Configure(CreateGlob())
-            );
+                        .Configure(CreateGlob()));
         return suppressOptimizationDiscard;
     }
 
@@ -49,8 +48,7 @@ public class FileSystemBenchmark : BenchmarkBase
             suppressOptimizationDiscard = EnumerateAll(
                 new GlobEnumeratorBuilder()
                         .WithGlob(Pattern)
-                        .Configure(CreateGlob(_globRealFS))
-            );
+                        .Configure(CreateGlob(_globRealFS)));
         return suppressOptimizationDiscard;
     }
 }

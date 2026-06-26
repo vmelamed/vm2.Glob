@@ -26,8 +26,7 @@ public class ObjectTypeBenchmark : BenchmarkBase
                 new GlobEnumeratorBuilder()
                     .WithGlob(Pattern)
                     .SelectFiles()
-                    .Configure(CreateGlob())
-            );
+                    .Configure(CreateGlob()));
         return suppressOptimizationDiscard;
     }
 
@@ -41,9 +40,7 @@ public class ObjectTypeBenchmark : BenchmarkBase
                 new GlobEnumeratorBuilder()
                     .WithGlob(Pattern)
                     .SelectDirectories()
-                    .Configure(CreateGlob())
-            );
-
+                    .Configure(CreateGlob()));
         return suppressOptimizationDiscard;
     }
 
@@ -57,8 +54,7 @@ public class ObjectTypeBenchmark : BenchmarkBase
                 new GlobEnumeratorBuilder()
                     .WithGlob(Pattern)
                     .SelectDirectoriesAndFiles()
-                    .Configure(CreateGlob())
-            );
+                    .Configure(CreateGlob()));
         return suppressOptimizationDiscard;
     }
 }
