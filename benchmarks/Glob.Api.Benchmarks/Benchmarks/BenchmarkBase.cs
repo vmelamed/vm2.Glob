@@ -19,7 +19,7 @@ public readonly record struct GlobContext(IFileSystem FileSystem, string FromDir
 #endif
 public abstract class BenchmarkBase
 {
-    // these must be initialized in GlobalSetup(), so we use the old dirty hack - the null-forgiving operator:
+    // these must be initialized in GlobalSetup()
     protected GlobContext _glob;
     protected string _realFSRootsPath = "";
     protected const string FsStandardJsonModelFileName = "standard-test-tree.json";
@@ -122,7 +122,7 @@ public abstract class BenchmarkBase
     /// Creates a fresh <see cref="GlobEnumerator"/> from the default benchmark file system context.
     /// </summary>
     /// <remarks>
-    /// Benchmarks must start from a fresh enumerator every invocation because <see cref="GlobEnumerator"/> becomes permanently
+    /// Benchmarks must start from a fresh enumerator in every invocation because <see cref="GlobEnumerator"/> becomes permanently
     /// frozen after the first <see cref="GlobEnumerator.Enumerate"/> call.
     /// </remarks>
     protected GlobEnumerator CreateGlob() => CreateGlob(_glob);
