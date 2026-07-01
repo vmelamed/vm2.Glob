@@ -1,5 +1,13 @@
 # Changelog
 
+## v3.2.0-preview.2 - 2026-07-01
+
+### Internal
+
+- change `.github/copilot-instructions.md` to refer to both `CONVENTIONS.md` AND to `../CLAUDE.md` [skip ci]
+- update conventions to include `<Using Include="..." />` for implicit usings in project files [skip ci]
+- update Copilot instructions for vm2.Glob and improve comments in BenchmarkBase.cs
+
 ## v3.2.0-preview.1 - 2026-06-26
 
 ### Added
