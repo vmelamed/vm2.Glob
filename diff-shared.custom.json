@@ -8,6 +8,6 @@
         "command": "code --new-window --wait --diff \"$REMOTE\" \"$LOCAL\" \"$REMOTE\" \"$LOCAL\""
     },
     "action_overrides": {
-        ".gitignore": "merge"
+        ".gitignore": "ask to merge"
     }
 }
