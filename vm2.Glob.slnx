@@ -1,6 +1,9 @@
 <Solution>
     <Folder Name="/.github/">
+        <File Path=".github/CONVENTIONS.md" />
+        <File Path=".github/copilot-instructions.md" />
         <File Path=".github/dependabot.yml" />
+        <File Path=".github/PULL_REQUEST_TEMPLATE.md" />
     </Folder>
     <Folder Name="/.github/workflows/">
         <File Path=".github/workflows/CI.yaml" />
@@ -9,9 +12,7 @@
         <File Path=".github/workflows/AutoMerge.yaml" />
         <File Path=".github/workflows/ClearCache.yaml" />
         <File Path=".github/workflows/RefreshLockFiles.yaml" />
-    </Folder>
-    <Folder Name="/benchmarks/">
-        <Project Path="benchmarks/Glob.Api.Benchmarks/Glob.Api.Benchmarks.csproj" />
+        <File Path=".github/workflows/RebuildBenchHistory.yaml" />
     </Folder>
     <Folder Name="/changelog/">
         <File Path="changelog/cliff.prerelease.toml" />
@@ -22,6 +23,7 @@
         <File Path=".gitattributes" />
         <File Path=".gitignore" />
         <File Path="CHANGELOG.md" />
+        <File Path="CLAUDE.md" />
         <File Path="codecov.yaml" />
         <File Path="coverage.settings.xml" />
         <File Path="Directory.Build.props" />
@@ -40,5 +42,8 @@
         <Project Path="tests/Glob.Api.FakeFileSystem.Tests/Glob.Api.FakeFileSystem.Tests.csproj" />
         <Project Path="tests/Glob.Api.FakeFileSystem/Glob.Api.FakeFileSystem.csproj" />
         <Project Path="tests/Glob.Api.Tests/Glob.Api.Tests.csproj" />
+    </Folder>
+    <Folder Name="/benchmarks/">
+        <Project Path="benchmarks/Glob.Api.Benchmarks/Glob.Api.Benchmarks.csproj" />
     </Folder>
 </Solution>
