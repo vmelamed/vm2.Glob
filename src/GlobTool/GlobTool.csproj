@@ -22,7 +22,6 @@
         <PackageTags>glob pattern matching cli tool cross-platform file-search directory-search</PackageTags>
         <PackageProjectUrl>https://github.com/vmelamed/vm2.Glob/blob/main/src/GlobTool</PackageProjectUrl>
         <RepositoryUrl>https://github.com/vmelamed/vm2.Glob</RepositoryUrl>
-        <PackageOutputPath>./nupkg</PackageOutputPath>
         <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 
