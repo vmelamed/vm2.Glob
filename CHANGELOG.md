@@ -21,6 +21,29 @@
 - remove unused package-projects-len output from workflows
 - update package versions for System.CommandLine, Microsoft.Testing.Extensions.CodeCoverage, NSubstitute, and vm2.TestUtilities
 - drop UTF-8 BOM from *.cs files; standardize on charset = utf-8
+- update changelog for v3.2.1-preview.1 [skip ci]
+
+## v3.2.1-preview.1 - 2026-10-05
+
+### Fixed
+
+- change the MinVerDefaultPreReleaseIdentifiers to preview.0; separate artifacts output layout settings with a comment
+- remove PackageOutputPath from GlobTool.csproj
+- add --gh-escape option to dump_vars in workflow files
+- remove gh_escape usage in workflows and update instructions for Copilot
+
+### Internal
+
+- promote to stable v3.2.0 [skip ci]
+- update changelog for v3.2.0 [skip ci]
+- update action override for .gitignore to 'ask to merge' [skip ci]
+- enhance conventions for instance and extension methods [skip ci]
+- update conventions to include interface honesty and AI co-authorship guidelines [skip ci]
+- enhance conventions for AI coding assistants and testing requirements [skip ci]
+- Update package dependencies to version 10.0.10 for Microsoft.Extensions.* and related libraries; upgrade Microsoft.Testing.Extensions to version 2.3.3; adjust System.IO.Hashing to version 10.0.10; ensure compatibility across all transitive dependencies.
+- remove unused package-projects-len output from workflows
+- update package versions for System.CommandLine, Microsoft.Testing.Extensions.CodeCoverage, NSubstitute, and vm2.TestUtilities
+- drop UTF-8 BOM from *.cs files; standardize on charset = utf-8
 
 ## v3.2.0 - 2026-07-01
 
