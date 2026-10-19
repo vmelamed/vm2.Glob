@@ -1,5 +1,10 @@
 # Changelog
 
+## v3.2.2-preview.5 - 2026-10-19
+
+### Internal
+
+DevOps changes only.
 ## v3.2.2-preview.4 - 2026-10-15
 
 ### Internal
